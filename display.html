@@ -1,0 +1,1325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Settings · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #e60000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --danger: #ff0000;
+            --font-family: 'Poppins', sans-serif;
+            --font-size-base: 16px;
+            --spacing-base: 1;
+            --animation-speed: 1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            transition: all 0.3s ease;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-header .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .save-btn {
+            padding: 10px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 80, 0.3);
+        }
+
+        /* ===== DISPLAY LAYOUT ===== */
+        .display-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Sidebar navigation */
+        .display-nav {
+            width: 200px;
+            min-width: 200px;
+            position: sticky;
+            top: 0;
+            height: fit-content;
+        }
+
+        .display-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .display-nav .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .display-nav .nav-item.active {
+            background: rgba(255, 0, 80, 0.1);
+            color: var(--primary);
+        }
+
+        .display-nav .nav-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+
+        .display-nav .nav-divider {
+            height: 1px;
+            background: var(--dark-gray);
+            margin: 12px 0;
+        }
+
+        /* Display content */
+        .display-content {
+            flex: 1;
+        }
+
+        .display-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .display-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .display-section h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .display-section .section-desc {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Settings cards */
+        .display-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .display-card .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .display-card .card-title i {
+            color: var(--primary);
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-row .info {
+            flex: 1;
+        }
+
+        .setting-row .info .label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .setting-row .info .description {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        /* Toggle switch */
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--dark-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle.active::after {
+            left: 22px;
+        }
+
+        /* Inputs and selects */
+        .setting-input, .setting-select {
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            color: var(--light);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 14px;
+            width: 200px;
+            transition: border-color 0.3s;
+        }
+
+        .setting-input:focus, .setting-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .setting-select option {
+            background: var(--darker);
+        }
+
+        /* Color options */
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active {
+            border-color: white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Preview card */
+        .preview-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+            margin-top: 20px;
+        }
+
+        .preview-card .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .preview-card .preview-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .preview-card .preview-content {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .preview-card .preview-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .preview-card .preview-actions button {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-family: var(--font-family);
+        }
+
+        .preview-card .preview-actions button:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        /* Font size slider */
+        .font-size-slider {
+            width: 200px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--dark-gray);
+            border-radius: 2px;
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        .font-size-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .font-size-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .font-size-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+
+        .font-size-label {
+            min-width: 60px;
+            text-align: center;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        /* Animation speed controls */
+        .speed-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .speed-option {
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            background: transparent;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-family);
+            font-size: 13px;
+        }
+
+        .speed-option:hover {
+            border-color: var(--primary);
+            color: var(--light);
+        }
+
+        .speed-option.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .display-layout {
+                flex-direction: column;
+            }
+            .display-nav {
+                width: 100%;
+                min-width: unset;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                position: relative;
+            }
+            .display-nav .nav-item {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+            .display-nav .nav-divider {
+                display: none;
+            }
+            .main-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .page-header h1 {
+                font-size: 22px;
+            }
+            .setting-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .setting-input, .setting-select, .font-size-slider {
+                width: 100%;
+            }
+            .display-nav .nav-item {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            .speed-options {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .save-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .display-card {
+                padding: 16px;
+            }
+            .color-options {
+                gap: 6px;
+            }
+            .color-option {
+                width: 28px;
+                height: 28px;
+            }
+            .preview-card {
+                padding: 16px;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+
+        /* Layout options preview */
+        .layout-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .layout-option {
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid var(--card-border);
+            background: var(--darker);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .layout-option:hover {
+            border-color: var(--primary);
+            background: rgba(255, 0, 80, 0.05);
+        }
+
+        .layout-option.active {
+            border-color: var(--primary);
+            background: rgba(255, 0, 80, 0.1);
+        }
+
+        .layout-option i {
+            font-size: 28px;
+            color: var(--gray);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .layout-option.active i {
+            color: var(--primary);
+        }
+
+        .layout-option .layout-name {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .layout-option.active .layout-name {
+            color: var(--light);
+        }
+
+        /* Accessibility options */
+        .accessibility-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            font-size: 11px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chathome.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='searching.html'">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='display.html'">
+                <i class="fas fa-palette"></i>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <h1>Display Settings</h1>
+                <div class="subtitle">Customize your visual experience</div>
+            </div>
+            <button class="save-btn" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+
+        <div class="display-layout">
+            <!-- Display Navigation -->
+            <div class="display-nav">
+                <div class="nav-item active" data-section="theme">
+                    <i class="fas fa-moon"></i> Theme
+                </div>
+                <div class="nav-item" data-section="layout">
+                    <i class="fas fa-th-large"></i> Layout
+                </div>
+                <div class="nav-item" data-section="typography">
+                    <i class="fas fa-font"></i> Typography
+                </div>
+                <div class="nav-item" data-section="colors">
+                    <i class="fas fa-palette"></i> Colors
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="animations">
+                    <i class="fas fa-play-circle"></i> Animations
+                </div>
+                <div class="nav-item" data-section="accessibility">
+                    <i class="fas fa-universal-access"></i> Accessibility
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="preview">
+                    <i class="fas fa-eye"></i> Live Preview
+                </div>
+            </div>
+
+            <!-- Display Content -->
+            <div class="display-content">
+
+                <!-- ===== THEME ===== -->
+                <div class="display-section active" id="section-theme">
+                    <h2>Theme Settings</h2>
+                    <p class="section-desc">Choose how Gramite looks on your device</p>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-moon"></i> Theme Mode</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Dark Mode</div>
+                                <div class="description">Enable dark theme for reduced eye strain</div>
+                            </div>
+                            <div class="toggle active" onclick="toggleTheme(this)"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">System Theme</div>
+                                <div class="description">Follow your system's theme preference</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Auto Theme Schedule</div>
+                                <div class="description">Automatically switch between light and dark</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>Disabled</option>
+                                <option selected>Sunset to Sunrise</option>
+                                <option>Custom Schedule</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-sun"></i> Light Theme Preferences</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Light Theme Variant</div>
+                                <div class="description">Choose your preferred light theme style</div>
+                            </div>
+                            <select class="setting-select">
+                                <option selected>Default Light</option>
+                                <option>Warm Light</option>
+                                <option>Cool Light</option>
+                                <option>High Contrast Light</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Reduce Brightness</div>
+                                <div class="description">Softer brightness for light theme</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LAYOUT ===== -->
+                <div class="display-section" id="section-layout">
+                    <h2>Layout Preferences</h2>
+                    <p class="section-desc">Customize the structure and spacing of your content</p>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-columns"></i> Layout Style</div>
+                        <div class="layout-options">
+                            <div class="layout-option active" onclick="selectLayout(this)">
+                                <i class="fas fa-th-large"></i>
+                                <div class="layout-name">Grid</div>
+                            </div>
+                            <div class="layout-option" onclick="selectLayout(this)">
+                                <i class="fas fa-list-ul"></i>
+                                <div class="layout-name">List</div>
+                            </div>
+                            <div class="layout-option" onclick="selectLayout(this)">
+                                <i class="fas fa-grip"></i>
+                                <div class="layout-name">Compact</div>
+                            </div>
+                            <div class="layout-option" onclick="selectLayout(this)">
+                                <i class="fas fa-th"></i>
+                                <div class="layout-name">Masonry</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-arrows-alt-h"></i> Spacing</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Content Width</div>
+                                <div class="description">Adjust the maximum width of content</div>
+                            </div>
+                            <select class="setting-select" id="contentWidth">
+                                <option>Narrow (800px)</option>
+                                <option selected>Standard (1100px)</option>
+                                <option>Wide (1400px)</option>
+                                <option>Full Width</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Spacing Density</div>
+                                <div class="description">Control the spacing between elements</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>Compact</option>
+                                <option selected>Normal</option>
+                                <option>Comfortable</option>
+                                <option>Spacious</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Sidebar Position</div>
+                                <div class="description">Choose where the sidebar appears</div>
+                            </div>
+                            <select class="setting-select">
+                                <option selected>Left</option>
+                                <option>Right</option>
+                                <option>Hidden (Full Width)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TYPOGRAPHY ===== -->
+                <div class="display-section" id="section-typography">
+                    <h2>Typography</h2>
+                    <p class="section-desc">Customize fonts and text appearance</p>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-font"></i> Font Settings</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Font Family</div>
+                                <div class="description">Choose your preferred font</div>
+                            </div>
+                            <select class="setting-select" id="fontFamily" onchange="updateFont()">
+                                <option value="'Poppins', sans-serif" selected>Poppins</option>
+                                <option value="'Montserrat', sans-serif">Montserrat</option>
+                                <option value="'Inter', sans-serif">Inter</option>
+                                <option value="'Roboto', sans-serif">Roboto</option>
+                                <option value="'Open Sans', sans-serif">Open Sans</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Font Size</div>
+                                <div class="description" id="fontSizeDisplay">16px</div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;width:200px;">
+                                <span style="font-size:12px;color:var(--gray);">A</span>
+                                <input type="range" class="font-size-slider" id="fontSizeSlider" min="12" max="24" value="16" step="1" oninput="updateFontSize(this.value)">
+                                <span style="font-size:18px;color:var(--gray);">A</span>
+                            </div>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Font Weight</div>
+                                <div class="description">Adjust the boldness of text</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>Light</option>
+                                <option selected>Regular</option>
+                                <option>Medium</option>
+                                <option>Bold</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-align-left"></i> Text Display</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Line Height</div>
+                                <div class="description">Space between lines of text</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>1.2 (Compact)</option>
+                                <option selected>1.5 (Normal)</option>
+                                <option>1.8 (Comfortable)</option>
+                                <option>2.0 (Spacious)</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Letter Spacing</div>
+                                <div class="description">Space between characters</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>None</option>
+                                <option selected>Normal</option>
+                                <option>Wide</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== COLORS ===== -->
+                <div class="display-section" id="section-colors">
+                    <h2>Color Settings</h2>
+                    <p class="section-desc">Customize the color scheme of your experience</p>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-palette"></i> Accent Colors</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Primary Color</div>
+                                <div class="description">Main accent color used throughout the app</div>
+                            </div>
+                            <div class="color-options">
+                                <div class="color-option active" style="background:#ff0050;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#00ff88;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#00aaff;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#ffaa00;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#aa66ff;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#ff44aa;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#ff6633;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#33cc99;" onclick="selectColor(this)"></div>
+                            </div>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Accent Color</div>
+                                <div class="description">Secondary accent for highlights and emphasis</div>
+                            </div>
+                            <div class="color-options">
+                                <div class="color-option active" style="background:#ff8800;" onclick="selectAccentColor(this)"></div>
+                                <div class="color-option" style="background:#00ddff;" onclick="selectAccentColor(this)"></div>
+                                <div class="color-option" style="background:#ff00aa;" onclick="selectAccentColor(this)"></div>
+                                <div class="color-option" style="background:#88ff00;" onclick="selectAccentColor(this)"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-adjust"></i> Color Intensity</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Saturation</div>
+                                <div class="description">Color intensity level</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>Muted</option>
+                                <option selected>Normal</option>
+                                <option>Vibrant</option>
+                                <option>High Contrast</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Background Pattern</div>
+                                <div class="description">Subtle background decoration</div>
+                            </div>
+                            <select class="setting-select">
+                                <option selected>None</option>
+                                <option>Dots</option>
+                                <option>Grid</option>
+                                <option>Waves</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ANIMATIONS ===== -->
+                <div class="display-section" id="section-animations">
+                    <h2>Animation Settings</h2>
+                    <p class="section-desc">Control motion and transitions</p>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-play-circle"></i> Motion Preferences</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Enable Animations</div>
+                                <div class="description">Turn all animations on or off</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Animation Speed</div>
+                                <div class="description">How fast animations should play</div>
+                            </div>
+                            <div class="speed-options">
+                                <button class="speed-option" onclick="selectSpeed(this, 0.5)">Slow</button>
+                                <button class="speed-option active" onclick="selectSpeed(this, 1)">Normal</button>
+                                <button class="speed-option" onclick="selectSpeed(this, 1.5)">Fast</button>
+                                <button class="speed-option" onclick="selectSpeed(this, 2)">Very Fast</button>
+                            </div>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Reduce Motion</div>
+                                <div class="description">Minimize animations for accessibility</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-magic"></i> Transition Effects</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Page Transitions</div>
+                                <div class="description">Smooth transitions between pages</div>
+                            </div>
+                            <select class="setting-select">
+                                <option selected>Fade</option>
+                                <option>Slide</option>
+                                <option>Zoom</option>
+                                <option>None</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Hover Effects</div>
+                                <div class="description">Interactive hover animations</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ACCESSIBILITY ===== -->
+                <div class="display-section" id="section-accessibility">
+                    <h2>Accessibility</h2>
+                    <p class="section-desc">Make Gramite more accessible for everyone</p>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-universal-access"></i> Accessibility Features</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">High Contrast Mode</div>
+                                <div class="description">Increase contrast for better readability</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Large Text</div>
+                                <div class="description">Increase text size for better readability</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Screen Reader Support</div>
+                                <div class="description">Optimize for screen readers</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Reduce Transparency</div>
+                                <div class="description">Remove transparent elements</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Focus Indicators</div>
+                                <div class="description">Enhanced focus outlines for keyboard navigation</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+
+                    <div class="display-card">
+                        <div class="card-title"><i class="fas fa-eye"></i> Visual Aids</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Color Blind Mode</div>
+                                <div class="description">Optimize colors for color vision deficiency</div>
+                            </div>
+                            <select class="setting-select">
+                                <option selected>None</option>
+                                <option>Protanopia (Red-blind)</option>
+                                <option>Deuteranopia (Green-blind)</option>
+                                <option>Tritanopia (Blue-blind)</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Readable Font</div>
+                                <div class="description">Use a highly readable font for better legibility</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LIVE PREVIEW ===== -->
+                <div class="display-section" id="section-preview">
+                    <h2>Live Preview</h2>
+                    <p class="section-desc">See how your display settings look in real-time</p>
+
+                    <div class="preview-card">
+                        <div class="preview-header">
+                            <div class="preview-avatar" id="previewAvatar">JD</div>
+                            <div>
+                                <div style="font-weight:600;" id="previewName">John Doe</div>
+                                <div style="color:var(--gray);font-size:13px;">@johndoe</div>
+                            </div>
+                        </div>
+                        <div class="preview-content" id="previewContent">
+                            <p>This is a preview of how your content will appear with your current display settings. The font, colors, and spacing will update in real-time as you make changes.</p>
+                            <p style="margin-top:12px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        </div>
+                        <div class="preview-actions">
+                            <button><i class="fas fa-heart"></i> Like</button>
+                            <button><i class="fas fa-comment"></i> Comment</button>
+                            <button><i class="fas fa-share"></i> Share</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Display settings saved successfully!</span>
+    </div>
+
+    <script>
+        // ===== SECTION NAVIGATION =====
+        document.querySelectorAll('.display-nav .nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.display-nav .nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                const section = this.dataset.section;
+                document.querySelectorAll('.display-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(`section-${section}`).classList.add('active');
+            });
+        });
+
+        // ===== THEME TOGGLE =====
+        function toggleTheme(element) {
+            element.classList.toggle('active');
+            if (element.classList.contains('active')) {
+                document.documentElement.style.setProperty('--dark', '#121212');
+                document.documentElement.style.setProperty('--darker', '#0a0a0a');
+                document.documentElement.style.setProperty('--card-bg', '#1a1a1a');
+                document.body.style.backgroundColor = '#121212';
+            } else {
+                document.documentElement.style.setProperty('--dark', '#f5f5f5');
+                document.documentElement.style.setProperty('--darker', '#e8e8e8');
+                document.documentElement.style.setProperty('--card-bg', '#ffffff');
+                document.body.style.backgroundColor = '#f5f5f5';
+                document.body.style.color = '#121212';
+                // Reset after a moment
+                setTimeout(() => {
+                    document.documentElement.style.setProperty('--dark', '#121212');
+                    document.documentElement.style.setProperty('--darker', '#0a0a0a');
+                    document.documentElement.style.setProperty('--card-bg', '#1a1a1a');
+                    document.body.style.backgroundColor = '#121212';
+                    document.body.style.color = '#f8f8f8';
+                }, 500);
+            }
+        }
+
+        // ===== COLOR SELECTION =====
+        function selectColor(element) {
+            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            
+            const color = element.style.background;
+            document.documentElement.style.setProperty('--primary', color);
+            
+            // Update preview avatar
+            document.getElementById('previewAvatar').style.background = color;
+        }
+
+        function selectAccentColor(element) {
+            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            // Could apply to secondary elements
+        }
+
+        // ===== LAYOUT SELECTION =====
+        function selectLayout(element) {
+            document.querySelectorAll('.layout-option').forEach(l => l.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // ===== FONT SETTINGS =====
+        function updateFont() {
+            const font = document.getElementById('fontFamily').value;
+            document.documentElement.style.setProperty('--font-family', font);
+        }
+
+        function updateFontSize(value) {
+            document.getElementById('fontSizeDisplay').textContent = value + 'px';
+            document.documentElement.style.setProperty('--font-size-base', value + 'px');
+        }
+
+        // ===== ANIMATION SPEED =====
+        function selectSpeed(element, speed) {
+            document.querySelectorAll('.speed-option').forEach(s => s.classList.remove('active'));
+            element.classList.add('active');
+            document.documentElement.style.setProperty('--animation-speed', speed);
+        }
+
+        // ===== SAVE SETTINGS =====
+        function saveSettings() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== TOGGLE FUNCTIONALITY =====
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // ===== KEYBOARD SHORTCUT: Ctrl+S =====
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveSettings();
+            }
+        });
+
+        // ===== SET ACTIVE SECTION BASED ON URL HASH =====
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const navItem = document.querySelector(`.display-nav .nav-item[data-section="${hash}"]`);
+                if (navItem) {
+                    navItem.click();
+                }
+            }
+            
+            // Initialize preview with current primary color
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+            if (primaryColor) {
+                document.getElementById('previewAvatar').style.background = primaryColor;
+            }
+        });
+    </script>
+
+</body>
+</html>

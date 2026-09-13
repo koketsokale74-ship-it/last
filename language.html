@@ -1,0 +1,1161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Settings · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #ff0000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-header .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .save-btn {
+            padding: 10px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 80, 0.3);
+        }
+
+        /* ===== LANGUAGE LAYOUT ===== */
+        .language-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Sidebar navigation */
+        .language-nav {
+            width: 200px;
+            min-width: 200px;
+            position: sticky;
+            top: 0;
+            height: fit-content;
+        }
+
+        .language-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .language-nav .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .language-nav .nav-item.active {
+            background: rgba(255, 0, 80, 0.1);
+            color: var(--primary);
+        }
+
+        .language-nav .nav-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+
+        .language-nav .nav-divider {
+            height: 1px;
+            background: var(--dark-gray);
+            margin: 12px 0;
+        }
+
+        /* Language content */
+        .language-content {
+            flex: 1;
+        }
+
+        .language-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .language-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .language-section h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .language-section .section-desc {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Settings cards */
+        .language-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .language-card .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .language-card .card-title i {
+            color: var(--primary);
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-row .info {
+            flex: 1;
+        }
+
+        .setting-row .info .label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .setting-row .info .description {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .setting-row .info .current-value {
+            font-size: 13px;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        /* Toggle switch */
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--dark-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle.active::after {
+            left: 22px;
+        }
+
+        /* Select dropdowns */
+        .setting-select {
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            color: var(--light);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 14px;
+            width: 220px;
+            transition: border-color 0.3s;
+            cursor: pointer;
+        }
+
+        .setting-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .setting-select option {
+            background: var(--darker);
+            padding: 8px;
+        }
+
+        /* Language search */
+        .language-search {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .language-search input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .language-search input:focus {
+            border-color: var(--primary);
+        }
+
+        .language-search input::placeholder {
+            color: var(--gray);
+        }
+
+        .language-search i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        /* Language list */
+        .language-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .language-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 12px;
+        }
+
+        .language-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .language-item.active {
+            background: rgba(255, 0, 80, 0.1);
+            border: 1px solid var(--primary);
+        }
+
+        .language-item .flag {
+            font-size: 22px;
+            width: 32px;
+            text-align: center;
+        }
+
+        .language-item .name {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .language-item .native-name {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        .language-item .check {
+            color: var(--primary);
+            font-size: 16px;
+            display: none;
+        }
+
+        .language-item.active .check {
+            display: block;
+        }
+
+        /* Translation options */
+        .translation-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .translation-option {
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: var(--darker);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .translation-option:hover {
+            border-color: var(--primary);
+        }
+
+        .translation-option.active {
+            border-color: var(--primary);
+            background: rgba(255, 0, 80, 0.05);
+        }
+
+        .translation-option i {
+            font-size: 24px;
+            color: var(--gray);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .translation-option.active i {
+            color: var(--primary);
+        }
+
+        .translation-option .opt-name {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .translation-option.active .opt-name {
+            color: var(--light);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .language-layout {
+                flex-direction: column;
+            }
+            .language-nav {
+                width: 100%;
+                min-width: unset;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                position: relative;
+            }
+            .language-nav .nav-item {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+            .language-nav .nav-divider {
+                display: none;
+            }
+            .main-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .page-header h1 {
+                font-size: 22px;
+            }
+            .setting-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .setting-select {
+                width: 100%;
+            }
+            .translation-options {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            .language-item {
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .save-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .language-card {
+                padding: 16px;
+            }
+            .translation-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chating.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='groups.html'">
+                <i class="fas fa-users"></i>
+                <span class="badge">8</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='language.html'">
+                <i class="fas fa-language"></i>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <h1>Language Settings</h1>
+                <div class="subtitle">Choose your preferred language and regional settings</div>
+            </div>
+            <button class="save-btn" onclick="saveLanguageSettings()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+
+        <div class="language-layout">
+            <!-- Navigation -->
+            <div class="language-nav">
+                <div class="nav-item active" data-section="preferred" onclick="switchSection('preferred')">
+                    <i class="fas fa-globe"></i> Preferred Language
+                </div>
+                <div class="nav-item" data-section="translation" onclick="switchSection('translation')">
+                    <i class="fas fa-language"></i> Translation
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="region" onclick="switchSection('region')">
+                    <i class="fas fa-map-pin"></i> Region & Format
+                </div>
+                <div class="nav-item" data-section="keyboard" onclick="switchSection('keyboard')">
+                    <i class="fas fa-keyboard"></i> Keyboard Layout
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="accessibility" onclick="switchSection('accessibility')">
+                    <i class="fas fa-universal-access"></i> Accessibility
+                </div>
+                <div class="nav-item" data-section="advanced" onclick="switchSection('advanced')">
+                    <i class="fas fa-cogs"></i> Advanced
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="language-content">
+
+                <!-- ===== PREFERRED LANGUAGE ===== -->
+                <div class="language-section active" id="section-preferred">
+                    <h2>Preferred Language</h2>
+                    <p class="section-desc">Choose the language you want to use across Gramite</p>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-globe"></i> Interface Language</div>
+                        <div class="language-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search languages..." id="languageSearch" oninput="filterLanguages()">
+                        </div>
+                        <div class="language-list" id="languageList">
+                            <!-- Languages rendered by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-user"></i> Content Language</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Content Language</div>
+                                <div class="description">Language preference for content suggestions</div>
+                            </div>
+                            <select class="setting-select" id="contentLanguage">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="zh">Chinese</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ar">Arabic</option>
+                                <option value="pt">Portuguese</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Auto-detect Language</div>
+                                <div class="description">Automatically detect and adjust language settings</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TRANSLATION ===== -->
+                <div class="language-section" id="section-translation">
+                    <h2>Translation Settings</h2>
+                    <p class="section-desc">Manage how content is translated on Gramite</p>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-language"></i> Translation Options</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Auto-Translate</div>
+                                <div class="description">Automatically translate content to your preferred language</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Translate to</div>
+                                <div class="description">Target language for translations</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Show Translation Option</div>
+                                <div class="description">Display translation button on posts</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-cog"></i> Translation Engine</div>
+                        <div class="translation-options">
+                            <div class="translation-option active" onclick="selectTranslationEngine(this)">
+                                <i class="fas fa-robot"></i>
+                                <div class="opt-name">Gramite AI</div>
+                            </div>
+                            <div class="translation-option" onclick="selectTranslationEngine(this)">
+                                <i class="fab fa-google"></i>
+                                <div class="opt-name">Google Translate</div>
+                            </div>
+                            <div class="translation-option" onclick="selectTranslationEngine(this)">
+                                <i class="fas fa-microchip"></i>
+                                <div class="opt-name">DeepL</div>
+                            </div>
+                            <div class="translation-option" onclick="selectTranslationEngine(this)">
+                                <i class="fas fa-globe"></i>
+                                <div class="opt-name">Microsoft Translator</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== REGION & FORMAT ===== -->
+                <div class="language-section" id="section-region">
+                    <h2>Region & Format</h2>
+                    <p class="section-desc">Customize regional settings for dates, time, and numbers</p>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-map-pin"></i> Regional Settings</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Region</div>
+                                <div class="description">Your current region for local content</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="us">United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="ca">Canada</option>
+                                <option value="au">Australia</option>
+                                <option value="de">Germany</option>
+                                <option value="fr">France</option>
+                                <option value="jp">Japan</option>
+                                <option value="br">Brazil</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Time Format</div>
+                                <div class="description">12-hour or 24-hour format</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="12h">12-hour (AM/PM)</option>
+                                <option value="24h">24-hour</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Date Format</div>
+                                <div class="description">How dates should be displayed</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="mm/dd/yyyy">MM/DD/YYYY</option>
+                                <option value="dd/mm/yyyy">DD/MM/YYYY</option>
+                                <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">First Day of Week</div>
+                                <div class="description">Calendar week start day</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="sunday">Sunday</option>
+                                <option value="monday">Monday</option>
+                                <option value="saturday">Saturday</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-dollar-sign"></i> Currency & Numbers</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Currency</div>
+                                <div class="description">Default currency for transactions</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="usd">USD ($)</option>
+                                <option value="eur">EUR (€)</option>
+                                <option value="gbp">GBP (£)</option>
+                                <option value="jpy">JPY (¥)</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Number Format</div>
+                                <div class="description">Decimal and thousand separators</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="1,234.56">1,234.56 (US)</option>
+                                <option value="1.234,56">1.234,56 (EU)</option>
+                                <option value="1 234.56">1 234.56 (UK)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== KEYBOARD LAYOUT ===== -->
+                <div class="language-section" id="section-keyboard">
+                    <h2>Keyboard Layout</h2>
+                    <p class="section-desc">Configure your keyboard input settings</p>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-keyboard"></i> Keyboard Settings</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Keyboard Language</div>
+                                <div class="description">Layout language for your keyboard</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="us">US English</option>
+                                <option value="uk">UK English</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="es">Spanish</option>
+                                <option value="jp">Japanese</option>
+                                <option value="kr">Korean</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Input Method</div>
+                                <div class="description">Method for typing non-Latin scripts</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="default">Default</option>
+                                <option value="pinyin">Pinyin (Chinese)</option>
+                                <option value="romaji">Romaji (Japanese)</option>
+                                <option value="hangul">Hangul (Korean)</option>
+                            </select>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Show Keyboard Shortcuts</div>
+                                <div class="description">Display keyboard shortcut hints</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ACCESSIBILITY ===== -->
+                <div class="language-section" id="section-accessibility">
+                    <h2>Accessibility Settings</h2>
+                    <p class="section-desc">Language-related accessibility options</p>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-universal-access"></i> Accessibility</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Text-to-Speech</div>
+                                <div class="description">Read content aloud in your language</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Speech-to-Text</div>
+                                <div class="description">Voice input for typing</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Language Detection</div>
+                                <div class="description">Auto-detect language for accessibility tools</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Simplified Language</div>
+                                <div class="description">Use simpler language for better understanding</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ADVANCED ===== -->
+                <div class="language-section" id="section-advanced">
+                    <h2>Advanced Settings</h2>
+                    <p class="section-desc">Additional language and localization options</p>
+
+                    <div class="language-card">
+                        <div class="card-title"><i class="fas fa-cogs"></i> Advanced Options</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Fallback Language</div>
+                                <div class="description">Language to use when content isn't available</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Character Encoding</div>
+                                <div class="description">Text encoding standard</div>
+                            </div>
+                            <select class="setting-select">
+                                <option value="utf-8">UTF-8 (Recommended)</option>
+                                <option value="utf-16">UTF-16</option>
+                                <option value="iso-8859-1">ISO-8859-1</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Language Data Download</div>
+                                <div class="description">Download language packs for offline use</div>
+                            </div>
+                            <button style="background:var(--primary);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:var(--font-family);font-weight:500;" onclick="showToast('📥 Language data download started...')">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Reset Language Settings</div>
+                                <div class="description" style="color:var(--danger);">Reset all language settings to defaults</div>
+                            </div>
+                            <button style="background:var(--danger);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:var(--font-family);font-weight:500;" onclick="if(confirm('Reset all language settings?')){showToast('Settings reset to default');}">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
+    <script>
+        // ===== LANGUAGE DATA =====
+        const languages = [
+            { name: 'English', native: 'English', flag: '🇬🇧', code: 'en' },
+            { name: 'Spanish', native: 'Español', flag: '🇪🇸', code: 'es' },
+            { name: 'French', native: 'Français', flag: '🇫🇷', code: 'fr' },
+            { name: 'German', native: 'Deutsch', flag: '🇩🇪', code: 'de' },
+            { name: 'Chinese', native: '中文', flag: '🇨🇳', code: 'zh' },
+            { name: 'Japanese', native: '日本語', flag: '🇯🇵', code: 'ja' },
+            { name: 'Korean', native: '한국어', flag: '🇰🇷', code: 'ko' },
+            { name: 'Arabic', native: 'العربية', flag: '🇸🇦', code: 'ar' },
+            { name: 'Portuguese', native: 'Português', flag: '🇧🇷', code: 'pt' },
+            { name: 'Russian', native: 'Русский', flag: '🇷🇺', code: 'ru' },
+            { name: 'Italian', native: 'Italiano', flag: '🇮🇹', code: 'it' },
+            { name: 'Dutch', native: 'Nederlands', flag: '🇳🇱', code: 'nl' },
+            { name: 'Turkish', native: 'Türkçe', flag: '🇹🇷', code: 'tr' },
+            { name: 'Polish', native: 'Polski', flag: '🇵🇱', code: 'pl' },
+            { name: 'Swedish', native: 'Svenska', flag: '🇸🇪', code: 'sv' },
+            { name: 'Greek', native: 'Ελληνικά', flag: '🇬🇷', code: 'el' },
+            { name: 'Hebrew', native: 'עברית', flag: '🇮🇱', code: 'he' },
+            { name: 'Thai', native: 'ภาษาไทย', flag: '🇹🇭', code: 'th' },
+            { name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳', code: 'vi' },
+            { name: 'Indonesian', native: 'Bahasa Indonesia', flag: '🇮🇩', code: 'id' }
+        ];
+
+        let selectedLanguage = 'en';
+        let languageSearchQuery = '';
+
+        // ===== RENDER LANGUAGE LIST =====
+        function renderLanguages() {
+            const list = document.getElementById('languageList');
+            let filtered = languages;
+
+            if (languageSearchQuery) {
+                const query = languageSearchQuery.toLowerCase();
+                filtered = languages.filter(l => 
+                    l.name.toLowerCase().includes(query) || 
+                    l.native.toLowerCase().includes(query)
+                );
+            }
+
+            list.innerHTML = filtered.map(lang => `
+                <div class="language-item ${lang.code === selectedLanguage ? 'active' : ''}" 
+                     onclick="selectLanguage('${lang.code}')">
+                    <span class="flag">${lang.flag}</span>
+                    <span class="name">${lang.name}</span>
+                    <span class="native-name">${lang.native}</span>
+                    <span class="check"><i class="fas fa-check-circle"></i></span>
+                </div>
+            `).join('');
+        }
+
+        // ===== SELECT LANGUAGE =====
+        function selectLanguage(code) {
+            selectedLanguage = code;
+            renderLanguages();
+            const lang = languages.find(l => l.code === code);
+            if (lang) {
+                showToast(`🌍 Language set to: ${lang.name}`);
+            }
+        }
+
+        // ===== FILTER LANGUAGES =====
+        function filterLanguages() {
+            const input = document.getElementById('languageSearch');
+            languageSearchQuery = input.value;
+            renderLanguages();
+        }
+
+        // ===== SECTION NAVIGATION =====
+        function switchSection(section) {
+            document.querySelectorAll('.language-nav .nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelector(`.language-nav .nav-item[data-section="${section}"]`).classList.add('active');
+
+            document.querySelectorAll('.language-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`section-${section}`).classList.add('active');
+        }
+
+        // ===== TRANSLATION ENGINE SELECTION =====
+        function selectTranslationEngine(element) {
+            document.querySelectorAll('.translation-option').forEach(o => o.classList.remove('active'));
+            element.classList.add('active');
+            const name = element.querySelector('.opt-name').textContent;
+            showToast(`🔄 Translation engine set to: ${name}`);
+        }
+
+        // ===== SAVE SETTINGS =====
+        function saveLanguageSettings() {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = '✅ Language settings saved successfully!';
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== TOAST =====
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== TOGGLE FUNCTIONALITY =====
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // ===== INIT =====
+        renderLanguages();
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveLanguageSettings();
+            }
+            if (e.key === 'Escape') {
+                document.getElementById('languageSearch').blur();
+            }
+        });
+
+        // ===== SET ACTIVE SECTION BASED ON URL HASH =====
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const navItem = document.querySelector(`.language-nav .nav-item[data-section="${hash}"]`);
+                if (navItem) {
+                    navItem.click();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

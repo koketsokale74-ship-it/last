@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Gramite · Help & Support</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff1a1a;
+            --primary-soft: #ff3333;
+            --primary-glow: rgba(255, 26, 26, 0.35);
+            --gold: #ffd700;
+            --dark: #0c0c10;
+            --darker: #07070a;
+            --card-bg: #16161e;
+            --card-hover: #1f1f2a;
+            --surface: #1c1c26;
+            --border-dim: #2a2a36;
+            --text-main: #f0f0f8;
+            --text-muted: #9494a3;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            background-image: radial-gradient(circle at 30% 10%, #1a0e0e 0%, #0c0c10 80%);
+        }
+
+        .app-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(7, 7, 10, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-dim);
+            z-index: 100;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.25s;
+            padding: 4px;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            color: var(--primary);
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-title i {
+            color: var(--primary);
+        }
+        .header-actions {
+            display: flex;
+            gap: 14px;
+        }
+        .header-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.25s;
+            padding: 4px;
+            text-decoration: none;
+        }
+        .header-action-btn:hover {
+            color: var(--primary);
+        }
+
+        /* ===== SEARCH ===== */
+        .search-box {
+            padding: 16px 20px 12px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 14px 18px 14px 46px;
+            border-radius: var(--radius-md);
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-dim);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            outline: none;
+            transition: 0.25s;
+        }
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+        .search-wrapper {
+            position: relative;
+        }
+        .search-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        /* ===== QUICK HELP LINKS ===== */
+        .quick-links {
+            padding: 0 20px 16px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .quick-link-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-sm);
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.25s;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+        .quick-link-item:hover {
+            border-color: var(--primary-soft);
+            background: var(--card-hover);
+            transform: translateY(-3px);
+        }
+        .quick-link-item i {
+            font-size: 24px;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 6px;
+        }
+        .quick-link-item span {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* ===== HELP SECTIONS ===== */
+        .help-section {
+            padding: 0 20px 20px;
+        }
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .help-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            transition: 0.25s;
+            cursor: pointer;
+        }
+        .help-card:hover {
+            border-color: var(--primary-soft);
+            background: var(--card-hover);
+        }
+        .help-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .help-card-title {
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .help-card-title i {
+            color: var(--primary);
+            font-size: 16px;
+            width: 20px;
+        }
+        .help-card-toggle {
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: 0.25s;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .help-card-toggle:hover {
+            color: var(--primary);
+        }
+        .help-card-body {
+            display: none;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-dim);
+            margin-top: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .help-card-body.open {
+            display: block;
+        }
+        .help-card-body ul {
+            list-style: none;
+            padding: 0;
+        }
+        .help-card-body ul li {
+            padding: 6px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .help-card-body ul li i {
+            color: var(--primary);
+            font-size: 14px;
+            margin-top: 3px;
+            width: 18px;
+        }
+        .help-card-body .help-tip {
+            background: rgba(255, 26, 26, 0.08);
+            border-left: 3px solid var(--primary);
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        /* ===== CONTACT SUPPORT ===== */
+        .contact-support {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin: 8px 20px 20px;
+            text-align: center;
+        }
+        .contact-support h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .contact-support p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+        .contact-support .contact-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .contact-btn {
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+        }
+        .contact-btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+        .contact-btn-primary:hover {
+            background: #e60000;
+            transform: translateY(-2px);
+        }
+        .contact-btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-dim);
+        }
+        .contact-btn-outline:hover {
+            background: var(--card-hover);
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            border-top: 1px solid var(--border-dim);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 14px;
+            backdrop-filter: blur(12px);
+            max-width: 640px;
+            margin: 0 auto;
+            z-index: 200;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 4px;
+            transition: 0.2s;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-item i {
+            font-size: 22px;
+            transition: 0.2s;
+        }
+        .nav-item.active {
+            color: var(--primary);
+        }
+        .nav-item.active i {
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+        .nav-item:hover {
+            color: white;
+        }
+
+        /* ===== MESSAGE BOX ===== */
+        .msg-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            display: none;
+            animation: fadeIn 0.2s;
+        }
+        .msg-box {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px 28px;
+            max-width: 360px;
+            width: 90%;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-heavy);
+            animation: popIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        }
+        .msg-box .icon-big {
+            background: var(--primary);
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 4px;
+        }
+        .msg-box h3 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .msg-box p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 4px 0 8px;
+        }
+        .msg-box .btn-close-msg {
+            background: var(--primary);
+            border: none;
+            border-radius: 60px;
+            padding: 12px 44px;
+            font-weight: 600;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .msg-box .btn-close-msg:hover {
+            background: #e60000;
+            transform: scale(0.96);
+        }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes popIn { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .header-title { font-size: 17px; }
+            .quick-links { grid-template-columns: repeat(2, 1fr); }
+            .quick-link-item { padding: 12px 6px; }
+            .quick-link-item i { font-size: 20px; }
+            .quick-link-item span { font-size: 10px; }
+            .help-card { padding: 14px; }
+            .help-card-title { font-size: 14px; }
+            .contact-support { padding: 16px; margin: 8px 16px 16px; }
+            .contact-btn { padding: 8px 16px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-left">
+            <a href="chating.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <div class="header-title"><i class="fas fa-circle-info"></i> Help & Support</div>
+        </div>
+        <div class="header-actions">
+            <a href="searching .html" class="header-action-btn"><i class="fas fa-search"></i></a>
+            <a href="settings.html" class="header-action-btn"><i class="fas fa-ellipsis-h"></i></a>
+        </div>
+    </div>
+
+    <!-- ===== SEARCH ===== -->
+    <div class="search-box">
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="helpSearch" placeholder="Search help articles..." />
+        </div>
+    </div>
+
+    <!-- ===== QUICK LINKS ===== -->
+    <div class="quick-links">
+        <div class="quick-link-item" onclick="showMsg('📱 Getting Started', 'Welcome to Gramite! Here\'s how to get started with your account.')">
+            <i class="fas fa-rocket"></i>
+            <span>Getting Started</span>
+        </div>
+        <div class="quick-link-item" onclick="showMsg('🔒 Privacy', 'Your privacy is important to us. Learn about our privacy settings.')">
+            <i class="fas fa-shield-halved"></i>
+            <span>Privacy</span>
+        </div>
+        <div class="quick-link-item" onclick="showMsg('💬 Messages', 'Learn how to send, receive, and manage your messages.')">
+            <i class="fas fa-message"></i>
+            <span>Messages</span>
+        </div>
+        <div class="quick-link-item" onclick="showMsg('🔔 Notifications', 'Manage your notification preferences and stay updated.')">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </div>
+    </div>
+
+    <!-- ===== HELP SECTIONS ===== -->
+    <div class="help-section">
+        <div class="section-title"><i class="fas fa-circle-question"></i> Frequently Asked Questions</div>
+
+        <!-- FAQ 1 -->
+        <div class="help-card" onclick="toggleHelp(this)">
+            <div class="help-card-header">
+                <div class="help-card-title"><i class="fas fa-comment"></i> How do I send a message?</div>
+                <button class="help-card-toggle"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="help-card-body">
+                <p>To send a message on Gramite:</p>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> Tap the <strong>Message</strong> icon at the bottom of the screen</li>
+                    <li><i class="fas fa-arrow-right"></i> Tap the <strong>+</strong> button to start a new conversation</li>
+                    <li><i class="fas fa-arrow-right"></i> Search for the person you want to message</li>
+                    <li><i class="fas fa-arrow-right"></i> Type your message and tap <strong>Send</strong></li>
+                </ul>
+                <div class="help-tip">
+                    <i class="fas fa-lightbulb" style="color:var(--gold);margin-right:6px;"></i>
+                    <strong>Tip:</strong> You can also send photos, videos, and voice messages by tapping the attachment icon.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="help-card" onclick="toggleHelp(this)">
+            <div class="help-card-header">
+                <div class="help-card-title"><i class="fas fa-user-plus"></i> How do I follow someone?</div>
+                <button class="help-card-toggle"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="help-card-body">
+                <p>Following someone on Gramite is easy:</p>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> Go to the person's profile page</li>
+                    <li><i class="fas fa-arrow-right"></i> Tap the <strong>Follow</strong> button on their profile</li>
+                    <li><i class="fas fa-arrow-right"></i> You'll start seeing their posts in your feed</li>
+                </ul>
+                <div class="help-tip">
+                    <i class="fas fa-lightbulb" style="color:var(--gold);margin-right:6px;"></i>
+                    <strong>Tip:</strong> You can unfollow someone at any time by tapping the <strong>Following</strong> button on their profile.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="help-card" onclick="toggleHelp(this)">
+            <div class="help-card-header">
+                <div class="help-card-title"><i class="fas fa-shield"></i> How do I report a problem?</div>
+                <button class="help-card-toggle"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="help-card-body">
+                <p>If you encounter an issue or need to report something:</p>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> Go to <strong>Settings</strong> → <strong>Report a Problem</strong></li>
+                    <li><i class="fas fa-arrow-right"></i> Select the type of issue you're experiencing</li>
+                    <li><i class="fas fa-arrow-right"></i> Provide a detailed description and any screenshots</li>
+                    <li><i class="fas fa-arrow-right"></i> Our support team will review and respond within 24 hours</li>
+                </ul>
+                <div class="help-tip">
+                    <i class="fas fa-lightbulb" style="color:var(--gold);margin-right:6px;"></i>
+                    <strong>Tip:</strong> For urgent issues, use the <strong>Contact Support</strong> option below for faster assistance.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="help-card" onclick="toggleHelp(this)">
+            <div class="help-card-header">
+                <div class="help-card-title"><i class="fas fa-palette"></i> How do I customize my profile?</div>
+                <button class="help-card-toggle"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="help-card-body">
+                <p>Customize your profile to make it your own:</p>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> Go to your <strong>Profile</strong> page</li>
+                    <li><i class="fas fa-arrow-right"></i> Tap the <strong>Edit Profile</strong> button (pencil icon)</li>
+                    <li><i class="fas fa-arrow-right"></i> Update your profile picture, bio, and display name</li>
+                    <li><i class="fas fa-arrow-right"></i> Tap <strong>Save</strong> to apply your changes</li>
+                </ul>
+                <div class="help-tip">
+                    <i class="fas fa-lightbulb" style="color:var(--gold);margin-right:6px;"></i>
+                    <strong>Tip:</strong> You can also add links to your social media profiles in the edit section.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="help-card" onclick="toggleHelp(this)">
+            <div class="help-card-header">
+                <div class="help-card-title"><i class="fas fa-bell"></i> How do I manage notifications?</div>
+                <button class="help-card-toggle"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="help-card-body">
+                <p>Control your notification preferences:</p>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> Go to <strong>Settings</strong> → <strong>Notifications</strong></li>
+                    <li><i class="fas fa-arrow-right"></i> Toggle notifications on/off for likes, comments, and new followers</li>
+                    <li><i class="fas fa-arrow-right"></i> Choose whether to receive push notifications or email alerts</li>
+                </ul>
+                <div class="help-tip">
+                    <i class="fas fa-lightbulb" style="color:var(--gold);margin-right:6px;"></i>
+                    <strong>Tip:</strong> You can also mute notifications from specific users by going to their profile and tapping the bell icon.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 6 -->
+        <div class="help-card" onclick="toggleHelp(this)">
+            <div class="help-card-header">
+                <div class="help-card-title"><i class="fas fa-lock"></i> How do I change my password?</div>
+                <button class="help-card-toggle"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="help-card-body">
+                <p>Keep your account secure by updating your password:</p>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> Go to <strong>Settings</strong> → <strong>Security</strong></li>
+                    <li><i class="fas fa-arrow-right"></i> Tap <strong>Change Password</strong></li>
+                    <li><i class="fas fa-arrow-right"></i> Enter your current password and new password</li>
+                    <li><i class="fas fa-arrow-right"></i> Tap <strong>Save</strong> to confirm the change</li>
+                </ul>
+                <div class="help-tip">
+                    <i class="fas fa-lightbulb" style="color:var(--gold);margin-right:6px;"></i>
+                    <strong>Tip:</strong> Use a strong password with at least 8 characters, including numbers and special characters.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONTACT SUPPORT ===== -->
+    <div class="contact-support">
+        <h3><i class="fas fa-headset" style="color:var(--primary);"></i> Need more help?</h3>
+        <p>Our support team is available 24/7 to assist you with any questions or issues.</p>
+        <div class="contact-actions">
+            <a href="chating.html" class="contact-btn contact-btn-primary"><i class="fas fa-comment"></i> Chat with Support</a>
+            <button class="contact-btn contact-btn-outline" onclick="showMsg('📧 Email Support', 'support@gramite.com\nWe\'ll respond within 24 hours.')"><i class="fas fa-envelope"></i> Email Us</button>
+            <button class="contact-btn contact-btn-outline" onclick="showMsg('📞 Call Support', 'Call us at: +27 78 867 2222\nAvailable 24/7')"><i class="fas fa-phone"></i> Call</button>
+        </div>
+    </div>
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <div class="bottom-nav">
+        <a href="Home.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="chating.html" class="nav-item active"><i class="fas fa-message"></i><span>Message</span></a>
+        <a href="posting.html" class="nav-item"><i class="fas fa-plus-square"></i><span>Create</span></a>
+        
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+    </div>
+
+    <!-- ===== MESSAGE BOX ===== -->
+    <div class="msg-overlay" id="msgOverlay"></div>
+    <div class="msg-box" id="msgBox">
+        <div class="icon-big"><i class="fas fa-bolt"></i></div>
+        <h3 id="msgTitle">✨</h3>
+        <p id="msgText">Hello</p>
+        <button class="btn-close-msg" id="msgCloseBtn">Got it</button>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        // ----- DOM refs -----
+        const msgOverlay = document.getElementById('msgOverlay');
+        const msgBox = document.getElementById('msgBox');
+        const msgTitle = document.getElementById('msgTitle');
+        const msgText = document.getElementById('msgText');
+        const msgCloseBtn = document.getElementById('msgCloseBtn');
+        const searchInput = document.getElementById('helpSearch');
+
+        // ----- Message System -----
+        window.showMsg = function(title, text) {
+            msgTitle.textContent = title;
+            msgText.textContent = text;
+            msgBox.style.display = 'flex';
+            msgOverlay.style.display = 'block';
+        };
+
+        function hideMsg() {
+            msgBox.style.display = 'none';
+            msgOverlay.style.display = 'none';
+        }
+
+        msgCloseBtn.addEventListener('click', hideMsg);
+        msgOverlay.addEventListener('click', hideMsg);
+
+        // ----- Toggle Help Cards -----
+        window.toggleHelp = function(card) {
+            const body = card.querySelector('.help-card-body');
+            const toggle = card.querySelector('.help-card-toggle i');
+            const isOpen = body.classList.contains('open');
+
+            // Close all other help cards
+            document.querySelectorAll('.help-card-body').forEach(b => {
+                if (b !== body) {
+                    b.classList.remove('open');
+                    b.closest('.help-card').querySelector('.help-card-toggle i').className = 'fas fa-chevron-down';
+                }
+            });
+
+            if (isOpen) {
+                body.classList.remove('open');
+                toggle.className = 'fas fa-chevron-down';
+            } else {
+                body.classList.add('open');
+                toggle.className = 'fas fa-chevron-up';
+            }
+        };
+
+        // ----- Search Functionality -----
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.help-card');
+
+            cards.forEach(card => {
+                const title = card.querySelector('.help-card-title').textContent.toLowerCase();
+                const body = card.querySelector('.help-card-body')?.textContent?.toLowerCase() || '';
+                const match = title.includes(query) || body.includes(query);
+                card.style.display = match ? 'block' : 'none';
+            });
+        });
+
+        // ----- Nav Items (intercept for demo) -----
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && !href.startsWith('#')) {
+                    e.preventDefault();
+                    const label = this.querySelector('span')?.textContent || 'page';
+                    showMsg('🚀 Navigating', `Going to ${label}...`);
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 400);
+                }
+            });
+        });
+
+        // ----- Header action links -----
+        document.querySelectorAll('.header-action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href) {
+                    e.preventDefault();
+                    showMsg('🔍', `Opening ${this.querySelector('i')?.className || 'page'}...`);
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 400);
+                }
+            });
+        });
+
+        // ----- Back button -----
+        document.querySelector('.back-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'message.html';
+        });
+
+        console.log('📋 Help & Support page loaded — fully functional.');
+        console.log('🔗 Back → message.html | Bottom nav: Home, Message, Create, Activity, Profile');
+    })();
+</script>
+</body>
+</html>

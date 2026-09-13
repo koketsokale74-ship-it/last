@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Gramite · Celebrity Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff1a1a;
+            --primary-soft: #ff3333;
+            --primary-glow: rgba(255, 26, 26, 0.4);
+            --gold: #ffd700;
+            --verified: #1da1f2;
+            --dark: #0c0c10;
+            --darker: #07070a;
+            --card-bg: #16161e;
+            --card-hover: #1f1f2a;
+            --surface: #1c1c26;
+            --border-dim: #2a2a36;
+            --text-main: #f0f0f8;
+            --text-muted: #9494a3;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            background-image: radial-gradient(circle at 30% 10%, #1a0e0e 0%, #0c0c10 80%);
+        }
+
+        .app-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(7, 7, 10, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-dim);
+            z-index: 100;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .header-actions {
+            display: flex;
+            gap: 14px;
+        }
+        .header-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.25s;
+            padding: 4px;
+            text-decoration: none;
+        }
+        .header-action-btn:hover {
+            color: var(--primary);
+        }
+
+        /* ===== CELEBRITY HEADER ===== */
+        .celebrity-header {
+            position: relative;
+            padding: 20px 16px 16px;
+            text-align: center;
+        }
+        .celebrity-bg-glow {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, #ff1a1a 0%, #ff1a1a 30%, transparent 70%);
+            opacity: 0.35;
+            filter: blur(50px);
+            z-index: 0;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .profile-pic-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 16px;
+            z-index: 2;
+        }
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            object-fit: cover;
+            box-shadow: 0 0 60px var(--primary-glow);
+            transition: transform 0.4s ease;
+        }
+        .profile-pic:hover {
+            transform: scale(1.02);
+        }
+
+        .verified-badge {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: var(--verified);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--dark);
+            box-shadow: 0 0 20px rgba(29, 161, 242, 0.4);
+        }
+        .verified-badge i {
+            color: white;
+            font-size: 16px;
+        }
+
+        .user-info {
+            position: relative;
+            z-index: 2;
+        }
+        .username {
+            font-size: 26px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .username .gold-star {
+            color: var(--gold);
+            font-size: 20px;
+        }
+        .user-handle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-top: 2px;
+        }
+        .user-bio {
+            font-size: 14px;
+            margin: 10px 0 16px;
+            opacity: 0.85;
+            padding: 0 10px;
+            line-height: 1.6;
+        }
+
+        .follow-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin: 6px 0 18px;
+        }
+        .stat-item {
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+        }
+        .stat-item:hover {
+            background: var(--card-hover);
+            transform: translateY(-2px);
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+        .btn-primary:hover {
+            background: #e60000;
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-dim);
+        }
+        .btn-outline:hover {
+            background: var(--card-hover);
+            border-color: var(--text-muted);
+        }
+        .btn-gold {
+            background: var(--gold);
+            color: var(--dark);
+            font-weight: 700;
+        }
+        .btn-gold:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: #00cc66;
+            color: white;
+        }
+
+        /* ===== HIGHLIGHTS ===== */
+        .highlights-section {
+            padding: 0 16px 20px;
+        }
+        .highlights-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .highlights-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 4px 0 12px;
+            scrollbar-width: none;
+        }
+        .highlights-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .highlight-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 72px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+        .highlight-item:hover {
+            transform: translateY(-3px);
+        }
+        .highlight-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px;
+        }
+        .highlight-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--dark);
+        }
+        .highlight-name {
+            font-size: 11px;
+            text-align: center;
+            max-width: 72px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-dim);
+            margin: 0 16px 18px;
+            gap: 0;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 14px 0;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .tab i {
+            font-size: 15px;
+        }
+        .tab.active {
+            color: var(--primary);
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 6px 6px 0 0;
+        }
+        .tab:hover {
+            color: white;
+        }
+
+        /* ===== CONTENT SECTIONS ===== */
+        .content-section {
+            display: none;
+            padding: 0 16px 20px;
+            animation: fadeUp 0.3s ease;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== POSTS GRID ===== */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+        }
+        .grid-item {
+            aspect-ratio: 9/16;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            cursor: pointer;
+            background: var(--card-bg);
+        }
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .grid-item:hover img {
+            transform: scale(1.05);
+        }
+        .grid-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8px 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+        }
+        .grid-item .overlay i {
+            color: var(--primary);
+        }
+        .grid-item .overlay span {
+            color: white;
+            font-weight: 500;
+        }
+        .live-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .live-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse-dot 1.4s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+
+        /* ===== FEATURED ===== */
+        .featured-item {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-dim);
+            transition: 0.25s;
+        }
+        .featured-item:hover {
+            border-color: var(--primary-soft);
+        }
+        .featured-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+        .featured-details {
+            padding: 14px 16px;
+        }
+        .featured-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .featured-info {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .featured-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .featured-btn {
+            padding: 7px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+        }
+        .featured-btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .featured-btn-primary:hover {
+            background: #e60000;
+            transform: translateY(-2px);
+        }
+        .featured-btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-dim);
+        }
+        .featured-btn-outline:hover {
+            background: var(--card-hover);
+        }
+
+        /* ===== EVENTS ===== */
+        .event-item {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border-dim);
+            transition: 0.25s;
+        }
+        .event-item:hover {
+            border-color: var(--primary-soft);
+        }
+        .event-date {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .event-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .event-location {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            border-top: 1px solid var(--border-dim);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 14px;
+            backdrop-filter: blur(12px);
+            max-width: 640px;
+            margin: 0 auto;
+            z-index: 200;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 4px;
+            transition: 0.2s;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-item i {
+            font-size: 22px;
+            transition: 0.2s;
+        }
+        .nav-item.active {
+            color: var(--primary);
+        }
+        .nav-item.active i {
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+        .nav-item:hover {
+            color: white;
+        }
+
+        /* ===== MESSAGE BOX ===== */
+        .msg-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            display: none;
+            animation: fadeIn 0.2s;
+        }
+        .msg-box {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px 28px;
+            max-width: 360px;
+            width: 90%;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-heavy);
+            animation: popIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        }
+        .msg-box .icon-big {
+            background: var(--primary);
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 4px;
+        }
+        .msg-box h3 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .msg-box p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 4px 0 8px;
+        }
+        .msg-box .btn-close-msg {
+            background: var(--primary);
+            border: none;
+            border-radius: 60px;
+            padding: 12px 44px;
+            font-weight: 600;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .msg-box .btn-close-msg:hover {
+            background: #e60000;
+            transform: scale(0.96);
+        }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes popIn { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .profile-pic-wrapper { width: 110px; height: 110px; }
+            .verified-badge { width: 26px; height: 26px; }
+            .verified-badge i { font-size: 13px; }
+            .username { font-size: 21px; }
+            .stat-value { font-size: 17px; }
+            .follow-stats { gap: 18px; }
+            .action-buttons .btn { padding: 8px 14px; font-size: 13px; }
+            .highlight-circle { width: 62px; height: 62px; }
+            .highlight-name { font-size: 10px; max-width: 62px; }
+            .tab { font-size: 12px; padding: 12px 0; }
+            .tab i { font-size: 13px; }
+            .content-grid { gap: 2px; }
+            .grid-item .overlay { font-size: 10px; padding: 4px 6px; }
+            .featured-name { font-size: 15px; }
+            .event-title { font-size: 15px; }
+            .header-title { font-size: 17px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-title">Celebrity Profile</div>
+        <div class="header-actions">
+            <a href="searching .html" class="header-action-btn"><i class="fas fa-search"></i></a>
+            <a href="settings.html" class="header-action-btn"><i class="fas fa-ellipsis-h"></i></a>
+        </div>
+    </div>
+
+    <!-- ===== CELEBRITY HEADER ===== -->
+    <div class="celebrity-header">
+        <div class="celebrity-bg-glow"></div>
+
+        <div class="profile-pic-wrapper">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Celebrity" class="profile-pic" />
+            <div class="verified-badge"><i class="fas fa-check"></i></div>
+        </div>
+
+        <div class="user-info">
+            <div class="username">
+                Emma Johnson
+                <span class="gold-star"><i class="fas fa-star"></i></span>
+            </div>
+            <div class="user-handle">@emmajohnson · verified</div>
+            <div class="user-bio">Actress • Singer • Model • Official account • For business: contact@emmajohnson.com</div>
+
+            <div class="follow-stats">
+                <button class="stat-item" onclick="switchTab('posts')">
+                    <div class="stat-value">1.2K</div>
+                    <div class="stat-label">Posts</div>
+                </button>
+                <button class="stat-item" onclick="switchTab('followers')">
+                    <div class="stat-value">12.5M</div>
+                    <div class="stat-label">Followers</div>
+                </button>
+                <button class="stat-item" onclick="showMsg('Following', 'You follow 348 amazing accounts.')">
+                    <div class="stat-value">348</div>
+                    <div class="stat-label">Following</div>
+                </button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="followBtn"><i class="fas fa-plus"></i> Follow</button>
+                <a href="chating.html" class="btn btn-outline"><i class="fas fa-message"></i> Message</a>
+                <button class="btn btn-gold" onclick="showMsg('✨ Subscribe', 'You are now subscribed to Emma Johnson\'s exclusive content!')"><i class="fas fa-star"></i> Subscribe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== HIGHLIGHTS ===== -->
+    <div class="highlights-section">
+        <div class="highlights-title"><i class="fas fa-circle-play" style="color:var(--primary);"></i> Highlights</div>
+        <div class="highlights-scroll">
+            <a href="#" class="highlight-item" onclick="showMsg('🎬 Movie Premiere', 'Exclusive behind-the-scenes from her latest movie.')">
+                <div class="highlight-circle"><img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" alt="Movie" class="highlight-image" /></div>
+                <span class="highlight-name">Movie Premiere</span>
+            </a>
+            <a href="#" class="highlight-item" onclick="showMsg('🎭 Backstage', 'Exclusive backstage moments from her world tour.')">
+                <div class="highlight-circle"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" alt="Backstage" class="highlight-image" /></div>
+                <span class="highlight-name">Backstage</span>
+            </a>
+            <a href="#" class="highlight-item" onclick="showMsg('✈️ Travel', 'Travel diaries from her amazing adventures around the world.')">
+                <div class="highlight-circle"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" alt="Travel" class="highlight-image" /></div>
+                <span class="highlight-name">Travel</span>
+            </a>
+            <a href="#" class="highlight-item" onclick="showMsg('🏆 Awards', 'All her award wins and nominations.')">
+                <div class="highlight-circle"><img src="https://images.unsplash.com/photo-1560060144-9ac036c8dc2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" alt="Awards" class="highlight-image" /></div>
+                <span class="highlight-name">Awards</span>
+            </a>
+            <a href="#" class="highlight-item" onclick="showMsg('💖 Charity', 'Her charity work and foundation updates.')">
+                <div class="highlight-circle"><img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" alt="Charity" class="highlight-image" /></div>
+                <span class="highlight-name">Charity</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ===== TABS ===== -->
+    <div class="tabs">
+        <button class="tab active" data-tab="posts"><i class="fas fa-grid-2"></i> Posts</button>
+        <button class="tab" data-tab="featured"><i class="fas fa-star"></i> Featured</button>
+        <button class="tab" data-tab="events"><i class="fas fa-calendar"></i> Events</button>
+    </div>
+
+    <!-- ===== POSTS ===== -->
+    <div class="content-section active" id="posts-section">
+        <div class="content-grid">
+            <div class="grid-item" onclick="showMsg('📸 Post', '245K likes · 3.2K comments')">
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600&q=80" alt="post" />
+                <div class="overlay"><i class="fas fa-heart"></i><span>245K</span><i class="fas fa-comment" style="margin-left:10px;"></i><span>3.2K</span></div>
+            </div>
+            <div class="grid-item" onclick="showMsg('📸 Post', '189K likes · 2.8K comments')">
+                <img src="https://images.unsplash.com/photo-1539109136883-14d43525d5e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600&q=80" alt="post" />
+                <div class="overlay"><i class="fas fa-heart"></i><span>189K</span><i class="fas fa-comment" style="margin-left:10px;"></i><span>2.8K</span></div>
+            </div>
+            <div class="grid-item" onclick="showMsg('📸 Post', '312K likes · 4.1K comments')">
+                <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600&q=80" alt="post" />
+                <div class="overlay"><i class="fas fa-heart"></i><span>312K</span><i class="fas fa-comment" style="margin-left:10px;"></i><span>4.1K</span></div>
+            </div>
+            <div class="grid-item" onclick="showMsg('📸 Post', '278K likes · 3.5K comments')">
+                <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600&q=80" alt="post" />
+                <div class="overlay"><i class="fas fa-heart"></i><span>278K</span><i class="fas fa-comment" style="margin-left:10px;"></i><span>3.5K</span></div>
+            </div>
+            <div class="grid-item" onclick="showMsg('🔴 LIVE', '421K likes · 5.3K comments · Watch now!')">
+                <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600&q=80" alt="live" />
+                <div class="live-badge">LIVE</div>
+                <div class="overlay"><i class="fas fa-heart"></i><span>421K</span><i class="fas fa-comment" style="margin-left:10px;"></i><span>5.3K</span></div>
+            </div>
+            <div class="grid-item" onclick="showMsg('📸 Post', '198K likes · 2.7K comments')">
+                <img src="https://images.unsplash.com/photo-1560060144-9ac036c8dc2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600&q=80" alt="post" />
+                <div class="overlay"><i class="fas fa-heart"></i><span>198K</span><i class="fas fa-comment" style="margin-left:10px;"></i><span>2.7K</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FEATURED ===== -->
+    <div class="content-section" id="featured-section">
+        <div class="featured-item">
+            <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450&q=80" alt="Movie" class="featured-image" />
+            <div class="featured-details">
+                <div class="featured-name">New Movie: Midnight Shadows</div>
+                <div class="featured-info">Coming this summer. Watch the official trailer and get ready for the premiere.</div>
+                <div class="featured-actions">
+                    <a href="#" class="featured-btn featured-btn-primary" onclick="showMsg('🎬 Trailer', 'Playing official trailer for Midnight Shadows...')"><i class="fas fa-play"></i> Watch Trailer</a>
+                    <button class="featured-btn featured-btn-outline" onclick="showMsg('🔔 Reminder', 'We\'ll remind you 1 day before the premiere.')"><i class="fas fa-calendar"></i> Remind Me</button>
+                </div>
+            </div>
+        </div>
+        <div class="featured-item">
+            <img src="https://images.unsplash.com/photo-1571330735066-03aaa9429d89?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450&q=80" alt="Music" class="featured-image" />
+            <div class="featured-details">
+                <div class="featured-name">New Single: Silent Whispers</div>
+                <div class="featured-info">My new single is out now on all streaming platforms! Listen and share your thoughts.</div>
+                <div class="featured-actions">
+                    <a href="#" class="featured-btn featured-btn-primary" onclick="showMsg('🎵 Music', 'Streaming Silent Whispers on all platforms...')"><i class="fas fa-music"></i> Listen Now</a>
+                    <button class="featured-btn featured-btn-outline" onclick="showMsg('📤 Share', 'Share this track with your friends!')"><i class="fas fa-share"></i> Share</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== EVENTS ===== -->
+    <div class="content-section" id="events-section">
+        <div class="event-item">
+            <div class="event-date">June 15, 2025 • 7:00 PM</div>
+            <div class="event-title">Movie Premiere: Midnight Shadows</div>
+            <div class="event-location"><i class="fas fa-map-marker-alt"></i> Hollywood, Los Angeles</div>
+            <div class="featured-actions">
+                <a href="#" class="featured-btn featured-btn-primary" onclick="showMsg('🎫 Tickets', 'Booking tickets for Midnight Shadows premiere...')"><i class="fas fa-ticket-alt"></i> Get Tickets</a>
+                <button class="featured-btn featured-btn-outline" onclick="showMsg('🔔 Reminder', 'We\'ll remind you 1 day before.')"><i class="fas fa-bell"></i> Remind Me</button>
+            </div>
+        </div>
+        <div class="event-item">
+            <div class="event-date">June 22, 2025 • 8:00 PM</div>
+            <div class="event-title">Live Concert: Summer Nights Tour</div>
+            <div class="event-location"><i class="fas fa-map-marker-alt"></i> Madison Square Garden, New York</div>
+            <div class="featured-actions">
+                <a href="#" class="featured-btn featured-btn-primary" onclick="showMsg('🎫 Tickets', 'Booking tickets for Summer Nights Tour...')"><i class="fas fa-ticket-alt"></i> Get Tickets</a>
+                <button class="featured-btn featured-btn-outline" onclick="showMsg('🔔 Reminder', 'We\'ll remind you 1 day before.')"><i class="fas fa-bell"></i> Remind Me</button>
+            </div>
+        </div>
+        <div class="event-item">
+            <div class="event-date">July 5, 2025 • 6:30 PM</div>
+            <div class="event-title">Charity Gala: Hope for Children Foundation</div>
+            <div class="event-location"><i class="fas fa-map-marker-alt"></i> The Ritz-Carlton, San Francisco</div>
+            <div class="featured-actions">
+                <a href="#" class="featured-btn featured-btn-primary" onclick="showMsg('🎫 Tickets', 'Booking tickets for Charity Gala...')"><i class="fas fa-ticket-alt"></i> Get Tickets</a>
+                <button class="featured-btn featured-btn-outline" onclick="showMsg('🔔 Reminder', 'We\'ll remind you 1 day before.')"><i class="fas fa-bell"></i> Remind Me</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <div class="bottom-nav">
+        <a href="Home.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="chating.html" class="nav-item"><i class="fas fa-message"></i><span>Message</span></a>
+        <a href="posting.html" class="nav-item"><i class="fas fa-plus-square"></i><span>Create</span></a>
+        <a href="activities.html" class="nav-item"><i class="fas fa-heart"></i><span>Activity</span></a>
+        <a href="profile.html" class="nav-item active"><i class="fas fa-user"></i><span>Profile</span></a>
+    </div>
+
+    <!-- ===== MESSAGE BOX ===== -->
+    <div class="msg-overlay" id="msgOverlay"></div>
+    <div class="msg-box" id="msgBox">
+        <div class="icon-big"><i class="fas fa-bolt"></i></div>
+        <h3 id="msgTitle">✨</h3>
+        <p id="msgText">Hello</p>
+        <button class="btn-close-msg" id="msgCloseBtn">Got it</button>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        // ----- DOM refs -----
+        const tabs = document.querySelectorAll('.tab');
+        const sections = {
+            posts: document.getElementById('posts-section'),
+            featured: document.getElementById('featured-section'),
+            events: document.getElementById('events-section')
+        };
+        const followBtn = document.getElementById('followBtn');
+
+        // ----- Message System -----
+        const msgOverlay = document.getElementById('msgOverlay');
+        const msgBox = document.getElementById('msgBox');
+        const msgTitle = document.getElementById('msgTitle');
+        const msgText = document.getElementById('msgText');
+        const msgCloseBtn = document.getElementById('msgCloseBtn');
+
+        window.showMsg = function(title, text) {
+            msgTitle.textContent = title;
+            msgText.textContent = text;
+            msgBox.style.display = 'flex';
+            msgOverlay.style.display = 'block';
+        };
+
+        function hideMsg() {
+            msgBox.style.display = 'none';
+            msgOverlay.style.display = 'none';
+        }
+
+        msgCloseBtn.addEventListener('click', hideMsg);
+        msgOverlay.addEventListener('click', hideMsg);
+
+        // ----- Tab Switching (global) -----
+        window.switchTab = function(tabName) {
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab[data-tab="${tabName}"]`)?.classList.add('active');
+            Object.keys(sections).forEach(key => {
+                sections[key].classList.toggle('active', key === tabName);
+            });
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const name = tab.dataset.tab;
+                if (name === 'posts') switchTab('posts');
+                else if (name === 'featured') switchTab('featured');
+                else if (name === 'events') switchTab('events');
+            });
+        });
+
+        // ----- Follow Button -----
+        let isFollowing = false;
+        followBtn.addEventListener('click', function() {
+            isFollowing = !isFollowing;
+            if (isFollowing) {
+                this.innerHTML = '<i class="fas fa-check"></i> Following';
+                this.classList.add('btn-success');
+                this.classList.remove('btn-primary');
+                showMsg('✅ Followed', 'You are now following Emma Johnson!');
+            } else {
+                this.innerHTML = '<i class="fas fa-plus"></i> Follow';
+                this.classList.remove('btn-success');
+                this.classList.add('btn-primary');
+                showMsg('↩️ Unfollowed', 'You unfollowed Emma Johnson.');
+            }
+        });
+
+        // ----- Nav Items (intercept for demo) -----
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && !href.startsWith('#')) {
+                    e.preventDefault();
+                    const label = this.querySelector('span')?.textContent || 'page';
+                    showMsg('🚀 Navigating', `Going to ${label}...`);
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 400);
+                }
+            });
+        });
+
+        // ----- Header action links (search, settings) -----
+        document.querySelectorAll('.header-action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href) {
+                    e.preventDefault();
+                    showMsg('🔍', `Opening ${this.querySelector('i')?.className || 'page'}...`);
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 400);
+                }
+            });
+        });
+
+        // ----- Highlight items (already have onclick) -----
+        // ----- Grid items (already have onclick) -----
+
+        console.log('🌟 Celebrity Profile loaded — fully linkable.');
+        console.log('🔗 Navigation: Home → index.html | Message → message.html | Create → create.html | Activity → notification.html | Profile → profile.html');
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoHub - Watch Reels, Videos & Courses</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0050;
+            --primary-dark: #e60046;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --gold: #ffd700;
+            --verified: #1da1f2;
+            --accent-green: #00cc66;
+            --accent-blue: #0099ff;
+            --accent-purple: #9933ff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--darker);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .header-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .header-action-btn:hover {
+            color: var(--primary);
+        }
+        
+        /* Main container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        /* Section headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0 20px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        
+        .view-all {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--dark-gray);
+            margin: 20px 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            color: var(--gray);
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* Content sections */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        /* Video grids */
+        .video-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .reels-grid {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+        
+        .long-videos-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+        
+        .courses-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+        
+        /* Video cards */
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9/16;
+        }
+        
+        .long-video .video-thumbnail {
+            aspect-ratio: 16/9;
+        }
+        
+        .course-card .video-thumbnail {
+            aspect-ratio: 16/9;
+            border-bottom: 3px solid var(--accent-purple);
+        }
+        
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--light);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .video-info {
+            padding: 12px;
+        }
+        
+        .video-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .video-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 13px;
+        }
+        
+        .video-views, .video-likes {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Course cards */
+        .course-card {
+            position: relative;
+        }
+        
+        .course-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent-purple);
+            color: var(--light);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .course-info {
+            padding: 15px;
+        }
+        
+        .course-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .course-instructor {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .course-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .course-rating, .course-duration {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .course-progress {
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background: var(--dark-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-purple);
+            border-radius: 3px;
+            width: 65%; /* Example progress */
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: var(--gray);
+            text-align: right;
+        }
+        
+        .course-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        /* Video player overlay */
+        .video-player {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .video-player.active {
+            display: flex;
+        }
+        
+        .player-container {
+            width: 90%;
+            max-width: 900px;
+            position: relative;
+        }
+        
+        .close-player {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--light);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .player-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--light);
+            font-size: 20px;
+            border-radius: 8px;
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 5px;
+            min-width: 50px;
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 19px;
+            }
+            
+            .video-grid {
+                gap: 15px;
+            }
+            
+            .reels-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .long-videos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .courses-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            
+            .video-title {
+                font-size: 14px;
+            }
+            
+            .course-title {
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 15px;
+            }
+            
+            .header-title {
+                font-size: 18px;
+            }
+            
+            .main-container {
+                padding: 15px;
+            }
+            
+            .section-title {
+                font-size: 17px;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .reels-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            
+            .long-videos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-info, .course-info {
+                padding: 10px;
+            }
+            
+            .nav-item i {
+                font-size: 18px;
+            }
+            
+            .nav-item {
+                font-size: 9px;
+                min-width: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">VideoHub</div>
+        <div class="header-actions">
+            <button class="header-action-btn"><i class="fas fa-search"></i></button>
+            <button class="header-action-btn"><i class="fas fa-bell"></i></button>
+            <button class="header-action-btn"><i class="fas fa-user"></i></button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" data-tab="reels">Reels</div>
+            <div class="tab" data-tab="long-videos">Videos</div>
+            <div class="tab" data-tab="courses">Courses</div>
+        </div>
+        
+        <!-- Reels Section -->
+        <div class="content-section active" id="reels-section">
+            <div class="section-header">
+                <h2 class="section-title">Trending Reels</h2>
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </div>
+            
+            <div class="video-grid reels-grid">
+                <!-- Reel 1 -->
+                <div class="video-card reel-card">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHJlZWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Reel">
+                        <div class="video-duration">0:15</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Morning workout routine</h3>
+                        <div class="video-stats">
+                            <span class="video-views"><i class="fas fa-play"></i> 245K</span>
+                            <span class="video-likes"><i class="fas fa-heart"></i> 12.5K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reel 2 -->
+                <div class="video-card reel-card">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1616469829476-8953c5655574?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHJlZWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Reel">
+                        <div class="video-duration">0:22</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Quick makeup tutorial</h3>
+                        <div class="video-stats">
+                            <span class="video-views"><i class="fas fa-play"></i> 189K</span>
+                            <span class="video-likes"><i class="fas fa-heart"></i> 9.8K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reel 3 -->
+                <div class="video-card reel-card">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHJlZWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Reel">
+                        <div class="video-duration">0:18</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Cooking hack you need to know</h3>
+                        <div class="video-stats">
+                            <span class="video-views"><i class="fas fa-play"></i> 312K</span>
+                            <span class="video-likes"><i class="fas fa-heart"></i> 21.3K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reel 4 -->
+                <div class="video-card reel-card">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHJlZWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Reel">
+                        <div class="video-duration">0:30</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Travel destination inspiration</h3>
+                        <div class="video-stats">
+                            <span class="video-views"><i class="fas fa-play"></i> 421K</span>
+                            <span class="video-likes"><i class="fas fa-heart"></i> 28.7K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Long Videos Section -->
+        <div class="content-section" id="long-videos-section">
+            <div class="section-header">
+                <h2 class="section-title">Trending Videos</h2>
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </div>
+            
+            <div class="video-grid long-videos-grid">
+                <!-- Long Video 1 -->
+                <div class="video-card long-video">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1559703248-dcaaec9fab78?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bG9uZyUyMHZpZGVvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Long Video">
+                        <div class="video-duration">12:45</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">How to Build a Successful YouTube Channel in 2023</h3>
+                        <div class="video-stats">
+                            <span class="video-views"><i class="fas fa-play"></i> 2.5M</span>
+                            <span class="video-likes"><i class="fas fa-heart"></i> 125K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Long Video 2 -->
+                <div class="video-card long-video">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1593121925319-6d5e2dd0e9f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bG9uZyUyMHZpZGVvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Long Video">
+                        <div class="video-duration">24:18</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Cooking the Perfect Steak: A Masterclass</h3>
+                        <div class="video-stats">
+                            <span class="video-views"><i class="fas fa-play"></i> 3.1M</span>
+                            <span class="video-likes"><i class="fas fa-heart"></i> 198K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Long Video 3 -->
+                <div class="video-card long-video">
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGxvbmclMjB2aWRlb3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Long Video">
+                        <div class="video-duration">18:32</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Travel Vlog: 10 Days in Bali</h3>
+                        <div class="video-stats">
+                            <span class="video-views"><i class="fas fa-play"></i> 4.2M</span>
+                            <span class="video-likes"><i class="fas fa-heart"></i> 312K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Courses Section -->
+        <div class="content-section" id="courses-section">
+            <div class="section-header">
+                <h2 class="section-title">Featured Courses</h2>
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </div>
+            
+            <div class="video-grid courses-grid">
+                <!-- Course 1 -->
+                <div class="video-card course-card">
+                    <div class="course-badge">BESTSELLER</div>
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y291cnNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Course">
+                    </div>
+                    <div class="course-info">
+                        <h3 class="course-title">Digital Marketing Masterclass: Get Your First 1,000 Customers</h3>
+                        <div class="course-instructor">
+                            <i class="fas fa-user"></i> Sarah Johnson
+                        </div>
+                        <div class="course-stats">
+                            <span class="course-rating"><i class="fas fa-star"></i> 4.8 (2,145 reviews)</span>
+                            <span class="course-duration"><i class="fas fa-clock"></i> 12h 30m</span>
+                        </div>
+                        <div class="course-price">
+                            $89.99 <span class="original-price">$129.99</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 2 -->
+                <div class="video-card course-card">
+                    <div class="course-badge">NEW</div>
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y291cnNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Course">
+                    </div>
+                    <div class="course-info">
+                        <h3 class="course-title">The Complete Web Development Bootcamp 2023</h3>
+                        <div class="course-instructor">
+                            <i class="fas fa-user"></i> Michael Chen
+                        </div>
+                        <div class="course-stats">
+                            <span class="course-rating"><i class="fas fa-star"></i> 4.9 (3,478 reviews)</span>
+                            <span class="course-duration"><i class="fas fa-clock"></i> 57h 15m</span>
+                        </div>
+                        <div class="course-price">
+                            $94.99 <span class="original-price">$149.99</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 3 -->
+                <div class="video-card course-card">
+                    <div class="course-badge">POPULAR</div>
+                    <div class="video-thumbnail">
+                        <img src="https://images.unsplash.com/photo-1519070994522-88c6b756330e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGNvdXJzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Course">
+                    </div>
+                    <div class="course-info">
+                        <h3 class="course-title">Photography Masterclass: A Complete Guide to Photography</h3>
+                        <div class="course-instructor">
+                            <i class="fas fa-user"></i> Alex Rodriguez
+                        </div>
+                        <div class="course-stats">
+                            <span class="course-rating"><i class="fas fa-star"></i> 4.7 (4,921 reviews)</span>
+                            <span class="course-duration"><i class="fas fa-clock"></i> 32h 10m</span>
+                        </div>
+                        <div class="course-price">
+                            $79.99 <span class="original-price">$119.99</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Video Player Overlay -->
+    <div class="video-player">
+        <div class="player-container">
+            <div class="close-player"><i class="fas fa-times"></i></div>
+            <div class="player-placeholder">
+                <div class="player-content">
+                    <i class="fas fa-play-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <p>Video Player</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-play-circle"></i>
+            <span>Videos</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Courses</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-bookmark"></i>
+            <span>Saved</span>
+        </a>
+        
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Hide all content sections
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the corresponding content section
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-section`).classList.add('active');
+            });
+        });
+        
+        // Video player functionality
+        const videoCards = document.querySelectorAll('.video-card');
+        const videoPlayer = document.querySelector('.video-player');
+        const closePlayer = document.querySelector('.close-player');
+        
+        videoCards.forEach(card => {
+            card.addEventListener('click', () => {
+                videoPlayer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closePlayer.addEventListener('click', () => {
+            videoPlayer.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Close player when clicking outside
+        videoPlayer.addEventListener('click', (e) => {
+            if (e.target === videoPlayer) {
+                videoPlayer.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>

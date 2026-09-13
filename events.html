@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #ff0000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --danger: #ff0044;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-header .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .create-btn {
+            padding: 10px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .create-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 80, 0.3);
+        }
+
+        /* ===== EVENT TABS ===== */
+        .tabs-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--dark-gray);
+            padding-bottom: 0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            font-family: var(--font-family);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--light);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-btn .count {
+            background: var(--dark-gray);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        .tab-btn.active .count {
+            background: rgba(255, 0, 80, 0.2);
+            color: var(--primary);
+        }
+
+        /* ===== SEARCH ===== */
+        .search-bar {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-bar input::placeholder {
+            color: var(--gray);
+        }
+
+        .search-bar .filter-select {
+            padding: 12px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar .filter-select:focus {
+            border-color: var(--primary);
+        }
+
+        .search-bar .filter-select option {
+            background: var(--darker);
+        }
+
+        /* ===== EVENTS GRID ===== */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .event-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(255, 0, 80, 0.1);
+        }
+
+        .event-card .cover {
+            height: 140px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .event-card .cover .event-type {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--light);
+            backdrop-filter: blur(4px);
+        }
+
+        .event-card .cover .event-date-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            padding: 6px 14px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            text-align: center;
+            border: 1px solid var(--primary);
+        }
+
+        .event-card .cover .event-date-badge .day {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .event-card .cover .event-date-badge .month {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+
+        .event-card .body {
+            padding: 16px 18px 18px;
+        }
+
+        .event-card .body .event-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .event-card .body .event-desc {
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-card .body .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .event-card .body .event-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .event-card .body .event-meta i {
+            color: var(--primary);
+            width: 14px;
+        }
+
+        .event-card .body .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .event-card .body .event-tags span {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--gray);
+        }
+
+        .event-card .body .event-actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 14px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .event-card .body .event-actions .attend-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .event-card .body .event-actions .attend-btn.attend {
+            background: var(--primary);
+            color: white;
+        }
+
+        .event-card .body .event-actions .attend-btn.attend:hover {
+            background: var(--primary-dark);
+        }
+
+        .event-card .body .event-actions .attend-btn.attending {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--success);
+        }
+
+        .event-card .body .event-actions .attend-btn.attending:hover {
+            background: rgba(255, 0, 80, 0.15);
+            color: var(--danger);
+        }
+
+        .event-card .body .event-actions .action-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: transparent;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .event-card .body .event-actions .action-icon:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: var(--dark-gray);
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            color: var(--light);
+            margin-bottom: 8px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            max-width: 520px;
+            width: 100%;
+            padding: 30px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .modal .modal-header .close-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal .modal-header .close-btn:hover {
+            color: var(--light);
+        }
+
+        .modal .form-group {
+            margin-bottom: 16px;
+        }
+
+        .modal .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .modal .form-group input,
+        .modal .form-group textarea,
+        .modal .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group textarea:focus,
+        .modal .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .modal .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .modal .form-group select option {
+            background: var(--darker);
+        }
+
+        .modal .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .modal .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal .submit-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .main-container {
+                padding: 20px;
+            }
+            .events-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .page-header h1 {
+                font-size: 22px;
+            }
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+            .search-bar {
+                flex-direction: column;
+            }
+            .search-bar input,
+            .search-bar .filter-select {
+                width: 100%;
+            }
+            .tabs-container {
+                gap: 0;
+            }
+            .tab-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+            .modal .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .create-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .modal {
+                padding: 20px;
+            }
+            .event-card .cover {
+                height: 100px;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chating.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='groups.html'">
+                <i class="fas fa-users"></i>
+                <span class="badge">8</span>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='events.html'">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="badge">5</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <h1>Events</h1>
+                <div class="subtitle">Discover and join events happening near you</div>
+            </div>
+            <button class="create-btn" onclick="openCreateModal()">
+                <i class="fas fa-plus"></i> Create Event
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container" id="tabsContainer">
+            <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">
+                <i class="fas fa-globe"></i> All Events <span class="count">8</span>
+            </button>
+            <button class="tab-btn" data-tab="attending" onclick="switchTab('attending')">
+                <i class="fas fa-check-circle"></i> Attending <span class="count">3</span>
+            </button>
+            <button class="tab-btn" data-tab="hosting" onclick="switchTab('hosting')">
+                <i class="fas fa-star"></i> Hosting <span class="count">1</span>
+            </button>
+            <button class="tab-btn" data-tab="saved" onclick="switchTab('saved')">
+                <i class="fas fa-bookmark"></i> Saved <span class="count">2</span>
+            </button>
+        </div>
+
+        <!-- Search -->
+        <div class="search-bar">
+            <input type="text" placeholder="Search events by name, location, or category..." id="searchInput" oninput="searchEvents()">
+            <select class="filter-select" id="filterSelect" onchange="filterEvents()">
+                <option value="all">All Categories</option>
+                <option value="music">🎵 Music</option>
+                <option value="tech">💻 Tech</option>
+                <option value="sports">⚽ Sports</option>
+                <option value="art">🎨 Art & Design</option>
+                <option value="business">💼 Business</option>
+                <option value="networking">🤝 Networking</option>
+                <option value="food">🍽️ Food & Drink</option>
+                <option value="festival">🎉 Festival</option>
+            </select>
+        </div>
+
+        <!-- Events Grid -->
+        <div class="events-grid" id="eventsGrid">
+            <!-- Events rendered by JavaScript -->
+        </div>
+    </div>
+
+    <!-- ===== CREATE EVENT MODAL ===== -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create New Event</h2>
+                <button class="close-btn" onclick="closeCreateModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Event Name</label>
+                <input type="text" id="eventName" placeholder="Enter event name..." maxlength="60">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="eventDesc" placeholder="Tell people about your event..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="eventDate">
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" id="eventTime">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="eventLocation" placeholder="Enter location or venue...">
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="eventCategory">
+                    <option value="music">🎵 Music</option>
+                    <option value="tech">💻 Tech</option>
+                    <option value="sports">⚽ Sports</option>
+                    <option value="art">🎨 Art & Design</option>
+                    <option value="business">💼 Business</option>
+                    <option value="networking">🤝 Networking</option>
+                    <option value="food">🍽️ Food & Drink</option>
+                    <option value="festival">🎉 Festival</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Event Type</label>
+                <select id="eventType">
+                    <option value="public">🌍 Public</option>
+                    <option value="private">🔒 Private (Invite Only)</option>
+                    <option value="virtual">💻 Virtual</option>
+                </select>
+            </div>
+            <button class="submit-btn" onclick="createEvent()">
+                <i class="fas fa-plus"></i> Create Event
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
+    <script>
+        // ===== EVENT DATA =====
+        const eventsData = [
+            {
+                id: 1,
+                name: "Music Festival 2026",
+                description: "Three days of incredible music, food, and art. Featuring top artists from around the world.",
+                date: "2026-08-15",
+                time: "14:00",
+                location: "Central Park, NYC",
+                category: "music",
+                type: "public",
+                attendees: 2345,
+                attending: true,
+                hosting: false,
+                saved: false,
+                color: "#ff0050",
+                emoji: "🎵"
+            },
+            {
+                id: 2,
+                name: "Tech Conference 2026",
+                description: "Annual tech conference bringing together innovators, developers, and industry leaders.",
+                date: "2026-09-10",
+                time: "09:00",
+                location: "Convention Center, SF",
+                category: "tech",
+                type: "public",
+                attendees: 1234,
+                attending: false,
+                hosting: false,
+                saved: true,
+                color: "#00aaff",
+                emoji: "💻"
+            },
+            {
+                id: 3,
+                name: "Art Gallery Opening",
+                description: "Exclusive gallery opening featuring emerging artists from around the world.",
+                date: "2026-07-25",
+                time: "19:00",
+                location: "Modern Art Museum, NYC",
+                category: "art",
+                type: "private",
+                attendees: 456,
+                attending: false,
+                hosting: false,
+                saved: false,
+                color: "#ff44aa",
+                emoji: "🎨"
+            },
+            {
+                id: 4,
+                name: "Startup Pitch Night",
+                description: "Watch 10 startups pitch their ideas to investors. Networking and drinks included.",
+                date: "2026-08-05",
+                time: "18:30",
+                location: "Innovation Hub, Austin",
+                category: "business",
+                type: "public",
+                attendees: 789,
+                attending: true,
+                hosting: false,
+                saved: false,
+                color: "#ffaa00",
+                emoji: "💼"
+            },
+            {
+                id: 5,
+                name: "International Food Festival",
+                description: "Taste cuisines from 20+ countries. Live cooking demonstrations and cultural performances.",
+                date: "2026-09-20",
+                time: "11:00",
+                location: "Waterfront Park, Miami",
+                category: "food",
+                type: "public",
+                attendees: 5678,
+                attending: false,
+                hosting: false,
+                saved: true,
+                color: "#33cc99",
+                emoji: "🍽️"
+            },
+            {
+                id: 6,
+                name: "Digital Marketing Summit",
+                description: "Learn from industry experts about the latest trends in digital marketing and social media.",
+                date: "2026-08-22",
+                time: "10:00",
+                location: "Online (Virtual)",
+                category: "networking",
+                type: "virtual",
+                attendees: 234,
+                attending: false,
+                hosting: true,
+                saved: false,
+                color: "#aa66ff",
+                emoji: "🤝"
+            },
+            {
+                id: 7,
+                name: "Basketball Tournament",
+                description: "Annual 3v3 basketball tournament. Open to all skill levels. Prizes for winners!",
+                date: "2026-07-30",
+                time: "08:00",
+                location: "Sports Complex, Chicago",
+                category: "sports",
+                type: "public",
+                attendees: 890,
+                attending: false,
+                hosting: false,
+                saved: false,
+                color: "#00ff88",
+                emoji: "⚽"
+            },
+            {
+                id: 8,
+                name: "Electronic Music Festival",
+                description: "Night of electronic music with top DJs. Light show and visual effects.",
+                date: "2026-08-28",
+                time: "21:00",
+                location: "Warehouse District, LA",
+                category: "music",
+                type: "private",
+                attendees: 1500,
+                attending: false,
+                hosting: false,
+                saved: false,
+                color: "#ff6633",
+                emoji: "🎶"
+            }
+        ];
+
+        let currentTab = 'all';
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let nextId = 9;
+
+        // ===== RENDER EVENTS =====
+        function renderEvents() {
+            const grid = document.getElementById('eventsGrid');
+            let filtered = eventsData;
+
+            // Tab filter
+            if (currentTab === 'attending') {
+                filtered = filtered.filter(e => e.attending === true);
+            } else if (currentTab === 'hosting') {
+                filtered = filtered.filter(e => e.hosting === true);
+            } else if (currentTab === 'saved') {
+                filtered = filtered.filter(e => e.saved === true);
+            }
+
+            // Category filter
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(e => e.category === currentFilter);
+            }
+
+            // Search filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filtered = filtered.filter(e => 
+                    e.name.toLowerCase().includes(query) || 
+                    e.description.toLowerCase().includes(query) ||
+                    e.location.toLowerCase().includes(query)
+                );
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No events found</h3>
+                        <p>Try adjusting your filters or search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(event => `
+                <div class="event-card" data-id="${event.id}">
+                    <div class="cover" style="background: linear-gradient(135deg, ${event.color}44, ${event.color});">
+                        <span style="font-size:48px;">${event.emoji}</span>
+                        <span class="event-type">${event.type === 'public' ? '🌍 Public' : event.type === 'private' ? '🔒 Private' : '💻 Virtual'}</span>
+                        <div class="event-date-badge">
+                            <div class="day">${formatDay(event.date)}</div>
+                            <div class="month">${formatMonth(event.date)}</div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <div class="event-title">${event.name}</div>
+                        <div class="event-desc">${event.description}</div>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-pin"></i> ${event.location}</span>
+                            <span><i class="fas fa-clock"></i> ${formatTime(event.time)}</span>
+                            <span><i class="fas fa-user"></i> ${formatNumber(event.attendees)}</span>
+                        </div>
+                        <div class="event-tags">
+                            <span>#${event.category}</span>
+                            <span>${event.type}</span>
+                        </div>
+                        <div class="event-actions">
+                            ${event.attending ? 
+                                `<button class="attend-btn attending" onclick="cancelAttendance(${event.id})"><i class="fas fa-check"></i> Attending</button>` :
+                                `<button class="attend-btn attend" onclick="attendEvent(${event.id})"><i class="fas fa-plus"></i> Attend</button>`
+                            }
+                            <button class="action-icon" onclick="toggleSave(${event.id})">
+                                <i class="fas ${event.saved ? 'fa-bookmark' : 'fa-bookmark'}" style="color:${event.saved ? 'var(--primary)' : 'var(--gray)'}"></i>
+                            </button>
+                            <button class="action-icon" onclick="viewEvent(${event.id})"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== HELPER FUNCTIONS =====
+        function formatDay(date) {
+            const d = new Date(date);
+            return d.getDate();
+        }
+
+        function formatMonth(date) {
+            const d = new Date(date);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return months[d.getMonth()];
+        }
+
+        function formatTime(time) {
+            const [h, m] = time.split(':');
+            const hour = parseInt(h);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12}:${m} ${ampm}`;
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        // ===== TAB SWITCHING =====
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            renderEvents();
+        }
+
+        // ===== SEARCH =====
+        function searchEvents() {
+            searchQuery = document.getElementById('searchInput').value;
+            renderEvents();
+        }
+
+        function filterEvents() {
+            currentFilter = document.getElementById('filterSelect').value;
+            renderEvents();
+        }
+
+        // ===== EVENT ACTIONS =====
+        function attendEvent(id) {
+            const event = eventsData.find(e => e.id === id);
+            if (event) {
+                event.attending = true;
+                event.attendees++;
+                showToast(`✅ You're attending "${event.name}"!`);
+                renderEvents();
+            }
+        }
+
+        function cancelAttendance(id) {
+            const event = eventsData.find(e => e.id === id);
+            if (event && confirm(`Cancel attendance for "${event.name}"?`)) {
+                event.attending = false;
+                event.attendees--;
+                showToast(`❌ You've canceled attendance for "${event.name}"`);
+                renderEvents();
+            }
+        }
+
+        function toggleSave(id) {
+            const event = eventsData.find(e => e.id === id);
+            if (event) {
+                event.saved = !event.saved;
+                showToast(event.saved ? `⭐ Saved "${event.name}"` : `Removed "${event.name}" from saved`);
+                renderEvents();
+            }
+        }
+
+        function viewEvent(id) {
+            const event = eventsData.find(e => e.id === id);
+            if (event) {
+                showToast(`📅 Viewing "${event.name}" - ${event.date} at ${event.location}`);
+            }
+        }
+
+        // ===== CREATE EVENT =====
+        function openCreateModal() {
+            document.getElementById('createModal').classList.add('active');
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('eventDate').value = today;
+            document.getElementById('eventTime').value = '18:00';
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('active');
+            document.getElementById('eventName').value = '';
+            document.getElementById('eventDesc').value = '';
+            document.getElementById('eventLocation').value = '';
+        }
+
+        function createEvent() {
+            const name = document.getElementById('eventName').value.trim();
+            const desc = document.getElementById('eventDesc').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const location = document.getElementById('eventLocation').value.trim();
+            const category = document.getElementById('eventCategory').value;
+            const type = document.getElementById('eventType').value;
+
+            if (!name) {
+                showToast('⚠️ Please enter an event name');
+                return;
+            }
+
+            if (!date) {
+                showToast('⚠️ Please select a date');
+                return;
+            }
+
+            const newEvent = {
+                id: nextId++,
+                name: name,
+                description: desc || 'No description provided',
+                date: date,
+                time: time || '12:00',
+                location: location || 'TBD',
+                category: category,
+                type: type,
+                attendees: 1,
+                attending: true,
+                hosting: type === 'private' ? true : false,
+                saved: false,
+                color: ['#ff0050', '#00aaff', '#ff44aa', '#ffaa00', '#33cc99', '#aa66ff', '#00ff88', '#ff6633'][nextId % 8],
+                emoji: ['🎵', '💻', '🎨', '💼', '🍽️', '🤝', '⚽', '🎶'][nextId % 8]
+            };
+
+            eventsData.unshift(newEvent);
+            closeCreateModal();
+            renderEvents();
+            showToast(`🎉 "${name}" created successfully!`);
+        }
+
+        // ===== MODAL CLOSE ON OVERLAY CLICK =====
+        document.getElementById('createModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCreateModal();
+            }
+        });
+
+        // ===== TOAST =====
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== INIT =====
+        renderEvents();
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCreateModal();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                openCreateModal();
+            }
+        });
+    </script>
+
+</body>
+</html>

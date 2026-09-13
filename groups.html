@@ -1,0 +1,1169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groups · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #e60000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --danger: #ff0000;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-header .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .create-btn {
+            padding: 10px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .create-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 80, 0.3);
+        }
+
+        /* ===== TABS ===== */
+        .tabs-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--dark-gray);
+            padding-bottom: 0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            font-family: var(--font-family);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--light);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-btn .count {
+            background: var(--dark-gray);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        .tab-btn.active .count {
+            background: rgba(255, 0, 80, 0.2);
+            color: var(--primary);
+        }
+
+        /* ===== SEARCH ===== */
+        .search-bar {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-bar input::placeholder {
+            color: var(--gray);
+        }
+
+        .search-bar .filter-select {
+            padding: 12px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar .filter-select:focus {
+            border-color: var(--primary);
+        }
+
+        .search-bar .filter-select option {
+            background: var(--darker);
+        }
+
+        /* ===== GROUPS GRID ===== */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .group-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(255, 0, 80, 0.1);
+        }
+
+        .group-card .cover {
+            height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .group-card .cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .group-card .cover .group-type {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--light);
+            backdrop-filter: blur(4px);
+        }
+
+        .group-card .cover .member-count {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--light);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .group-card .body {
+            padding: 16px 18px 18px;
+        }
+
+        .group-card .body .group-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .group-card .body .group-name .verified {
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .group-card .body .group-desc {
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .group-card .body .group-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .group-card .body .group-tags span {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--gray);
+        }
+
+        .group-card .body .group-actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 14px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .group-card .body .group-actions .join-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .group-card .body .group-actions .join-btn.join {
+            background: var(--primary);
+            color: white;
+        }
+
+        .group-card .body .group-actions .join-btn.join:hover {
+            background: var(--primary-dark);
+        }
+
+        .group-card .body .group-actions .join-btn.joined {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--success);
+        }
+
+        .group-card .body .group-actions .join-btn.joined:hover {
+            background: rgba(255, 0, 80, 0.15);
+            color: var(--danger);
+        }
+
+        .group-card .body .group-actions .action-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: transparent;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .group-card .body .group-actions .action-icon:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: var(--dark-gray);
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            color: var(--light);
+            margin-bottom: 8px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .modal .modal-header .close-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal .modal-header .close-btn:hover {
+            color: var(--light);
+        }
+
+        .modal .form-group {
+            margin-bottom: 16px;
+        }
+
+        .modal .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .modal .form-group input,
+        .modal .form-group textarea,
+        .modal .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group textarea:focus,
+        .modal .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .modal .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .modal .form-group select option {
+            background: var(--darker);
+        }
+
+        .modal .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal .submit-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .main-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .page-header h1 {
+                font-size: 22px;
+            }
+            .groups-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 16px;
+            }
+            .search-bar {
+                flex-direction: column;
+            }
+            .search-bar input,
+            .search-bar .filter-select {
+                width: 100%;
+            }
+            .tabs-container {
+                gap: 0;
+            }
+            .tab-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .create-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .groups-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal {
+                padding: 20px;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chating.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='groups.html'">
+                <i class="fas fa-users"></i>
+                <span class="badge">8</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='searching .html'">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <h1>Groups</h1>
+                <div class="subtitle">Discover and join communities that matter to you</div>
+            </div>
+            <button class="create-btn" onclick="openCreateModal()">
+                <i class="fas fa-plus"></i> Create Group
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container" id="tabsContainer">
+            <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">
+                <i class="fas fa-globe"></i> All Groups <span class="count">12</span>
+            </button>
+            <button class="tab-btn" data-tab="joined" onclick="switchTab('joined')">
+                <i class="fas fa-check-circle"></i> Joined <span class="count">4</span>
+            </button>
+            <button class="tab-btn" data-tab="pending" onclick="switchTab('pending')">
+                <i class="fas fa-clock"></i> Pending <span class="count">2</span>
+            </button>
+            <button class="tab-btn" data-tab="suggested" onclick="switchTab('suggested')">
+                <i class="fas fa-lightbulb"></i> Suggested <span class="count">6</span>
+            </button>
+        </div>
+
+        <!-- Search -->
+        <div class="search-bar">
+            <input type="text" placeholder="Search groups by name, topic, or member..." id="searchInput" oninput="searchGroups()">
+            <select class="filter-select" id="filterSelect" onchange="filterGroups()">
+                <option value="all">All Categories</option>
+                <option value="tech">Technology</option>
+                <option value="lifestyle">Lifestyle</option>
+                <option value="gaming">Gaming</option>
+                <option value="art">Art & Design</option>
+                <option value="music">Music</option>
+                <option value="sports">Sports</option>
+                <option value="business">Business</option>
+            </select>
+        </div>
+
+        <!-- Groups Grid -->
+        <div class="groups-grid" id="groupsGrid">
+            <!-- Groups will be rendered by JavaScript -->
+        </div>
+    </div>
+
+    <!-- ===== CREATE GROUP MODAL ===== -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create New Group</h2>
+                <button class="close-btn" onclick="closeCreateModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Group Name</label>
+                <input type="text" id="groupName" placeholder="Enter group name..." maxlength="50">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="groupDesc" placeholder="What is this group about?"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="groupCategory">
+                    <option value="tech">Technology</option>
+                    <option value="lifestyle">Lifestyle</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="art">Art & Design</option>
+                    <option value="music">Music</option>
+                    <option value="sports">Sports</option>
+                    <option value="business">Business</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Privacy</label>
+                <select id="groupPrivacy">
+                    <option value="public">Public - Anyone can join</option>
+                    <option value="private">Private - Requires approval</option>
+                    <option value="secret">Secret - Invite only</option>
+                </select>
+            </div>
+            <button class="submit-btn" onclick="createGroup()">
+                <i class="fas fa-plus"></i> Create Group
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
+    <script>
+        // ===== DATA =====
+        const groupsData = [
+            {
+                id: 1,
+                name: "Tech Innovators",
+                description: "Discuss the latest in technology, AI, and innovation. Share ideas and collaborate.",
+                category: "tech",
+                members: 1247,
+                joined: true,
+                pending: false,
+                cover: "💻",
+                type: "public",
+                tags: ["AI", "Startup", "Innovation"]
+            },
+            {
+                id: 2,
+                name: "Gaming Legends",
+                description: "Connect with gamers from around the world. Play together, share strategies, and have fun.",
+                category: "gaming",
+                members: 3456,
+                joined: true,
+                pending: false,
+                cover: "🎮",
+                type: "public",
+                tags: ["Gaming", "eSports", "Streaming"]
+            },
+            {
+                id: 3,
+                name: "Art & Design Hub",
+                description: "A community for artists, designers, and creatives to share work and get feedback.",
+                category: "art",
+                members: 892,
+                joined: false,
+                pending: true,
+                cover: "🎨",
+                type: "private",
+                tags: ["Art", "Design", "Creative"]
+            },
+            {
+                id: 4,
+                name: "Music Producers",
+                description: "For music producers, beatmakers, and audio engineers to share tips and tracks.",
+                category: "music",
+                members: 567,
+                joined: false,
+                pending: false,
+                cover: "🎵",
+                type: "public",
+                tags: ["Music", "Production", "Audio"]
+            },
+            {
+                id: 5,
+                name: "Fitness Fanatics",
+                description: "Stay motivated with workout tips, nutrition advice, and fitness challenges.",
+                category: "lifestyle",
+                members: 2134,
+                joined: true,
+                pending: false,
+                cover: "💪",
+                type: "public",
+                tags: ["Fitness", "Health", "Wellness"]
+            },
+            {
+                id: 6,
+                name: "Startup Founders",
+                description: "Connect with founders, investors, and entrepreneurs building the future.",
+                category: "business",
+                members: 978,
+                joined: false,
+                pending: false,
+                cover: "🚀",
+                type: "private",
+                tags: ["Startup", "Business", "Entrepreneurship"]
+            },
+            {
+                id: 7,
+                name: "Photography Masters",
+                description: "Share your best shots, get feedback, and learn new techniques.",
+                category: "art",
+                members: 1567,
+                joined: false,
+                pending: false,
+                cover: "📸",
+                type: "public",
+                tags: ["Photography", "Camera", "Visual"]
+            },
+            {
+                id: 8,
+                name: "Crypto Enthusiasts",
+                description: "Discuss cryptocurrency, blockchain, and the future of decentralized finance.",
+                category: "tech",
+                members: 2345,
+                joined: false,
+                pending: false,
+                cover: "₿",
+                type: "public",
+                tags: ["Crypto", "Blockchain", "DeFi"]
+            },
+            {
+                id: 9,
+                name: "Book Lovers Club",
+                description: "A place to discuss your favorite books, share recommendations, and join reading challenges.",
+                category: "lifestyle",
+                members: 678,
+                joined: false,
+                pending: false,
+                cover: "📚",
+                type: "public",
+                tags: ["Books", "Reading", "Literature"]
+            },
+            {
+                id: 10,
+                name: "Sports Talk",
+                description: "Talk about your favorite sports, teams, and athletes. Join live discussions.",
+                category: "sports",
+                members: 4567,
+                joined: false,
+                pending: false,
+                cover: "⚽",
+                type: "public",
+                tags: ["Sports", "Football", "Basketball"]
+            },
+            {
+                id: 11,
+                name: "Digital Marketing Pros",
+                description: "For marketing professionals to share strategies, tools, and industry insights.",
+                category: "business",
+                members: 789,
+                joined: false,
+                pending: false,
+                cover: "📊",
+                type: "private",
+                tags: ["Marketing", "SEO", "Social Media"]
+            },
+            {
+                id: 12,
+                name: "Anime & Manga Hub",
+                description: "Discuss your favorite anime and manga series. Share fan art and theories.",
+                category: "lifestyle",
+                members: 3456,
+                joined: false,
+                pending: false,
+                cover: "🎌",
+                type: "public",
+                tags: ["Anime", "Manga", "Cosplay"]
+            }
+        ];
+
+        let currentTab = 'all';
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // ===== RENDER GROUPS =====
+        function renderGroups() {
+            const grid = document.getElementById('groupsGrid');
+            let filtered = groupsData;
+
+            // Tab filter
+            if (currentTab === 'joined') {
+                filtered = filtered.filter(g => g.joined === true);
+            } else if (currentTab === 'pending') {
+                filtered = filtered.filter(g => g.pending === true);
+            } else if (currentTab === 'suggested') {
+                filtered = filtered.filter(g => g.joined === false && g.pending === false);
+            }
+
+            // Category filter
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(g => g.category === currentFilter);
+            }
+
+            // Search filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filtered = filtered.filter(g => 
+                    g.name.toLowerCase().includes(query) || 
+                    g.description.toLowerCase().includes(query) ||
+                    g.tags.some(t => t.toLowerCase().includes(query))
+                );
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i class="fas fa-users-slash"></i>
+                        <h3>No groups found</h3>
+                        <p>Try adjusting your filters or search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(group => `
+                <div class="group-card" data-id="${group.id}">
+                    <div class="cover" style="background: linear-gradient(135deg, ${getColor(group.id)}, ${getColor(group.id + 5)}); display:flex;align-items:center;justify-content:center;font-size:48px;">
+                        ${group.cover}
+                        <span class="group-type">${group.type === 'public' ? '🌍 Public' : group.type === 'private' ? '🔒 Private' : '🔐 Secret'}</span>
+                        <span class="member-count"><i class="fas fa-user"></i> ${formatNumber(group.members)}</span>
+                    </div>
+                    <div class="body">
+                        <div class="group-name">
+                            ${group.name}
+                            ${group.type === 'private' ? '<span class="verified"><i class="fas fa-lock"></i></span>' : ''}
+                        </div>
+                        <div class="group-desc">${group.description}</div>
+                        <div class="group-tags">
+                            ${group.tags.map(tag => `<span>#${tag}</span>`).join('')}
+                        </div>
+                        <div class="group-actions">
+                            ${group.joined ? 
+                                `<button class="join-btn joined" onclick="leaveGroup(${group.id})"><i class="fas fa-check"></i> Joined</button>` :
+                                group.pending ? 
+                                    `<button class="join-btn" style="background:rgba(255,170,0,0.15);color:#ffaa00;cursor:default;"><i class="fas fa-clock"></i> Pending</button>` :
+                                    `<button class="join-btn join" onclick="joinGroup(${group.id})"><i class="fas fa-plus"></i> Join Group</button>`
+                            }
+                            <button class="action-icon" onclick="viewGroup(${group.id})"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== HELPER FUNCTIONS =====
+        function getColor(id) {
+            const colors = ['#ff0050', '#00ff88', '#00aaff', '#ffaa00', '#aa66ff', '#ff44aa', '#ff6633', '#33cc99'];
+            return colors[id % colors.length];
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        // ===== TAB SWITCHING =====
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            renderGroups();
+        }
+
+        // ===== SEARCH =====
+        function searchGroups() {
+            searchQuery = document.getElementById('searchInput').value;
+            renderGroups();
+        }
+
+        function filterGroups() {
+            currentFilter = document.getElementById('filterSelect').value;
+            renderGroups();
+        }
+
+        // ===== GROUP ACTIONS =====
+        function joinGroup(id) {
+            const group = groupsData.find(g => g.id === id);
+            if (group) {
+                group.joined = true;
+                group.members++;
+                showToast(`Joined "${group.name}" successfully!`);
+                renderGroups();
+            }
+        }
+
+        function leaveGroup(id) {
+            const group = groupsData.find(g => g.id === id);
+            if (group && confirm(`Leave "${group.name}"?`)) {
+                group.joined = false;
+                group.members--;
+                showToast(`Left "${group.name}"`);
+                renderGroups();
+            }
+        }
+
+        function viewGroup(id) {
+            const group = groupsData.find(g => g.id === id);
+            if (group) {
+                showToast(`Viewing "${group.name}" group page`);
+            }
+        }
+
+        // ===== CREATE GROUP =====
+        function openCreateModal() {
+            document.getElementById('createModal').classList.add('active');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('active');
+            document.getElementById('groupName').value = '';
+            document.getElementById('groupDesc').value = '';
+        }
+
+        function createGroup() {
+            const name = document.getElementById('groupName').value.trim();
+            const desc = document.getElementById('groupDesc').value.trim();
+            const category = document.getElementById('groupCategory').value;
+            const privacy = document.getElementById('groupPrivacy').value;
+
+            if (!name) {
+                showToast('Please enter a group name');
+                return;
+            }
+
+            const newGroup = {
+                id: groupsData.length + 1,
+                name: name,
+                description: desc || 'No description provided',
+                category: category,
+                members: 1,
+                joined: true,
+                pending: false,
+                cover: '🌟',
+                type: privacy,
+                tags: ['New']
+            };
+
+            groupsData.unshift(newGroup);
+            closeCreateModal();
+            renderGroups();
+            showToast(`"${name}" created successfully!`);
+        }
+
+        // ===== TOAST =====
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== MODAL CLOSE ON OVERLAY CLICK =====
+        document.getElementById('createModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCreateModal();
+            }
+        });
+
+        // ===== INIT =====
+        renderGroups();
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCreateModal();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+    </script>
+
+</body>
+</html>

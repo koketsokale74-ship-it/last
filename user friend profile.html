@@ -1,0 +1,1068 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friend Profile · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #ff0000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --danger: #ff0044;
+            --font-family: 'Poppins', sans-serif;
+            --online: #00ff88;
+            --offline: #555;
+            --away: #ffaa00;
+            --busy: #ff0044;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        /* ===== PROFILE HEADER ===== */
+        .profile-header {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .profile-cover {
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary), #ff44aa);
+            position: relative;
+        }
+
+        .profile-cover .cover-actions {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .profile-cover .cover-actions button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profile-cover .cover-actions .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .profile-cover .cover-actions .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .profile-cover .cover-actions .btn-secondary {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            backdrop-filter: blur(4px);
+        }
+
+        .profile-cover .cover-actions .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .profile-info {
+            padding: 0 24px 24px;
+            position: relative;
+            margin-top: -50px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--card-bg);
+            background: var(--darker);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar .status-dot {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid var(--card-bg);
+            background: var(--online);
+        }
+
+        .profile-avatar .status-dot.offline {
+            background: var(--offline);
+        }
+        .profile-avatar .status-dot.away {
+            background: var(--away);
+        }
+        .profile-avatar .status-dot.busy {
+            background: var(--busy);
+        }
+
+        .profile-details {
+            flex: 1;
+        }
+
+        .profile-details .name-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .profile-details .name-row h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .profile-details .name-row .verified {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .profile-details .username {
+            color: var(--gray);
+            font-size: 14px;
+            margin: 2px 0 6px;
+        }
+
+        .profile-details .bio {
+            color: var(--gray);
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .profile-stats .stat {
+            text-align: center;
+        }
+
+        .profile-stats .stat .number {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--light);
+        }
+
+        .profile-stats .stat .label {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .profile-mutual {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .profile-mutual .avatars {
+            display: flex;
+        }
+
+        .profile-mutual .avatars .mini-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
+            margin-left: -6px;
+            background: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .profile-mutual .avatars .mini-avatar:first-child {
+            margin-left: 0;
+        }
+
+        /* ===== TABS ===== */
+        .tabs-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--dark-gray);
+            padding-bottom: 0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            font-family: var(--font-family);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--light);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-btn .count {
+            background: var(--dark-gray);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        .tab-btn.active .count {
+            background: rgba(255, 0, 80, 0.2);
+            color: var(--primary);
+        }
+
+        /* ===== CONTENT SECTIONS ===== */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== POSTS GRID ===== */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .post-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .post-card .post-image {
+            height: 180px;
+            background: var(--darker);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .post-card .post-body {
+            padding: 16px 18px 18px;
+        }
+
+        .post-card .post-body .post-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .post-card .post-body .post-desc {
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .post-card .post-body .post-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--gray);
+            padding-top: 12px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .post-card .post-body .post-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .post-card .post-body .post-meta i {
+            color: var(--primary);
+        }
+
+        /* ===== FRIENDS GRID ===== */
+        .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .friend-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .friend-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .friend-card .friend-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--darker);
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            border: 2px solid var(--card-border);
+            position: relative;
+        }
+
+        .friend-card .friend-avatar .status-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
+            background: var(--online);
+        }
+
+        .friend-card .friend-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .friend-card .friend-username {
+            color: var(--gray);
+            font-size: 12px;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .about-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--card-border);
+        }
+
+        .about-item .label {
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .about-item .value {
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .about-item .value i {
+            color: var(--primary);
+            margin-right: 6px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .main-container {
+                padding: 20px;
+            }
+            .profile-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                margin-top: -40px;
+            }
+            .profile-details .name-row {
+                justify-content: center;
+            }
+            .profile-details .bio {
+                max-width: 100%;
+            }
+            .profile-stats {
+                justify-content: center;
+            }
+            .profile-mutual {
+                justify-content: center;
+            }
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .profile-cover {
+                height: 120px;
+            }
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 28px;
+            }
+            .profile-cover .cover-actions {
+                top: 10px;
+                right: 10px;
+            }
+            .profile-cover .cover-actions button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .profile-info {
+                padding: 0 16px 16px;
+            }
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+            .friends-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            .tabs-container {
+                gap: 0;
+            }
+            .tab-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+            .profile-stats {
+                gap: 16px;
+            }
+            .profile-stats .stat .number {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .friends-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .profile-cover .cover-actions {
+                flex-direction: column;
+            }
+            .profile-cover .cover-actions button {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chathome.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='groups.html'">
+                <i class="fas fa-users"></i>
+                <span class="badge">8</span>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='friend-profile.html'">
+                <i class="fas fa-user-friends"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-cover">
+                <div class="cover-actions">
+                    <button class="btn-primary" onclick="sendMessage()">
+                        <i class="fas fa-envelope"></i> Message
+                    </button>
+                    <button class="btn-secondary" onclick="toggleFollow()">
+                        <i class="fas fa-user-plus"></i> <span id="followText">Follow</span>
+                    </button>
+                </div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    JD
+                    <div class="status-dot online"></div>
+                </div>
+                <div class="profile-details">
+                    <div class="name-row">
+                        <h2>John Doe</h2>
+                        <span class="verified"><i class="fas fa-check-circle"></i></span>
+                    </div>
+                    <div class="username">@johndoe</div>
+                    <div class="bio">Digital creator | Tech enthusiast | Coffee addict ☕ | Building the future, one post at a time.</div>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <div class="number">1.2K</div>
+                            <div class="label">Posts</div>
+                        </div>
+                        <div class="stat">
+                            <div class="number">345</div>
+                            <div class="label">Followers</div>
+                        </div>
+                        <div class="stat">
+                            <div class="number">218</div>
+                            <div class="label">Following</div>
+                        </div>
+                    </div>
+                    <div class="profile-mutual">
+                        <div class="avatars">
+                            <div class="mini-avatar">AK</div>
+                            <div class="mini-avatar">MR</div>
+                            <div class="mini-avatar">JW</div>
+                            <div class="mini-avatar" style="background:var(--primary);color:white;font-size:8px;">+12</div>
+                        </div>
+                        <span>15 mutual friends</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <button class="tab-btn active" data-tab="posts" onclick="switchTab('posts')">
+                <i class="fas fa-th"></i> Posts <span class="count">12</span>
+            </button>
+            <button class="tab-btn" data-tab="friends" onclick="switchTab('friends')">
+                <i class="fas fa-users"></i> Friends <span class="count">218</span>
+            </button>
+            <button class="tab-btn" data-tab="about" onclick="switchTab('about')">
+                <i class="fas fa-info-circle"></i> About
+            </button>
+            <button class="tab-btn" data-tab="photos" onclick="switchTab('photos')">
+                <i class="fas fa-images"></i> Photos <span class="count">48</span>
+            </button>
+        </div>
+
+        <!-- Posts Section -->
+        <div class="content-section active" id="section-posts">
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#ff005044,#ff0050);">📸</div>
+                    <div class="post-body">
+                        <div class="post-title">Sunset photography</div>
+                        <div class="post-desc">Captured this beautiful sunset at the beach today. Nature never ceases to amaze me!</div>
+                        <div class="post-meta">
+                            <span><i class="fas fa-heart"></i> 234</span>
+                            <span><i class="fas fa-comment"></i> 45</span>
+                            <span><i class="fas fa-clock"></i> 2h ago</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#00aaff44,#00aaff);">💻</div>
+                    <div class="post-body">
+                        <div class="post-title">New setup reveal</div>
+                        <div class="post-desc">Finally upgraded my workstation. The new monitor and keyboard are game-changers!</div>
+                        <div class="post-meta">
+                            <span><i class="fas fa-heart"></i> 189</span>
+                            <span><i class="fas fa-comment"></i> 32</span>
+                            <span><i class="fas fa-clock"></i> 5h ago</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#00ff8844,#00ff88);">☕</div>
+                    <div class="post-body">
+                        <div class="post-title">Morning coffee ritual</div>
+                        <div class="post-desc">Starting the day right with a fresh cup of pour-over. What's your go-to coffee?</div>
+                        <div class="post-meta">
+                            <span><i class="fas fa-heart"></i> 156</span>
+                            <span><i class="fas fa-comment"></i> 28</span>
+                            <span><i class="fas fa-clock"></i> 8h ago</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#ffaa0044,#ffaa00);">🎵</div>
+                    <div class="post-body">
+                        <div class="post-title">New music release</div>
+                        <div class="post-desc">Just dropped my latest track! Check it out and let me know what you think.</div>
+                        <div class="post-meta">
+                            <span><i class="fas fa-heart"></i> 312</span>
+                            <span><i class="fas fa-comment"></i> 56</span>
+                            <span><i class="fas fa-clock"></i> 1d ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Friends Section -->
+        <div class="content-section" id="section-friends">
+            <div class="friends-grid">
+                <div class="friend-card" onclick="viewFriendProfile()">
+                    <div class="friend-avatar">
+                        JS
+                        <div class="status-dot online"></div>
+                    </div>
+                    <div class="friend-name">Jane Smith</div>
+                    <div class="friend-username">@janesmith</div>
+                </div>
+                <div class="friend-card" onclick="viewFriendProfile()">
+                    <div class="friend-avatar">
+                        MK
+                        <div class="status-dot online"></div>
+                    </div>
+                    <div class="friend-name">Mark K.</div>
+                    <div class="friend-username">@markk</div>
+                </div>
+                <div class="friend-card" onclick="viewFriendProfile()">
+                    <div class="friend-avatar">
+                        SA
+                        <div class="status-dot away"></div>
+                    </div>
+                    <div class="friend-name">Sarah A.</div>
+                    <div class="friend-username">@sarah_a</div>
+                </div>
+                <div class="friend-card" onclick="viewFriendProfile()">
+                    <div class="friend-avatar">
+                        TL
+                        <div class="status-dot offline"></div>
+                    </div>
+                    <div class="friend-name">Tom L.</div>
+                    <div class="friend-username">@toml</div>
+                </div>
+                <div class="friend-card" onclick="viewFriendProfile()">
+                    <div class="friend-avatar">
+                        EM
+                        <div class="status-dot online"></div>
+                    </div>
+                    <div class="friend-name">Emily M.</div>
+                    <div class="friend-username">@emily_m</div>
+                </div>
+                <div class="friend-card" onclick="viewFriendProfile()">
+                    <div class="friend-avatar">
+                        AK
+                        <div class="status-dot busy"></div>
+                    </div>
+                    <div class="friend-name">Alex K.</div>
+                    <div class="friend-username">@alex_k</div>
+                </div>
+                <div class="friend-card" onclick="viewFriendProfile()">
+                    <div class="friend-avatar">
+                        MR
+                        <div class="status-dot online"></div>
+                    </div>
+                    <div class="friend-name">Maya R.</div>
+                    <div class="friend-username">@maya_r</div>
+                </div>
+                <div class="friend-card" onclick="viewFriendProfile()">
+                    <div class="friend-avatar">
+                        JW
+                        <div class="status-dot away"></div>
+                    </div>
+                    <div class="friend-name">Jamie W.</div>
+                    <div class="friend-username">@jamie_w</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="content-section" id="section-about">
+            <div class="about-grid">
+                <div class="about-item">
+                    <div class="label">Full Name</div>
+                    <div class="value">John Michael Doe</div>
+                </div>
+                <div class="about-item">
+                    <div class="label">Location</div>
+                    <div class="value"><i class="fas fa-map-pin"></i> New York, USA</div>
+                </div>
+                <div class="about-item">
+                    <div class="label">Joined</div>
+                    <div class="value"><i class="fas fa-calendar"></i> January 2023</div>
+                </div>
+                <div class="about-item">
+                    <div class="label">Birthday</div>
+                    <div class="value"><i class="fas fa-birthday-cake"></i> March 15, 1995</div>
+                </div>
+                <div class="about-item">
+                    <div class="label">Occupation</div>
+                    <div class="value"><i class="fas fa-briefcase"></i> Software Developer</div>
+                </div>
+                <div class="about-item">
+                    <div class="label">Website</div>
+                    <div class="value"><i class="fas fa-globe"></i> johndoe.dev</div>
+                </div>
+                <div class="about-item">
+                    <div class="label">Interests</div>
+                    <div class="value" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">
+                        <span style="background:var(--dark-gray);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:400;">Tech</span>
+                        <span style="background:var(--dark-gray);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:400;">Photography</span>
+                        <span style="background:var(--dark-gray);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:400;">Music</span>
+                        <span style="background:var(--dark-gray);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:400;">Coffee</span>
+                        <span style="background:var(--dark-gray);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:400;">Travel</span>
+                    </div>
+                </div>
+                <div class="about-item">
+                    <div class="label">Languages</div>
+                    <div class="value" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">
+                        <span style="background:var(--dark-gray);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:400;">🇬🇧 English (Native)</span>
+                        <span style="background:var(--dark-gray);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:400;">🇪🇸 Spanish (Fluent)</span>
+                        <span style="background:var(--dark-gray);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:400;">🇫🇷 French (Intermediate)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photos Section -->
+        <div class="content-section" id="section-photos">
+            <div class="posts-grid">
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#ff005044,#ff0050);font-size:64px;">🌅</div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#00aaff44,#00aaff);font-size:64px;">🏔️</div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#00ff8844,#00ff88);font-size:64px;">🌊</div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#ffaa0044,#ffaa00);font-size:64px;">🌄</div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#aa66ff44,#aa66ff);font-size:64px;">🎆</div>
+                </div>
+                <div class="post-card">
+                    <div class="post-image" style="background:linear-gradient(135deg,#ff44aa44,#ff44aa);font-size:64px;">🌺</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
+    <script>
+        // ===== TAB SWITCHING =====
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.toggle('active', section.id === `section-${tab}`);
+            });
+        }
+
+        // ===== SEND MESSAGE =====
+        function sendMessage() {
+            showToast('💬 Opening chat with John Doe...');
+            setTimeout(() => {
+                window.location.href = 'chathome.html';
+            }, 1000);
+        }
+
+        // ===== TOGGLE FOLLOW =====
+        let isFollowing = false;
+
+        function toggleFollow() {
+            const followText = document.getElementById('followText');
+            if (isFollowing) {
+                followText.textContent = 'Follow';
+                showToast('❌ Unfollowed John Doe');
+            } else {
+                followText.textContent = 'Following';
+                showToast('✅ Now following John Doe!');
+            }
+            isFollowing = !isFollowing;
+        }
+
+        // ===== VIEW FRIEND PROFILE =====
+        function viewFriendProfile() {
+            showToast('👤 Viewing friend profile');
+        }
+
+        // ===== TOAST =====
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '1') switchTab('posts');
+            if (e.key === '2') switchTab('friends');
+            if (e.key === '3') switchTab('about');
+            if (e.key === '4') switchTab('photos');
+            if (e.key === 'm' || e.key === 'M') {
+                if (!e.ctrlKey && !e.metaKey) sendMessage();
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,691 @@
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Out · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #ff0000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --danger: #ff0044;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== LOGOUT CARD ===== */
+        .logout-container {
+            max-width: 480px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            padding: 40px;
+            text-align: center;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logout-container .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 0, 80, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border: 2px solid var(--primary);
+        }
+
+        .logout-container .icon-wrapper i {
+            font-size: 36px;
+            color: var(--primary);
+        }
+
+        .logout-container h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .logout-container .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .logout-container .user-info {
+            background: var(--darker);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid var(--card-border);
+        }
+
+        .logout-container .user-info .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .logout-container .user-info .details {
+            text-align: left;
+            flex: 1;
+        }
+
+        .logout-container .user-info .details .name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .logout-container .user-info .details .email {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        .logout-container .session-info {
+            background: var(--darker);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--card-border);
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .logout-container .session-info i {
+            color: var(--success);
+            font-size: 14px;
+        }
+
+        .logout-container .session-info .device {
+            flex: 1;
+            text-align: left;
+        }
+
+        .logout-container .session-info .device strong {
+            color: var(--light);
+        }
+
+        .logout-container .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .logout-container .btn-group .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logout-container .btn-group .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .logout-container .btn-group .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 80, 0.3);
+        }
+
+        .logout-container .btn-group .btn-secondary {
+            background: var(--dark-gray);
+            color: var(--light);
+        }
+
+        .logout-container .btn-group .btn-secondary:hover {
+            background: var(--gray);
+            transform: translateY(-2px);
+        }
+
+        .logout-container .btn-group .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .logout-container .btn-group .btn-danger:hover {
+            background: #cc0033;
+            transform: translateY(-2px);
+        }
+
+        .logout-container .btn-group .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .logout-container .security-options {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .logout-container .security-options .option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .logout-container .security-options .option:hover {
+            color: var(--light);
+        }
+
+        .logout-container .security-options .option .label {
+            font-size: 13px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-container .security-options .option .label i {
+            width: 18px;
+            color: var(--primary);
+        }
+
+        .logout-container .security-options .option .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--card-border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logout-container .security-options .option .checkbox.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .logout-container .security-options .option .checkbox.active i {
+            display: block;
+        }
+
+        .logout-container .security-options .option .checkbox i {
+            display: none;
+            color: white;
+            font-size: 12px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .logout-container {
+                padding: 28px 20px;
+            }
+            .logout-container .btn-group {
+                flex-direction: column;
+            }
+            .logout-container .btn-group .btn {
+                flex: none;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logout-container {
+                padding: 20px 16px;
+            }
+            .logout-container h1 {
+                font-size: 20px;
+            }
+            .logout-container .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            .logout-container .user-info .details {
+                text-align: center;
+            }
+            .logout-container .session-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            .logout-container .session-info .device {
+                text-align: center;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chating.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='groups.html'">
+                <i class="fas fa-users"></i>
+                <span class="badge">8</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='logout.html'">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <div class="logout-container">
+            <!-- Icon -->
+            <div class="icon-wrapper">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+
+            <!-- Title -->
+            <h1>Log Out</h1>
+            <p class="subtitle">You're about to sign out of your Gramite account. Are you sure you want to continue?</p>
+
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="avatar">JD</div>
+                <div class="details">
+                    <div class="name">John Doe</div>
+                    <div class="email">john.doe@email.com</div>
+                </div>
+            </div>
+
+            <!-- Session Info -->
+            <div class="session-info">
+                <i class="fas fa-circle"></i>
+                <div class="device">
+                    <strong>Active Session</strong> · Chrome on Windows 10
+                </div>
+                <span style="font-size:12px;">Last active: 2m ago</span>
+            </div>
+
+            <!-- Security Options -->
+            <div class="security-options">
+                <div class="option" onclick="toggleCheckbox(this)">
+                    <span class="label">
+                        <i class="fas fa-lock"></i> 
+                        Sign out from all devices
+                    </span>
+                    <div class="checkbox" id="allDevices">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                <div class="option" onclick="toggleCheckbox(this)">
+                    <span class="label">
+                        <i class="fas fa-trash-alt"></i> 
+                        Clear local data on this device
+                    </span>
+                    <div class="checkbox" id="clearData">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                <div class="option" onclick="toggleCheckbox(this)">
+                    <span class="label">
+                        <i class="fas fa-envelope"></i> 
+                        Send logout confirmation email
+                    </span>
+                    <div class="checkbox active" id="sendEmail">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="cancelLogout()">
+                    <i class="fas fa-arrow-left"></i> Cancel
+                </button>
+                <button class="btn btn-danger" id="logoutBtn" onclick="confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </button>
+            </div>
+
+            <!-- Additional Info -->
+            <div style="margin-top: 16px; font-size: 12px; color: var(--gray);">
+                <i class="fas fa-shield-alt"></i> 
+                Your data is encrypted and secure. You'll be redirected to the login page.
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
+    <script>
+        // ===== TOGGLE CHECKBOX =====
+        function toggleCheckbox(element) {
+            const checkbox = element.querySelector('.checkbox');
+            if (checkbox) {
+                checkbox.classList.toggle('active');
+                const label = element.querySelector('.label').textContent.trim();
+                const isActive = checkbox.classList.contains('active');
+                showToast(`${isActive ? '✅' : '❌'} ${label}`);
+            }
+        }
+
+        // ===== CANCEL LOGOUT =====
+        function cancelLogout() {
+            showToast('↩️ Logout cancelled. Returning to safety.');
+            setTimeout(() => {
+                window.location.href = 'Home.html';
+            }, 1000);
+        }
+
+        // ===== CONFIRM LOGOUT =====
+        function confirmLogout() {
+            const btn = document.getElementById('logoutBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging out...';
+
+            // Get checkbox states
+            const allDevices = document.getElementById('allDevices').classList.contains('active');
+            const clearData = document.getElementById('clearData').classList.contains('active');
+            const sendEmail = document.getElementById('sendEmail').classList.contains('active');
+
+            // Simulate logout process
+            setTimeout(() => {
+                // Show success message
+                showToast('✅ Successfully logged out! See you soon!');
+                btn.innerHTML = '<i class="fas fa-check"></i> Logged Out';
+
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }, 2000);
+
+            // Log the options for demonstration
+            console.log('Logout options:', { allDevices, clearData, sendEmail });
+        }
+
+        // ===== TOAST =====
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', function(e) {
+            // Escape to cancel
+            if (e.key === 'Escape') {
+                cancelLogout();
+            }
+            // Enter to confirm logout
+            if (e.key === 'Enter') {
+                const btn = document.getElementById('logoutBtn');
+                if (!btn.disabled) {
+                    confirmLogout();
+                }
+            }
+            // Ctrl+Shift+D to toggle all devices
+            if (e.key === 'D' && e.ctrlKey && e.shiftKey) {
+                e.preventDefault();
+                const option = document.querySelector('.option:first-child');
+                if (option) toggleCheckbox(option);
+            }
+        });
+
+        // ===== SESSION TIMEOUT WARNING =====
+        let idleTime = 0;
+        const maxIdleTime = 300; // 5 minutes
+
+        // Reset idle timer on user activity
+        document.addEventListener('mousemove', resetIdleTimer);
+        document.addEventListener('keydown', resetIdleTimer);
+        document.addEventListener('click', resetIdleTimer);
+
+        function resetIdleTimer() {
+            idleTime = 0;
+        }
+
+        // Check idle time every minute
+        setInterval(() => {
+            idleTime++;
+            if (idleTime >= maxIdleTime) {
+                showToast('⏰ Session timeout warning. You will be logged out soon.');
+                idleTime = 0;
+            }
+        }, 60000);
+    </script>
+
+</body>
+</html>

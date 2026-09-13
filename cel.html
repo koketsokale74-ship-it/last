@@ -1,0 +1,957 @@
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrity Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0050;
+            --primary-dark: #ff004c;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --gold: #ffd700;
+            --verified: #1da1f2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--darker);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .header-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .header-action-btn:hover {
+            color: var(--primary);
+        }
+        
+        /* Main container */
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+        
+        /* Celebrity header section */
+        .celebrity-header {
+            position: relative;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .celebrity-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--darker));
+            z-index: -1;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        /* Profile picture */
+        .profile-pic-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 15px;
+        }
+        
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--light);
+            object-fit: cover;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .verified-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 28px;
+            height: 28px;
+            background: var(--verified);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--light);
+        }
+        
+        .verified-badge i {
+            color: var(--light);
+            font-size: 14px;
+        }
+        
+        /* User info */
+        .user-info {
+            margin-bottom: 20px;
+        }
+        
+        .username {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .user-handle {
+            color: var(--gray);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .user-bio {
+            font-size: 15px;
+            margin-bottom: 15px;
+            padding: 0 20px;
+            line-height: 1.5;
+        }
+        
+        /* Follow stats */
+        .follow-stats {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: var(--light);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 1px solid var(--gray);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-gold {
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            font-weight: 700;
+        }
+        
+        .btn-gold:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+        }
+        
+        /* Celebrity highlights */
+        .celebrity-highlights {
+            padding: 0 15px 20px;
+        }
+        
+        .highlights-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .highlights-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 5px 0 15px;
+            scrollbar-width: none;
+        }
+        
+        .highlights-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .highlight-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 70px;
+        }
+        
+        .highlight-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            position: relative;
+        }
+        
+        .highlight-image {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--dark);
+        }
+        
+        .highlight-name {
+            font-size: 12px;
+            text-align: center;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--dark-gray);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* Content sections */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        /* Posts grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+        
+        .grid-item {
+            aspect-ratio: 9/16;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .grid-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .grid-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .grid-item .overlay i {
+            color: var(--light);
+            font-size: 12px;
+        }
+        
+        .grid-item .overlay span {
+            color: var(--light);
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Live badge */
+        .live-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: var(--primary);
+            color: var(--light);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .live-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--light);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        /* Featured content */
+        .featured-content {
+            padding: 15px;
+        }
+        
+        .featured-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .featured-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .featured-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+        
+        .featured-details {
+            padding: 12px;
+        }
+        
+        .featured-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .featured-info {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .featured-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .featured-btn {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .featured-btn-primary {
+            background: var(--primary);
+            color: var(--light);
+        }
+        
+        .featured-btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .featured-btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 1px solid var(--gray);
+        }
+        
+        .featured-btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Upcoming events */
+        .events-list {
+            padding: 15px;
+        }
+        
+        .event-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .event-date {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .event-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .event-location {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .event-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 5px;
+        }
+        
+        .nav-item i {
+            font-size: 22px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .profile-pic-container {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .username {
+                font-size: 22px;
+            }
+            
+            .user-handle {
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .stat-value {
+                font-size: 18px;
+            }
+            
+            .highlight-circle {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .highlight-image {
+                width: 52px;
+                height: 52px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">Celebrity Profile</div>
+        <div class="header-actions">
+            <button class="header-action-btn">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="header-action-btn">
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="profile-container">
+        <!-- Celebrity header section -->
+        <div class="celebrity-header">
+            <div class="celebrity-background"></div>
+            
+            <!-- Profile picture with verified badge -->
+            <div class="profile-pic-container">
+                <img src="https://storage.googleapis.com/a1aa/image/sFWBI7p0Q0bq3Sfzq9Hf3Fp3W3y3n3q3f3q3f3q3f3q3f3q.jpg" alt="Celebrity Profile" class="profile-pic">
+                <div class="verified-badge">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            
+            <!-- User information -->
+            <div class="user-info">
+                <h1 class="username">
+                    Selena Gomez 
+                    <i class="fas fa-check-circle" style="color: var(--verified);"></i>
+                </h1>
+                <p class="user-handle">@selenagomez</p>
+                <p class="user-bio">Singer 🎤 | Actress 🎬 | Producer | Founder of Rare Beauty | Only Murders in the Building</p>
+            </div>
+            
+            <!-- Follow stats -->
+            <div class="follow-stats">
+                <div class="stat">
+                    <div class="stat-value">328</div>
+                    <div class="stat-label">Posts</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">248M</div>
+                    <div class="stat-label">Followers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">245</div>
+                    <div class="stat-label">
+                </div>
+            </div>
+            
+            <!-- Action buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Follow
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-comment"></i> Message
+                </button>
+                <button class="btn btn-gold">
+                    <i class="fas fa-star"></i> Subscribe
+                </button>
+            </div>
+        </div>
+        
+        <!-- Celebrity highlights -->
+        <div class="celebrity-highlights">
+            <div class="highlights-title">
+                <span>Highlights</span>
+                <i class="fas fa-chevron-right" style="font-size: 12px;"></i>
+            </div>
+            <div class="highlights-scroll">
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://source.unsplash.com/random/100x100/?music" alt="Music" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">Music</span>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://source.unsplash.com/random/100x100/?movie" alt="Movies" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">Movies</span>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://source.unsplash.com/random/100x100/?beauty" alt="Beauty" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">Rare Beauty</span>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://source.unsplash.com/random/100x100/?charity" alt="Charity" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">Charity</span>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://source.unsplash.com/random/100x100/?behindthescenes" alt="BTS" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">BTS</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs navigation -->
+        <div class="tabs">
+            <div class="tab active" data-tab="posts">
+                <i class="fas fa-th-large"></i> Posts
+            </div>
+            <div class="tab" data-tab="featured">
+                <i class="fas fa-star"></i> Featured
+            </div>
+            <div class="tab" data-tab="events">
+                <i class="fas fa-calendar-alt"></i> Events
+            </div>
+        </div>
+        
+        <!-- Posts Section -->
+        <div class="content-section active" id="posts-section">
+            <div class="content-grid">
+                <!-- Sample grid items with different content -->
+                <div class="grid-item">
+                    <img src="https://source.unsplash.com/random/300x500/?singing" alt="Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>2.4M</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://source.unsplash.com/random/300x500/?redcarpet" alt="Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>3.1M</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://source.unsplash.com/random/300x500/?studio" alt="Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>1.8M</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://source.unsplash.com/random/300x500/?makeup" alt="Post">
+                    <div class="live-badge">
+                        LIVE
+                    </div>
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>4.2M</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://source.unsplash.com/random/300x500/?concert" alt="Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>2.9M</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://source.unsplash.com/random/300x500/?award" alt="Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>3.7M</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Featured Section -->
+        <div class="content-section" id="featured-section">
+            <div class="featured-content">
+                <div class="featured-title">
+                    <span>Featured Content</span>
+                </div>
+                
+                <div class="featured-item">
+                    <img src="https://source.unsplash.com/random/600x400/?musicvideo" alt="Music Video" class="featured-image">
+                    <div class="featured-details">
+                        <div class="featured-name">Single Out Now - "Calm Down"</div>
+                        <div class="featured-info">Official music video · 245M views</div>
+                        <div class="featured-actions">
+                            <button class="featured-btn featured-btn-primary">
+                                <i class="fas fa-play"></i> Watch
+                            </button>
+                            <button class="featured-btn featured-btn-outline">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="featured-item">
+                    <img src="https://source.unsplash.com/random/600x400/?makeupproduct" alt="Beauty Product" class="featured-image">
+                    <div class="featured-details">
+                        <div class="featured-name">Rare Beauty New Collection</div>
+                        <div class="featured-info">Limited edition · Available now</div>
+                        <div class="featured-actions">
+                            <button class="featured-btn featured-btn-primary">
+                                <i class="fas fa-shopping-bag"></i> Shop
+                            </button>
+                            <button class="featured-btn featured-btn-outline">
+                                <i class="fas fa-heart"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Events Section -->
+        <div class="content-section" id="events-section">
+            <div class="events-list">
+                <div class="featured-title">
+                    <span>Upcoming Events</span>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-date">June 15, 2023 · 8:00 PM</div>
+                    <div class="event-title">Summer Concert Tour - Los Angeles</div>
+                    <div class="event-location">
+                        <i class="fas fa-map-marker-alt"></i> Staples Center, Los Angeles, CA
+                    </div>
+                    <div class="event-actions">
+                        <button class="featured-btn featured-btn-primary">
+                            <i class="fas fa-ticket-alt"></i> Buy Tickets
+                        </button>
+                        <button class="featured-btn featured-btn-outline">
+                            <i class="fas fa-bell"></i> Remind Me
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-date">July 2, 2023 · 7:30 PM</div>
+                    <div class="event-title">Rare Beauty Launch Event - NYC</div>
+                    <div class="event-location">
+                        <i class="fas fa-map-marker-alt"></i> Sephora Times Square, New York, NY
+                    </div>
+                    <div class="event-actions">
+                        <button class="featured-btn featured-btn-primary">
+                            <i class="fas fa-ticket-alt"></i> RSVP
+                        </button>
+                        <button class="featured-btn featured-btn-outline">
+                            <i class="fas fa-bell"></i> Remind Me
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-date">August 10, 2023 · 9:00 PM</div>
+                    <div class="event-title">Only Murders in the Building Premiere</div>
+                    <div class="event-location">
+                        <i class="fas fa-map-marker-alt"></i> Hollywood Theater, Los Angeles, CA
+                    </div>
+                    <div class="event-actions">
+                        <button class="featured-btn featured-btn-outline">
+                            <i class="fas fa-info-circle"></i> More Info
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom navigation -->
+    <div class="bottom-nav">
+        <a href="Home.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+       
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Hide all content sections
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the corresponding content section
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}-section`).classList.add('active');
+            });
+        });
+        
+        // Follow button functionality
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            if (this.textContent.includes('Follow')) {
+                this.innerHTML = '<i class="fas fa-check"></i> Following';
+            } else {
+                this.innerHTML = '<i class="fas fa-plus"></i> Follow';
+            }
+        });
+        
+        // Subscribe button functionality
+        document.querySelector('.btn-gold').addEventListener('click', function() {
+            if (this.textContent.includes('Subscribe')) {
+                this.innerHTML = '<i class="fas fa-star"></i> Subscribed';
+            } else {
+                this.innerHTML = '<i class="fas fa-star"></i> Subscribe';
+            }
+        });
+        
+        // Header search functionality
+        document.querySelector('.header-action-btn:first-child').addEventListener('click', function() {
+            alert('Search functionality would go here!');
+        });
+        
+        // Header menu functionality
+        document.querySelector('.header-action-btn:last-child').addEventListener('click', function() {
+            alert('More options would appear here!');
+        });
+    </script>
+</body>
+</html>

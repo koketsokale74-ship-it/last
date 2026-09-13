@@ -1,0 +1,940 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy & Safety · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #ff0000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --danger: #ff0000;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-header .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .last-updated {
+            color: var(--gray);
+            font-size: 13px;
+            background: var(--card-bg);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .last-updated i {
+            color: var(--primary);
+        }
+
+        /* ===== CONTENT LAYOUT ===== */
+        .content-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Sidebar navigation */
+        .content-nav {
+            width: 220px;
+            min-width: 220px;
+            position: sticky;
+            top: 0;
+            height: fit-content;
+        }
+
+        .content-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .content-nav .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .content-nav .nav-item.active {
+            background: rgba(255, 0, 80, 0.1);
+            color: var(--primary);
+        }
+
+        .content-nav .nav-item i {
+            width: 18px;
+            font-size: 14px;
+        }
+
+        .content-nav .nav-divider {
+            height: 1px;
+            background: var(--dark-gray);
+            margin: 8px 0;
+        }
+
+        /* Content sections */
+        .content-sections {
+            flex: 1;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 i {
+            color: var(--primary);
+        }
+
+        .section .section-desc {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Cards */
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .info-card .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card .card-title i {
+            color: var(--primary);
+        }
+
+        .info-card .card-content {
+            color: var(--gray);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .info-card .card-content p {
+            margin-bottom: 12px;
+        }
+
+        .info-card .card-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-card .card-content ul li {
+            padding: 6px 0 6px 28px;
+            position: relative;
+        }
+
+        .info-card .card-content ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .info-card .card-content strong {
+            color: var(--light);
+        }
+
+        .info-card .highlight-box {
+            background: rgba(255, 0, 80, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+        }
+
+        .info-card .highlight-box strong {
+            color: var(--primary);
+        }
+
+        /* Safety tips grid */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .tip-card {
+            background: var(--darker);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .tip-card .tip-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .tip-card .tip-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .tip-card .tip-desc {
+            color: var(--gray);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* Report section */
+        .report-section {
+            margin-top: 20px;
+        }
+
+        .report-btn {
+            padding: 12px 28px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .report-btn:hover {
+            background: #cc0033;
+            transform: translateY(-2px);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .content-layout {
+                flex-direction: column;
+            }
+            .content-nav {
+                width: 100%;
+                min-width: unset;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                position: relative;
+            }
+            .content-nav .nav-item {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+            .content-nav .nav-divider {
+                display: none;
+            }
+            .main-container {
+                padding: 20px;
+            }
+            .tips-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .page-header h1 {
+                font-size: 22px;
+            }
+            .info-card {
+                padding: 16px;
+            }
+            .tips-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .last-updated {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .section h2 {
+                font-size: 18px;
+            }
+            .info-card .card-content {
+                font-size: 13px;
+            }
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-nav .nav-item {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chating.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='groups.html'">
+                <i class="fas fa-users"></i>
+                <span class="badge">8</span>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='privecy.html'">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <h1>Privacy & Safety</h1>
+                <div class="subtitle">Your security and privacy are our top priorities</div>
+            </div>
+            <div class="last-updated">
+                <i class="fas fa-clock"></i> Last Updated: July 13, 2026
+            </div>
+        </div>
+
+        <div class="content-layout">
+            <!-- Navigation -->
+            <div class="content-nav">
+                <div class="nav-item active" data-section="overview" onclick="switchSection('overview')">
+                    <i class="fas fa-info-circle"></i> Overview
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="privacy" onclick="switchSection('privacy')">
+                    <i class="fas fa-lock"></i> Privacy Policy
+                </div>
+                <div class="nav-item" data-section="data" onclick="switchSection('data')">
+                    <i class="fas fa-database"></i> Data Protection
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="safety" onclick="switchSection('safety')">
+                    <i class="fas fa-shield-alt"></i> Safety Guidelines
+                </div>
+                <div class="nav-item" data-section="reporting" onclick="switchSection('reporting')">
+                    <i class="fas fa-flag"></i> Reporting & Support
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="security" onclick="switchSection('security')">
+                    <i class="fas fa-user-shield"></i> Account Security
+                </div>
+                <div class="nav-item" data-section="children" onclick="switchSection('children')">
+                    <i class="fas fa-child"></i> Child Safety
+                </div>
+            </div>
+
+            <!-- Content Sections -->
+            <div class="content-sections">
+
+                <!-- ===== OVERVIEW ===== -->
+                <div class="section active" id="section-overview">
+                    <h2><i class="fas fa-info-circle"></i> Privacy & Safety Overview</h2>
+                    <p class="section-desc">Understanding how Gramite protects your information and ensures a safe experience.</p>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-heart"></i> Our Commitment</div>
+                        <div class="card-content">
+                            <p>At Gramite, we believe that privacy and safety are fundamental rights. We are committed to protecting your personal information and creating a safe environment where you can connect, share, and express yourself freely.</p>
+                            <p>Our approach to privacy and safety is built on three core principles:</p>
+                            <ul>
+                                <li><strong>Transparency:</strong> We clearly explain how we collect, use, and protect your data.</li>
+                                <li><strong>Control:</strong> You have control over your privacy settings and what you share.</li>
+                                <li><strong>Security:</strong> We use industry-leading security measures to protect your information.</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <strong>🔒 Your Trust Matters:</strong> We regularly review and update our privacy and safety practices to ensure they meet the highest standards.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-gavel"></i> Key Principles</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>Data Minimization:</strong> We only collect data that is necessary for providing our services.</li>
+                                <li><strong>User Empowerment:</strong> You have the right to access, modify, and delete your data.</li>
+                                <li><strong>Proactive Safety:</strong> We use advanced tools to detect and prevent harmful content.</li>
+                                <li><strong>Community Standards:</strong> Our guidelines ensure a respectful and inclusive community.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== PRIVACY POLICY ===== -->
+                <div class="section" id="section-privacy">
+                    <h2><i class="fas fa-lock"></i> Privacy Policy</h2>
+                    <p class="section-desc">How we collect, use, and protect your personal information.</p>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-database"></i> Information We Collect</div>
+                        <div class="card-content">
+                            <p>We collect information to provide, improve, and personalize your experience on Gramite. This includes:</p>
+                            <ul>
+                                <li><strong>Account Information:</strong> Name, email address, username, and profile information.</li>
+                                <li><strong>Content:</strong> Posts, comments, messages, and media you share.</li>
+                                <li><strong>Usage Data:</strong> How you interact with our platform, including device information and preferences.</li>
+                                <li><strong>Location Data:</strong> With your permission, we may collect location information to improve your experience.</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <strong>📌 Important:</strong> We never sell your personal data to third parties. Your information is used solely to improve your Gramite experience.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-share-alt"></i> How We Use Your Data</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>Service Delivery:</strong> To provide and maintain our platform features.</li>
+                                <li><strong>Improvement:</strong> To enhance user experience and develop new features.</li>
+                                <li><strong>Communication:</strong> To send updates, notifications, and support messages.</li>
+                                <li><strong>Safety & Security:</strong> To detect and prevent fraud, abuse, and harmful content.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-user-cog"></i> Your Privacy Rights</div>
+                        <div class="card-content">
+                            <p>You have the right to:</p>
+                            <ul>
+                                <li><strong>Access:</strong> Request a copy of your personal data.</li>
+                                <li><strong>Rectify:</strong> Correct inaccurate or incomplete information.</li>
+                                <li><strong>Delete:</strong> Request deletion of your account and associated data.</li>
+                                <li><strong>Restrict:</strong> Limit how your data is processed.</li>
+                                <li><strong>Object:</strong> Object to certain data processing activities.</li>
+                            </ul>
+                            <p style="margin-top:12px;">For any privacy-related requests, contact us at <strong style="color:var(--primary);">privacy@gramite.com</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== DATA PROTECTION ===== -->
+                <div class="section" id="section-data">
+                    <h2><i class="fas fa-database"></i> Data Protection</h2>
+                    <p class="section-desc">How we keep your data secure and what you can do to protect yourself.</p>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-shield-alt"></i> Security Measures</div>
+                        <div class="card-content">
+                            <p>We implement multiple layers of security to protect your data:</p>
+                            <ul>
+                                <li><strong>Encryption:</strong> All data is encrypted in transit and at rest using industry-standard protocols.</li>
+                                <li><strong>Access Control:</strong> Strict access controls ensure only authorized personnel can access user data.</li>
+                                <li><strong>Monitoring:</strong> Continuous monitoring for suspicious activity and potential breaches.</li>
+                                <li><strong>Regular Audits:</strong> Independent security audits to identify and address vulnerabilities.</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <strong>🔐 Data Storage:</strong> Your data is stored in secure, redundant facilities with strict physical security measures.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-user-secret"></i> What You Can Do</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>Strong Passwords:</strong> Use unique, complex passwords for your account.</li>
+                                <li><strong>Two-Factor Authentication:</strong> Enable 2FA for an extra layer of security.</li>
+                                <li><strong>Regular Updates:</strong> Keep your app and devices updated with the latest security patches.</li>
+                                <li><strong>Privacy Settings:</strong> Review and adjust your privacy preferences regularly.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SAFETY GUIDELINES ===== -->
+                <div class="section" id="section-safety">
+                    <h2><i class="fas fa-shield-alt"></i> Safety Guidelines</h2>
+                    <p class="section-desc">Tips and best practices for staying safe on Gramite.</p>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-lightbulb"></i> Safety Tips</div>
+                        <div class="tips-grid">
+                            <div class="tip-card">
+                                <div class="tip-icon">🔒</div>
+                                <div class="tip-title">Protect Your Account</div>
+                                <div class="tip-desc">Use a strong password and enable 2FA</div>
+                            </div>
+                            <div class="tip-card">
+                                <div class="tip-icon">👁️</div>
+                                <div class="tip-title">Review Privacy Settings</div>
+                                <div class="tip-desc">Regularly check who can see your content</div>
+                            </div>
+                            <div class="tip-card">
+                                <div class="tip-icon">🚫</div>
+                                <div class="tip-title">Block & Report</div>
+                                <div class="tip-desc">Don't hesitate to block or report harassment</div>
+                            </div>
+                            <div class="tip-card">
+                                <div class="tip-icon">📱</div>
+                                <div class="tip-title">Be Careful What You Share</div>
+                                <div class="tip-desc">Avoid sharing sensitive personal information</div>
+                            </div>
+                            <div class="tip-card">
+                                <div class="tip-icon">🔍</div>
+                                <div class="tip-title">Verify Before Trusting</div>
+                                <div class="tip-desc">Be cautious of suspicious accounts or messages</div>
+                            </div>
+                            <div class="tip-card">
+                                <div class="tip-icon">🤝</div>
+                                <div class="tip-title">Stay Respectful</div>
+                                <div class="tip-desc">Treat others with kindness and respect</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-list-check"></i> Community Guidelines</div>
+                        <div class="card-content">
+                            <p>To maintain a safe and welcoming environment, we expect all users to follow our community guidelines:</p>
+                            <ul>
+                                <li><strong>Respect:</strong> Treat all members with respect and dignity.</li>
+                                <li><strong>No Hate Speech:</strong> Hate speech, discrimination, and harassment are strictly prohibited.</li>
+                                <li><strong>No Bullying:</strong> Bullying or intimidating behavior will not be tolerated.</li>
+                                <li><strong>Appropriate Content:</strong> Share content that is appropriate for a diverse community.</li>
+                                <li><strong>No Impersonation:</strong> Do not impersonate others or use fake identities.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== REPORTING & SUPPORT ===== -->
+                <div class="section" id="section-reporting">
+                    <h2><i class="fas fa-flag"></i> Reporting & Support</h2>
+                    <p class="section-desc">How to report issues and get help when you need it.</p>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-flag"></i> Report a Problem</div>
+                        <div class="card-content">
+                            <p>If you encounter any of the following, please report it immediately:</p>
+                            <ul>
+                                <li><strong>Harassment or Bullying:</strong> Persistent negative behavior directed at you or others.</li>
+                                <li><strong>Hate Speech:</strong> Content that attacks or discriminates against individuals or groups.</li>
+                                <li><strong>Inappropriate Content:</strong> Explicit, violent, or otherwise unsuitable content.</li>
+                                <li><strong>Impersonation:</strong> Accounts pretending to be someone else.</li>
+                                <li><strong>Security Issues:</strong> Suspicious activity or potential security breaches.</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <strong>📢 We're Here to Help:</strong> Our moderation team reviews all reports within 24 hours and takes appropriate action.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <button class="report-btn" onclick="reportIssue()">
+                            <i class="fas fa-flag"></i> Report an Issue
+                        </button>
+                        <button style="margin-left:12px;padding:12px 28px;background:var(--primary);color:white;border:none;border-radius:10px;font-family:var(--font-family);font-weight:600;cursor:pointer;transition:all 0.3s ease;display:inline-flex;align-items:center;gap:8px;" onclick="contactSupport()">
+                            <i class="fas fa-envelope"></i> Contact Support
+                        </button>
+                    </div>
+
+                    <div class="info-card" style="margin-top:20px;">
+                        <div class="card-title"><i class="fas fa-headset"></i> Support Resources</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>Help Center:</strong> <a href="help-support.html" style="color:var(--primary);text-decoration:none;">Visit our Help Center</a> for FAQs and guides.</li>
+                                <li><strong>Email Support:</strong> <span style="color:var(--primary);">support@gramite.com</span></li>
+                                <li><strong>Emergency Contact:</strong> If you're in immediate danger, please contact your local emergency services.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ACCOUNT SECURITY ===== -->
+                <div class="section" id="section-security">
+                    <h2><i class="fas fa-user-shield"></i> Account Security</h2>
+                    <p class="section-desc">Protect your account with these essential security features.</p>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-key"></i> Security Features</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>Two-Factor Authentication (2FA):</strong> Add an extra layer of security by requiring a verification code in addition to your password.</li>
+                                <li><strong>Password Manager:</strong> Use a trusted password manager to create and store strong, unique passwords.</li>
+                                <li><strong>Login Notifications:</strong> Get alerts when your account is accessed from a new device or location.</li>
+                                <li><strong>Session Management:</strong> View and manage all active sessions from your account settings.</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <strong>🛡️ Pro Tip:</strong> Enable 2FA and review your active sessions regularly to keep your account secure.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Signs of a Compromised Account</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>Unauthorized Activity:</strong> Posts or messages you didn't create.</li>
+                                <li><strong>Password Changes:</strong> You receive notifications about password changes you didn't make.</li>
+                                <li><strong>Login Alerts:</strong> Unusual login attempts from unfamiliar locations.</li>
+                                <li><strong>Profile Changes:</strong> Your profile information has been altered without your knowledge.</li>
+                            </ul>
+                            <p style="margin-top:12px;">If you notice any of these signs, <strong style="color:var(--primary);">immediately change your password</strong> and contact our support team.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== CHILD SAFETY ===== -->
+                <div class="section" id="section-children">
+                    <h2><i class="fas fa-child"></i> Child Safety</h2>
+                    <p class="section-desc">Our commitment to protecting minors on Gramite.</p>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-shield-child"></i> Protecting Young Users</div>
+                        <div class="card-content">
+                            <p>We are committed to providing a safe experience for younger users. Our platform is designed with the following protections:</p>
+                            <ul>
+                                <li><strong>Age Requirements:</strong> Users must be at least 13 years old to create an account.</li>
+                                <li><strong>Parental Controls:</strong> Tools for parents to monitor and manage their child's account.</li>
+                                <li><strong>Content Filters:</strong> Advanced filters to prevent exposure to inappropriate content.</li>
+                                <li><strong>Reporting Tools:</strong> Dedicated reporting channels for safety concerns involving minors.</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <strong>👨‍👩‍👦 Parental Guidance:</strong> We encourage parents to discuss online safety with their children and use our parental control features.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-title"><i class="fas fa-book"></i> Tips for Parents</div>
+                        <div class="card-content">
+                            <ul>
+                                <li><strong>Stay Involved:</strong> Engage with your child's online activities and know who they interact with.</li>
+                                <li><strong>Set Boundaries:</strong> Establish clear rules about screen time and online behavior.</li>
+                                <li><strong>Educate:</strong> Teach your child about online safety, privacy, and the importance of respectful communication.</li>
+                                <li><strong>Communicate:</strong> Encourage open dialogue about their online experiences and concerns.</li>
+                                <li><strong>Use Tools:</strong> Take advantage of parental controls and monitoring features available on the platform.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
+    <script>
+        // ===== SECTION SWITCHING =====
+        function switchSection(section) {
+            document.querySelectorAll('.content-nav .nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelector(`.content-nav .nav-item[data-section="${section}"]`).classList.add('active');
+
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`section-${section}`).classList.add('active');
+
+            // Update URL hash
+            window.location.hash = section;
+        }
+
+        // ===== REPORT ISSUE =====
+        function reportIssue() {
+            showToast('🚩 Report submitted. Our team will review it within 24 hours.');
+        }
+
+        // ===== CONTACT SUPPORT =====
+        function contactSupport() {
+            showToast('📧 Support ticket created. We\'ll respond within 2-4 hours.');
+        }
+
+        // ===== TOAST =====
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        // ===== SET ACTIVE SECTION BASED ON URL HASH =====
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const navItem = document.querySelector(`.content-nav .nav-item[data-section="${hash}"]`);
+                if (navItem) {
+                    navItem.click();
+                }
+            }
+        });
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', function(e) {
+            const sections = ['overview', 'privacy', 'data', 'safety', 'reporting', 'security', 'children'];
+            const keyMap = ['1', '2', '3', '4', '5', '6', '7'];
+            const index = keyMap.indexOf(e.key);
+            if (index !== -1 && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                switchSection(sections[index]);
+            }
+            if (e.key === 'r' || e.key === 'R') {
+                if (!e.ctrlKey && !e.metaKey) reportIssue();
+            }
+        });
+    </script>
+
+</body>
+</html>

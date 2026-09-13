@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Gramite · Welcome</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff2d55;
+            --primary-2: #ff7a45;
+            --primary-glow: rgba(255, 45, 85, 0.45);
+            --bg: #050507;
+            --bg-elevated: #0c0c12;
+            --card-bg: rgba(255, 255, 255, 0.035);
+            --border-dim: rgba(255, 255, 255, 0.08);
+            --border-soft: rgba(255, 255, 255, 0.05);
+            --text-main: #f5f4fa;
+            --text-muted: #7d7d92;
+            --text-dim: #4e4e5e;
+            --font-display: 'Bricolage Grotesque', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-lg: 30px;
+            --radius-md: 20px;
+            --radius-sm: 12px;
+        }
+
+        html, body {
+            background: var(--bg);
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ===== GRAIN TEXTURE ===== */
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.035;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ===== MESH BACKGROUND ===== */
+        .mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 700px 500px at 15% 10%, rgba(255, 45, 85, 0.14) 0%, transparent 60%),
+                radial-gradient(ellipse 600px 600px at 90% 85%, rgba(255, 122, 69, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 500px 500px at 50% 100%, rgba(255, 45, 85, 0.06) 0%, transparent 65%);
+        }
+
+        .mesh::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: radial-gradient(ellipse 60% 50% at 50% 40%, black 0%, transparent 75%);
+        }
+
+        /* ===== AMBIENT PARTICLES ===== */
+        .particles-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle 22s infinite;
+            box-shadow: 0 0 8px var(--primary-glow);
+        }
+
+        .particle:nth-child(1) { left: 8%; animation-delay: 0s; width: 2px; height: 2px; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; width: 4px; height: 4px; opacity: 0.3; }
+        .particle:nth-child(3) { left: 32%; animation-delay: 5s; width: 2px; height: 2px; }
+        .particle:nth-child(4) { left: 46%; animation-delay: 1s; width: 5px; height: 5px; opacity: 0.2; }
+        .particle:nth-child(5) { left: 58%; animation-delay: 3.5s; width: 2px; height: 2px; }
+        .particle:nth-child(6) { left: 68%; animation-delay: 6s; width: 3px; height: 3px; opacity: 0.3; }
+        .particle:nth-child(7) { left: 78%; animation-delay: 2.5s; width: 4px; height: 4px; }
+        .particle:nth-child(8) { left: 88%; animation-delay: 4.5s; width: 2px; height: 2px; opacity: 0.4; }
+        .particle:nth-child(9) { left: 94%; animation-delay: 1.5s; width: 3px; height: 3px; }
+        .particle:nth-child(10) { left: 52%; animation-delay: 4s; width: 5px; height: 5px; opacity: 0.15; }
+
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        /* ===== APP WRAPPER ===== */
+        .app-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 36px 24px 30px;
+            min-height: 100vh;
+        }
+
+        /* ===== TOP SECTION ===== */
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 6px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 19px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 0 34px var(--primary-glow);
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        /* ===== SLIDES CONTAINER ===== */
+        .slides-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .slides-wrapper {
+            width: 100%;
+            position: relative;
+            height: 400px;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(60px) scale(0.95);
+            transition: all 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+            padding: 0 8px;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        .slide.exit {
+            opacity: 0;
+            transform: translateX(-60px) scale(0.95);
+        }
+
+        /* ===== SIGNATURE ICON STAGE ===== */
+        .icon-stage {
+            position: relative;
+            width: 156px;
+            height: 156px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+
+        .ghost-numeral {
+            position: absolute;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 160px;
+            line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255, 45, 85, 0.16);
+            user-select: none;
+            transform: translateY(-2px);
+        }
+
+        .icon-container {
+            width: 118px;
+            height: 118px;
+            border-radius: 50%;
+            background: linear-gradient(160deg, rgba(255,45,85,0.14), rgba(255,122,69,0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid rgba(255, 45, 85, 0.14);
+            backdrop-filter: blur(6px);
+        }
+
+        .icon-ring {
+            position: absolute;
+            inset: -1px;
+            border-radius: 50%;
+            padding: 1px;
+            background: conic-gradient(from 0deg, var(--primary), transparent 30%, var(--primary-2), transparent 70%, var(--primary));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: spinRing 7s linear infinite;
+        }
+
+        .icon-ring.outer {
+            inset: -14px;
+            opacity: 0.45;
+            animation-duration: 12s;
+            animation-direction: reverse;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .slide .icon-container i {
+            font-size: 42px;
+            background: linear-gradient(135deg, #ffb199, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide h2 {
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.6px;
+            margin-bottom: 12px;
+        }
+
+        .slide h2 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide p {
+            color: var(--text-muted);
+            font-size: 15.5px;
+            line-height: 1.7;
+            max-width: 360px;
+            font-weight: 400;
+        }
+
+        .slide p strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .slide .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin-top: 18px;
+            text-align: left;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .slide .feature-list .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            padding: 9px 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-sm);
+        }
+
+        .slide .feature-list .feature-item i {
+            color: var(--primary);
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+
+        /* ===== PROGRESS ===== */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .progress-seg {
+            position: relative;
+            width: 44px;
+            height: 4px;
+            border-radius: 4px;
+            background: var(--border-dim);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-seg .fill {
+            position: absolute;
+            inset: 0;
+            width: 0%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-2));
+            box-shadow: 0 0 10px var(--primary-glow);
+            transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .progress-seg.done .fill { width: 100%; }
+        .progress-seg.current .fill { width: var(--progress, 0%); }
+
+        /* ===== BOTTOM SECTION ===== */
+        .bottom-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-bottom: 6px;
+        }
+
+        .bottom-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .step-indicator {
+            font-family: var(--font-mono);
+            font-size: 12.5px;
+            color: var(--text-dim);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .step-indicator .current {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            border: none;
+            color: white;
+            padding: 15px 34px;
+            border-radius: 40px;
+            font-family: var(--font-body);
+            font-size: 15.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 144px;
+            justify-content: center;
+            box-shadow: 0 4px 30px var(--primary-glow);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px var(--primary-glow);
+        }
+
+        .next-btn:active {
+            transform: scale(0.96);
+        }
+
+        .next-btn .arrow {
+            transition: transform 0.3s ease;
+            display: flex;
+        }
+
+        .next-btn:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* ===== MESSAGE BOX ===== */
+        .msg-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 2, 5, 0.75);
+            backdrop-filter: blur(14px);
+            z-index: 999;
+        }
+
+        .msg-box {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 34px 28px;
+            max-width: 340px;
+            width: 90%;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(255,45,85,0.08);
+        }
+
+        .msg-box .icon-big {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            color: white;
+            margin: 0 auto 14px;
+            box-shadow: 0 0 30px var(--primary-glow);
+        }
+
+        .msg-box h3 { font-family: var(--font-display); font-size: 21px; font-weight: 700; }
+        .msg-box p { color: var(--text-muted); font-size: 14.5px; margin: 10px 0 20px; line-height: 1.6; }
+
+        .msg-box .btn-close {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            border: none;
+            border-radius: 40px;
+            padding: 13px 44px;
+            font-weight: 600;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: 0.25s;
+            box-shadow: 0 4px 24px var(--primary-glow);
+        }
+
+        .msg-box .btn-close:hover {
+            transform: scale(0.97);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .app-wrapper { padding: 26px 16px 20px; }
+            .slides-wrapper { height: 350px; }
+            .slide h2 { font-size: 23px; }
+            .slide p { font-size: 14px; }
+            .icon-stage { width: 120px; height: 120px; margin-bottom: 16px; }
+            .icon-container { width: 92px; height: 92px; }
+            .ghost-numeral { font-size: 120px; }
+            .slide .icon-container i { font-size: 32px; }
+            .next-btn { padding: 13px 26px; font-size: 14px; min-width: 122px; }
+            .logo-icon { width: 32px; height: 32px; font-size: 15px; }
+            .logo-text { font-size: 16px; }
+        }
+
+        @media (max-width: 360px) {
+            .slides-wrapper { height: 320px; }
+            .slide h2 { font-size: 20px; }
+            .slide p { font-size: 13px; }
+            .icon-stage { width: 96px; height: 96px; }
+            .icon-container { width: 74px; height: 74px; }
+            .ghost-numeral { font-size: 96px; }
+            .slide .icon-container i { font-size: 28px; }
+            .progress-seg { width: 34px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mesh"></div>
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    <div class="grain"></div>
+
+    <div class="app-wrapper">
+
+        <div class="top-section">
+            <div class="logo">
+                <div class="logo-icon">G</div>
+                <div class="logo-text">Gram<span>ite</span></div>
+            </div>
+            <div class="eyebrow">Onboarding</div>
+        </div>
+
+        <div class="slides-container">
+            <div class="slides-wrapper" id="slidesWrapper">
+                <div class="slide active" data-index="0">
+                    <div class="icon-stage">
+                        <div class="ghost-numeral">01</div>
+                        <div class="icon-container">
+                            <div class="icon-ring"></div>
+                            <div class="icon-ring outer"></div>
+                            <i class="fas fa-compass"></i>
+                        </div>
+                    </div>
+                    <h2>Welcome to <span class="highlight">Gramite</span></h2>
+                    <p>The next-generation social platform where <strong>creators</strong> and <strong>communities</strong> come together to share, connect, and inspire.</p>
+                    <div class="feature-list">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Discover trending content</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Connect with like-minded people</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Share your unique story</div>
+                    </div>
+                </div>
+
+                <div class="slide" data-index="1">
+                    <div class="icon-stage">
+                        <div class="ghost-numeral">02</div>
+                        <div class="icon-container">
+                            <div class="icon-ring"></div>
+                            <div class="icon-ring outer"></div>
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                    </div>
+                    <h2>Create &amp; <span class="highlight">Inspire</span></h2>
+                    <p>Share your passions through posts, reels, stories, and live streams. Your <strong>creativity</strong> has no limits on Gramite.</p>
+                    <div class="feature-list">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Rich media creation tools</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Real-time engagement</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Built-in analytics</div>
+                    </div>
+                </div>
+
+                <div class="slide" data-index="2">
+                    <div class="icon-stage">
+                        <div class="ghost-numeral">03</div>
+                        <div class="icon-container">
+                            <div class="icon-ring"></div>
+                            <div class="icon-ring outer"></div>
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <h2>Connect with <span class="highlight">Community</span></h2>
+                    <p>Join millions of creators and fans. Build your <strong>network</strong>, grow your audience, and make meaningful connections.</p>
+                    <div class="feature-list">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Smart recommendations</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Group conversations</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Private messaging</div>
+                    </div>
+                </div>
+
+                <div class="slide" data-index="3">
+                    <div class="icon-stage">
+                        <div class="ghost-numeral">04</div>
+                        <div class="icon-container">
+                            <div class="icon-ring"></div>
+                            <div class="icon-ring outer"></div>
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                    </div>
+                    <h2>Safe &amp; <span class="highlight">Secure</span></h2>
+                    <p>Your privacy matters. Gramite is built with <strong>industry-leading</strong> security to keep your data safe and your experience worry-free.</p>
+                    <div class="feature-list">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> End-to-end encryption</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> Full privacy controls</div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i> 24/7 community support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-seg" data-index="0"><div class="fill"></div></div>
+            <div class="progress-seg" data-index="1"><div class="fill"></div></div>
+            <div class="progress-seg" data-index="2"><div class="fill"></div></div>
+            <div class="progress-seg" data-index="3"><div class="fill"></div></div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="bottom-row">
+                <div class="step-indicator">
+                    <span class="current" id="currentStep">01</span> / <span id="totalSteps">04</span>
+                </div>
+                <button class="next-btn" id="nextBtn">
+                    <span class="btn-text" id="btnText">Next</span>
+                    <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="msg-overlay" id="msgOverlay" onclick="hideMsg()"></div>
+    <div class="msg-box" id="msgBox">
+        <div class="icon-big"><i class="fas fa-rocket"></i></div>
+        <h3 id="msgTitle">Welcome to Gramite!</h3>
+        <p id="msgText">You're about to join a community of millions. Let's get started!</p>
+        <button class="btn-close" onclick="handleGetStarted()">Let's go</button>
+    </div>
+
+    <script>
+        // ===== HANDLE GET STARTED - NAVIGATE TO LOADING.HTML =====
+        function handleGetStarted() {
+            hideMsg();
+            window.location.href = 'loading.html';
+        }
+
+        let currentSlide = 0;
+        const totalSlides = 4;
+        let isTransitioning = false;
+
+        const slides = document.querySelectorAll('.slide');
+        const segs = document.querySelectorAll('.progress-seg');
+        const nextBtn = document.getElementById('nextBtn');
+        const btnText = document.getElementById('btnText');
+        const currentStep = document.getElementById('currentStep');
+        const totalSteps = document.getElementById('totalSteps');
+
+        function pad(n) { return String(n + 1).padStart(2, '0'); }
+
+        function updateSlide(index) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'exit');
+                if (i === index) {
+                    slide.classList.add('active');
+                } else if (i < index) {
+                    slide.classList.add('exit');
+                }
+            });
+
+            segs.forEach((seg, i) => {
+                seg.classList.remove('done', 'current');
+                seg.style.removeProperty('--progress');
+                if (i < index) {
+                    seg.classList.add('done');
+                } else if (i === index) {
+                    seg.classList.add('current');
+                    requestAnimationFrame(() => seg.style.setProperty('--progress', '100%'));
+                }
+            });
+
+            currentStep.textContent = pad(index);
+            totalSteps.textContent = pad(totalSlides - 1);
+
+            if (index === totalSlides - 1) {
+                btnText.textContent = 'Get started';
+            } else {
+                btnText.textContent = 'Next';
+            }
+
+            currentSlide = index;
+
+            setTimeout(() => { isTransitioning = false; }, 850);
+        }
+
+        function nextSlide() {
+            if (isTransitioning) return;
+
+            if (currentSlide === totalSlides - 1) {
+                showMsg(
+                    'Welcome to Gramite',
+                    "You're about to join a community of millions. Let's get started on your journey."
+                );
+                // The button in the message box now calls handleGetStarted()
+                return;
+            }
+
+            updateSlide(currentSlide + 1);
+        }
+
+        function goToSlide(index) {
+            if (isTransitioning || index === currentSlide) return;
+            updateSlide(index);
+        }
+
+        segs.forEach((seg, index) => {
+            seg.addEventListener('click', () => goToSlide(index));
+        });
+
+        nextBtn.addEventListener('click', nextSlide);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentSlide > 0) updateSlide(currentSlide - 1);
+            }
+        });
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const slidesWrapper = document.getElementById('slidesWrapper');
+
+        slidesWrapper.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        slidesWrapper.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else if (currentSlide > 0) {
+                    updateSlide(currentSlide - 1);
+                }
+            }
+        }, { passive: true });
+
+        function showMsg(title, text) {
+            document.getElementById('msgTitle').textContent = title;
+            document.getElementById('msgText').textContent = text;
+            document.getElementById('msgBox').style.display = 'block';
+            document.getElementById('msgOverlay').style.display = 'block';
+        }
+
+        function hideMsg() {
+            document.getElementById('msgBox').style.display = 'none';
+            document.getElementById('msgOverlay').style.display = 'none';
+        }
+
+        let autoPlayInterval;
+
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(() => {
+                if (!isTransitioning) {
+                    if (currentSlide === totalSlides - 1) {
+                        clearInterval(autoPlayInterval);
+                        return;
+                    }
+                    nextSlide();
+                }
+            }, 5000);
+        }
+
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+        }
+
+        startAutoPlay();
+        document.addEventListener('click', stopAutoPlay);
+        document.addEventListener('touchstart', stopAutoPlay);
+        document.addEventListener('keydown', stopAutoPlay);
+
+        updateSlide(0);
+    </script>
+
+</body>
+</html>

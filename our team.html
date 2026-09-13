@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team · Gramite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff1900;
+            --primary-dark: #ff1900;
+            --dark: #1a1a1a;
+            --darker: #0d0d0d;
+            --light: #f5f5f5;
+            --gray: #bdc3c7;
+            --dark-gray: #2c2c2c;
+            --card-bg: #222;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ---- header / nav (minimal) ---- */
+        .top-bar {
+            background: var(--darker);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2a2a;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.9rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+
+        .top-bar nav a {
+            color: var(--gray);
+            margin-left: 24px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .top-bar nav a:hover {
+            color: var(--primary);
+        }
+
+        .top-bar nav a i {
+            margin-right: 6px;
+        }
+
+        /* ---- hero ---- */
+        .team-hero {
+            text-align: center;
+            padding: 50px 20px 30px;
+            background: linear-gradient(145deg, #111, #1a1a1a);
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .team-hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4.2rem;
+            color: var(--light);
+            letter-spacing: 3px;
+        }
+
+        .team-hero h1 span {
+            color: var(--primary);
+        }
+
+        .team-hero p {
+            max-width: 600px;
+            margin: 10px auto 0;
+            color: var(--gray);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* ---- team grid ---- */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+        }
+
+        .team-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 28px 18px 22px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #2e2e2e;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 18px 35px rgba(231, 76, 60, 0.15);
+            border-color: var(--primary);
+        }
+
+        .team-card .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            border: 3px solid var(--primary);
+            background: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: #1e1e1e;
+        }
+
+        .team-card .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .team-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .team-card .role {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .team-card .bio {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 18px;
+            padding: 0 4px;
+        }
+
+        .team-card .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .team-card .social-links a {
+            color: var(--gray);
+            font-size: 1.3rem;
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        .team-card .social-links a:hover {
+            color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        /* ---- extra section (values) ---- */
+        .values-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #2a2a2a;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .values-section .value-item i {
+            font-size: 2.6rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .values-section .value-item h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .values-section .value-item p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* ---- footer ---- */
+        .footer {
+            text-align: center;
+            padding: 28px 20px;
+            background: var(--darker);
+            border-top: 1px solid #222;
+            margin-top: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .footer span {
+            color: var(--primary);
+        }
+
+        /* ---- responsive ---- */
+        @media (max-width: 600px) {
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .top-bar nav a {
+                margin-left: 0;
+                margin-right: 18px;
+            }
+            .team-hero h1 {
+                font-size: 2.8rem;
+            }
+            .team-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== TOP BAR (minimal, with link back) ===== -->
+    <header class="top-bar">
+        <div class="logo">Gramite</div>
+        <nav>
+            <a href="menu.html"><i class="fas fa-arrow-left"></i> Back</a>
+            <a href="Home.html"><i class="fas fa-home"></i> Home</a>
+            <a href="our team.html"><i class="fas fa-users"></i> Team</a>
+        </nav>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="team-hero">
+        <h1>OUR <span>TEAM</span></h1>
+        <p>Passionate creators, engineers &amp; dreamers building the future of social connection.</p>
+    </section>
+
+    <!-- ===== TEAM GRID ===== -->
+    <div class="container">
+        <div class="team-grid">
+
+            <!-- 1 -->
+            <div class="team-card">
+                <div class="avatar">
+                    <img src="https://placehold.co/110x110/2c2c2c/e74c3c?text=KK" alt="Alex K.">
+                </div>
+                <h3>KALE KOKETSO</h3>
+                <div class="role">CEO &amp; Co‑founder</div>
+                <p class="bio">Visionary strategist. Former product lead at Meta. Loves cycling &amp; cold brew.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="team-card">
+                <div class="avatar">
+                    <img src="https://placehold.co/110x110/2c2c2c/e74c3c?text=MR" alt="Maya R.">
+                </div>
+                <h3></h3>
+                <div class="role">CTO · Lead Engineer</div>
+                <p class="bio">Full‑stack architect. Rust &amp; React enthusiast. Previously at Stripe. Drone racer.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <!-- 3 -->
+            <div class="team-card">
+                <div class="avatar">
+                    <img src="https://placehold.co/110x110/2c2c2c/e74c3c?text=MC" alt="Jamie W.">
+                </div>
+                <h3>MAKAMOLE COLANE</h3>
+                <div class="role">Head of Product</div>
+                <p class="bio">Design‑led product thinker. Ex‑Airbnb. Obsessed with typography &amp; user psychology.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-dribbble"></i></a>
+                </div>
+            </div>
+
+            <!-- 4 -->
+            <div class="team-card">
+                <div class="avatar">
+                    <img src="https://placehold.co/110x110/2c2c2c/e74c3c?text=KK" alt="Samir S.">
+                </div>
+                <h3>KALE KOKETSO</h3>
+                <div class="role">Senior Backend</div>
+                <p class="bio">Distributed systems wizard. Built high‑scale APIs at Uber. Loves chess &amp; jazz.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <!-- 5 -->
+            <div class="team-card">
+                <div class="avatar">
+                    <img src="https://placehold.co/110x110/2c2c2c/e74c3c?text=MO" alt="Lena C.">
+                </div>
+                <h3>MUIMA ORENEILWE</h3>
+                <div class="role">UI/UX Director</div>
+                <p class="bio">Crafted design systems for Figma &amp; Adobe. Illustrator &amp; ceramic artist.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-behance"></i></a>
+                </div>
+            </div>
+
+            <!-- 6 -->
+            <div class="team-card">
+                <div class="avatar">
+                    <img src="https://placehold.co/110x110/2c2c2c/e74c3c?text=OM" alt="Omar M.">
+                </div>
+                <h3></h3>
+                <div class="role">Data &amp; ML Lead</div>
+                <p class="bio">Built recommendation engines at Spotify. PhD in NLP. Marathon runner.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== VALUES / extra ===== -->
+        <div class="values-section">
+            <div class="value-item">
+                <i class="fas fa-rocket"></i>
+                <h4>Innovation</h4>
+                <p>We push boundaries with every feature, always exploring new tech.</p>
+            </div>
+            <div class="value-item">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h4>Community First</h4>
+                <p>Our users are at the heart of every decision we make.</p>
+            </div>
+            <div class="value-item">
+                <i class="fas fa-globe-americas"></i>
+                <h4>Global Mindset</h4>
+                <p>Diverse perspectives from 12+ countries shape our platform.</p>
+            </div>
+            <div class="value-item">
+                <i class="fas fa-code"></i>
+                <h4>Open Source</h4>
+                <p>We contribute back to the community and believe in transparency.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <p>© 2026 <span>Gramite</span> · Built with <i class="fas fa-heart" style="color: var(--primary);"></i> by our amazing team</p>
+    </footer>
+
+    <!-- tiny interactivity (optional) -->
+    <script>
+        // just a friendly console message
+        console.log('🚀 Gramite team page — we’re hiring!');
+        // hover effect on cards already in CSS
+    </script>
+</body>
+</html>

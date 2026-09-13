@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Profile - Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0050;
+            --primary-dark: #e60046;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --business: #ff0000;
+            --business-dark: #ff0000;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--business);
+            border-radius: 3px;
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--darker);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .header-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .header-action-btn:hover {
+            color: var(--business);
+        }
+        
+        /* Main container */
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+        
+        /* Business header section */
+        .business-header {
+            position: relative;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .business-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--business), var(--darker));
+            z-index: -1;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        /* Profile picture */
+        .profile-pic-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 15px;
+        }
+        
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--light);
+            object-fit: cover;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .verified-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 28px;
+            height: 28px;
+            background: var(--business);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--light);
+        }
+        
+        .verified-badge i {
+            color: var(--light);
+            font-size: 14px;
+        }
+        
+        /* Business info */
+        .business-info {
+            margin-bottom: 20px;
+        }
+        
+        .business-name {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .business-handle {
+            color: var(--gray);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .business-bio {
+            font-size: 15px;
+            margin-bottom: 15px;
+            padding: 0 20px;
+            line-height: 1.5;
+        }
+        
+        .business-category {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(74, 108, 247, 0.2);
+            color: var(--business);
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        /* Business stats */
+        .business-stats {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            min-width: 70px;
+        }
+        
+        .stat:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: var(--business);
+            color: var(--light);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--business-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 1px solid var(--gray);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-contact {
+            background: var(--primary);
+            color: var(--light);
+            border: none;
+        }
+        
+        .btn-contact:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Business highlights */
+        .business-highlights {
+            padding: 0 15px 20px;
+        }
+        
+        .highlights-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .highlights-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 5px 0 15px;
+            scrollbar-width: none;
+        }
+        
+        .highlights-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .highlight-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 70px;
+        }
+        
+        .highlight-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--business), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            position: relative;
+        }
+        
+        .highlight-image {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--dark);
+        }
+        
+        .highlight-name {
+            font-size: 12px;
+            text-align: center;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Business info cards */
+        .info-cards {
+            padding: 0 15px;
+            margin-bottom: 25px;
+        }
+        
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .info-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-card-content {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+        
+        .info-list {
+            list-style: none;
+        }
+        
+        .info-list-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--dark-gray);
+        }
+        
+        .info-list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-list-item i {
+            color: var(--business);
+            width: 20px;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--dark-gray);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 10px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            color: var(--gray);
+            transition: color 0.3s ease;
+            min-width: 100px;
+        }
+        
+        .tab.active {
+            color: var(--business);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 3px;
+            background: var(--business);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* Content sections */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        /* Posts grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+        
+        .grid-item {
+            aspect-ratio: 1/1;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .grid-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .grid-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .grid-item .overlay i {
+            color: var(--light);
+            font-size: 12px;
+        }
+        
+        .grid-item .overlay span {
+            color: var(--light);
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Products grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 15px;
+        }
+        
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+        
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 12px;
+        }
+        
+        .product-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--business);
+            margin-bottom: 8px;
+        }
+        
+        .product-action {
+            width: 100%;
+            padding: 8px;
+            background: var(--business);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .product-action:hover {
+            background: var(--business-dark);
+        }
+        
+        /* Reviews section */
+        .reviews-container {
+            padding: 15px;
+        }
+        
+        .review-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .reviewer-info {
+            flex: 1;
+        }
+        
+        .reviewer-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .review-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .review-rating {
+            color: var(--business);
+            font-weight: 600;
+        }
+        
+        .review-text {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .review-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .review-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 5px;
+        }
+        
+        .nav-item i {
+            font-size: 22px;
+        }
+        
+        .nav-item.active {
+            color: var(--business);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .profile-pic-container {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .business-name {
+                font-size: 22px;
+            }
+            
+            .business-handle {
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .stat-value {
+                font-size: 18px;
+            }
+            
+            .highlight-circle {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .highlight-image {
+                width: 52px;
+                height: 52px;
+            }
+            
+            .content-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">Business Profile</div>
+        <div class="header-actions">
+            <button class="header-action-btn">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="header-action-btn">
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="profile-container">
+        <!-- Business header section -->
+        <div class="business-header">
+            <div class="business-background"></div>
+            
+            <!-- Profile picture with verified badge -->
+            <div class="profile-pic-container">
+                <img src="https://images.unsplash.com/photo-1563014959-7aaa83350992?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Business Profile" class="profile-pic">
+                <div class="verified-badge">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            
+            <!-- Business information -->
+            <div class="business-info">
+                <h1 class="business-name">
+                    TechGadgets 
+                    <i class="fas fa-check-circle" style="color: var(--business);"></i>
+                </h1>
+                <p class="business-handle">@techgadgets</p>
+                <p class="business-bio">Innovative tech products for everyday life. Making technology accessible to everyone. 📱💻⌚</p>
+                <div class="business-category">Electronics & Gadgets</div>
+            </div>
+            
+            <!-- Business stats -->
+            <div class="business-stats">
+                <div class="stat">
+                    <div class="stat-value">328</div>
+                    <div class="stat-label">Posts</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">45.2K</div>
+                    <div class="stat-label">Followers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">245</div>
+                    <div class="stat-label">Following</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">1.2K</div>
+                    <div class="stat-label">Products</div>
+                </div>
+            </div>
+            
+            <!-- Action buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary">
+                    <i class="fas fa-store"></i> Shop
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-bell"></i> Follow
+                </button>
+                <button class="btn btn-contact">
+                    <i class="fas fa-envelope"></i> Contact
+                </button>
+            </div>
+        </div>
+        
+        <!-- Business info cards -->
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-card-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Business Information</span>
+                </div>
+                <ul class="info-list">
+                    <li class="info-list-item">
+                        <i class="fas fa-globe"></i>
+                        <span>techgadgets.com</span>
+                    </li>
+                    <li class="info-list-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+1 (555) 123-4567</span>
+                    </li>
+                    <li class="info-list-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>contact@techgadgets.com</span>
+                    </li>
+                    <li class="info-list-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>123 Tech Street, San Francisco, CA</span>
+                    </li>
+                    <li class="info-list-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Open today ⋅ 9:00 AM - 6:00 PM</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Business highlights -->
+        <div class="business-highlights">
+            <div class="highlights-title">
+                <span>Featured</span>
+                <i class="fas fa-chevron-right" style="font-size: 12px;"></i>
+            </div>
+            <div class="highlights-scroll">
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://images.unsplash.com/photo-1556656793-08538906a9f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="New Arrivals" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">New Arrivals</span>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Best Sellers" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">Best Sellers</span>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Sale" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">Sale</span>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://images.unsplash.com/photo-1468436139062-f60a71c5c892?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Reviews" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">Reviews</span>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-circle">
+                        <img src="https://images.unsplash.com/photo-1516387938699-a93567ec168e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Behind Scenes" class="highlight-image">
+                    </div>
+                    <span class="highlight-name">Behind Scenes</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs navigation -->
+        <div class="tabs">
+            <div class="tab active" data-tab="posts">
+                <i class="fas fa-th-large"></i> Posts
+            </div>
+            <div class="tab" data-tab="products">
+                <i class="fas fa-shopping-bag"></i> Products
+            </div>
+            <div class="tab" data-tab="reviews">
+                <i class="fas fa-star"></i> Reviews
+            </div>
+            <div class="tab" data-tab="about">
+                <i class="fas fa-info-circle"></i> About
+            </div>
+        </div>
+        
+        <!-- Posts Section -->
+        <div class="content-section active" id="posts-section">
+            <div class="content-grid">
+                <div class="grid-item">
+                    <img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Product Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>245</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Product Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>189</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Product Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>312</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Product Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>421</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Product Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>156</span>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <img src="https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Product Post">
+                    <div class="overlay">
+                        <i class="fas fa-heart"></i>
+                        <span>278</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Products Section -->
+        <div class="content-section" id="products-section">
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Wireless Earbuds" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Premium Wireless Earbuds - Noise Cancelling</div>
+                        <div class="product-price">$129.99</div>
+                        <button class="product-action">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Smart Watch" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Smart Watch Pro Series 5 - Black</div>
+                        <div class="product-price">$199.99</div>
+                        <button class="product-action">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Headphones" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Over-Ear Wireless Headphones - Silver</div>
+                        <div class="product-price">$159.99</div>
+                        <button class="product-action">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Phone Case" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Premium Protective Phone Case - Various Models</div>
+                        <div class="product-price">$39.99</div>
+                        <button class="product-action">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reviews Section -->
+        <div class="content-section" id="reviews-section">
+            <div class="reviews-container">
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Reviewer" class="reviewer-avatar">
+                        <div class="reviewer-info">
+                            <div class="reviewer-name">Sarah Johnson</div>
+                            <div class="review-time">2 days ago</div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="review-text">The wireless earbuds are amazing! The sound quality is exceptional and the battery life lasts all day. Would definitely recommend!</p>
+                    <div class="review-images">
+                        <img src="https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Review" class="review-image">
+                        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Review" class="review-image">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Review" class="review-image">
+                    </div>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Reviewer" class="reviewer-avatar">
+                        <div class="reviewer-info">
+                            <div class="reviewer-name">Michael Chen</div>
+                            <div class="review-time">1 week ago</div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="review-text">Great smartwatch with lots of features. The heart rate monitor is accurate and the battery lasts for about 4 days with normal use.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- About Section -->
+        <div class="content-section" id="about-section">
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-card-title">
+                        <i class="fas fa-building"></i>
+                        <span>About TechGadgets</span>
+                    </div>
+                    <div class="info-card-content">
+                        <p>Founded in 2015, TechGadgets is dedicated to bringing the latest technology innovations to consumers at affordable prices. We believe that everyone should have access to quality tech products that enhance daily life.</p>
+                        <p>Our team of experts tests every product to ensure quality and performance. We stand behind all our products with a 30-day money-back guarantee and 1-year warranty.</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-card-title">
+                        <i class="fas fa-truck"></i>
+                        <span>Shipping & Returns</span>
+                    </div>
+                    <div class="info-card-content">
+                        <p>We offer free shipping on all orders over $50. Most orders are processed within 24 hours and delivered within 3-5 business days.</p>
+                        <p>Not satisfied with your purchase? Return it within 30 days for a full refund. No questions asked.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom navigation -->
+    <div class="bottom-nav">
+        <a href="Home.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="searching .html" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Discover</span>
+        </a>
+        <a href="" class="nav-item">
+            <i class="fas fa-plus-square"></i>
+            <span>Create</span>
+        
+       
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Hide all content sections
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the corresponding content section
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}-section`).classList.add('active');
+            });
+        });
+        
+        // Follow button functionality
+        document.querySelector('.btn-outline').addEventListener('click', function() {
+            if (this.textContent.includes('Follow')) {
+                this.innerHTML = '<i class="fas fa-check"></i> Following';
+            } else {
+                this.innerHTML = '<i class="fas fa-bell"></i> Follow';
+            }
+        });
+        
+        // Shop button functionality
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            alert('Redirecting to TechGadgets store...');
+        });
+        
+        // Contact button functionality
+        document.querySelector('.btn-contact').addEventListener('click', function() {
+            alert('Opening contact options...');
+        });
+        
+        // Add to cart functionality
+        document.querySelectorAll('.product-action').forEach(button => {
+            button.addEventListener('click', function() {
+                const productName = this.parentElement.querySelector('.product-name').textContent;
+                alert(`Added ${productName} to cart!`);
+            });
+        });
+        
+        // Header search functionality
+        document.querySelector('.header-action-btn:first-child').addEventListener('click', function() {
+            alert('Search functionality would go here!');
+        });
+        
+        // Header menu functionality
+        document.querySelector('.header-action-btn:last-child').addEventListener('click', function() {
+            alert('Business profile options would appear here!');
+        });
+    </script>
+</body>
+</html>

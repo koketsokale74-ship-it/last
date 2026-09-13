@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gramite Music</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0050;
+            --primary-dark: #e60046;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        /* Main container */
+        .music-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 120px;
+        }
+        
+        /* Header section */
+        .music-header {
+            position: relative;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--darker));
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .music-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .music-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        /* Search section */
+        .search-container {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 10px 20px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .search-box i {
+            color: var(--gray);
+            margin-right: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-input::placeholder {
+            color: var(--gray);
+        }
+        
+        .search-results {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .search-results.active {
+            display: block;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        /* Now playing section */
+        .now-playing {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .album-art {
+            width: 280px;
+            height: 280px;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .album-art::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+        }
+        
+        .song-info {
+            margin-bottom: 25px;
+        }
+        
+        .song-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .song-artist {
+            color: var(--gray);
+            font-size: 18px;
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: var(--dark-gray);
+            border-radius: 3px;
+            margin: 20px 0;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            width: 30%;
+            position: relative;
+        }
+        
+        .progress-handle {
+            width: 16px;
+            height: 16px;
+            background: var(--light);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translate(50%, -50%);
+            box-shadow: 0 0 10px rgba(255, 0, 80, 0.8);
+        }
+        
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        /* Controls */
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin: 25px 0;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 20px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            box-shadow: 0 0 20px rgba(255, 0, 80, 0.5);
+        }
+        
+        .play-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        /* Volume control */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+        
+        .volume-slider {
+            width: 120px;
+            -webkit-appearance: none;
+            height: 4px;
+            background: var(--dark-gray);
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--light);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        /* Music library */
+        .music-library {
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .view-all {
+            color: var(--primary);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .song-list {
+            list-style: none;
+        }
+        
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--dark-gray);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .song-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .song-item.active {
+            background: rgba(255, 0, 80, 0.1);
+        }
+        
+        .song-number {
+            width: 30px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .song-item.active .song-number {
+            color: var(--primary);
+        }
+        
+        .song-info-small {
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .song-title-small {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .song-artist-small {
+            color: var(--gray);
+            font-size: 13px;
+        }
+        
+        .song-duration {
+            color: var(--gray);
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .song-menu {
+            color: var(--gray);
+            font-size: 16px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        /* Playlists */
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .playlist-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--card-border);
+        }
+        
+        .playlist-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .playlist-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+        
+        .playlist-info {
+            padding: 12px;
+        }
+        
+        .playlist-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .playlist-songs {
+            color: var(--gray);
+            font-size: 12px;
+        }
+        
+        /* Bottom player bar */
+        .mini-player {
+            position: fixed;
+            bottom: 70px;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .mini-album {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .mini-album img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .mini-info {
+            flex: 1;
+        }
+        
+        .mini-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .mini-artist {
+            font-size: 12px;
+            color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .mini-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .mini-btn {
+            color: var(--light);
+            font-size: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .play-mini {
+            color: var(--primary);
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 5px;
+        }
+        
+        .nav-item i {
+            font-size: 22px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .album-art {
+                width: 220px;
+                height: 220px;
+            }
+            
+            .song-title {
+                font-size: 20px;
+            }
+            
+            .song-artist {
+                font-size: 16px;
+            }
+            
+            .playlist-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .player-controls {
+                gap: 15px;
+            }
+            
+            .control-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .play-btn {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        /* Animation for rotating album art */
+        @keyframes rotateAlbum {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .playing .album-art img {
+            animation: rotateAlbum 20s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="music-container">
+        <!-- Header section -->
+        <div class="music-header">
+            <h1 class="music-title">Gramite Music</h1>
+            <p class="music-subtitle">Stream your favorite tracks</p>
+        </div>
+        
+        <!-- Search section -->
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-input" placeholder="Search for songs, artists, or albums...">
+            </div>
+            
+            <div class="search-results" id="searchResults">
+                <h3 class="result-title">Search Results</h3>
+                <ul class="song-list" id="searchResultsList">
+                    <!-- Search results will be populated here -->
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Now playing section -->
+        <div class="now-playing">
+            <div class="album-art">
+                <img src="https://storage.googleapis.com/a1aa/image/sTQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album Art">
+            </div>
+            
+            <div class="song-info">
+                <h2 class="song-title">Blinding Lights</h2>
+                <p class="song-artist">The Weeknd</p>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress">
+                    <div class="progress-handle"></div>
+                </div>
+            </div>
+            
+            <div class="time-info">
+                <span class="current-time">1:45</span>
+                <span class="total-time">3:20</span>
+            </div>
+            
+            <div class="player-controls">
+                <button class="control-btn">
+                    <i class="fas fa-random"></i>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="control-btn play-btn">
+                    <i class="fas fa-pause"></i>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            
+            <div class="volume-control">
+                <i class="fas fa-volume-down"></i>
+                <input type="range" class="volume-slider" min="0" max="100" value="80">
+                <i class="fas fa-volume-up"></i>
+            </div>
+        </div>
+        
+        <!-- Music library -->
+        <div class="music-library">
+            <div class="section-title">
+                <h3>Recently Played</h3>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            
+            <ul class="song-list">
+                <li class="song-item active">
+                    <div class="song-number">1</div>
+                    <div class="mini-album">
+                        <img src="https://storage.googleapis.com/a1aa/image/sTQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album">
+                    </div>
+                    <div class="song-info-small">
+                        <div class="song-title-small">Blinding Lights</div>
+                        <div class="song-artist-small">The Weeknd</div>
+                    </div>
+                    <div class="song-duration">3:20</div>
+                    <div class="song-menu"><i class="fas fa-ellipsis-h"></i></div>
+                </li>
+                
+                <li class="song-item">
+                    <div class="song-number">2</div>
+                    <div class="mini-album">
+                        <img src="https://storage.googleapis.com/a1aa/image/6JQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album">
+                    </div>
+                    <div class="song-info-small">
+                        <div class="song-title-small">Save Your Tears</div>
+                        <div class="song-artist-small">The Weeknd</div>
+                    </div>
+                    <div class="song-duration">3:35</div>
+                    <div class="song-menu"><i class="fas fa-ellipsis-h"></i></div>
+                </li>
+                
+                <li class="song-item">
+                    <div class="song-number">3</div>
+                    <div class="mini-album">
+                        <img src="https://storage.googleapis.com/a1aa/image/7KQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album">
+                    </div>
+                    <div class="song-info-small">
+                        <div class="song-title-small">Levitating</div>
+                        <div class="song-artist-small">Dua Lipa</div>
+                    </div>
+                    <div class="song-duration">3:23</div>
+                    <div class="song-menu"><i class="fas fa-ellipsis-h"></i></div>
+                </li>
+                
+                <li class="song-item">
+                    <div class="song-number">4</div>
+                    <div class="mini-album">
+                        <img src="https://storage.googleapis.com/a1aa/image/8LQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album">
+                    </div>
+                    <div class="song-info-small">
+                        <div class="song-title-small">Stay</div>
+                        <div class="song-artist-small">The Kid LAROI, Justin Bieber</div>
+                    </div>
+                    <div class="song-duration">2:21</div>
+                    <div class="song-menu"><i class="fas fa-ellipsis-h"></i></div>
+                </li>
+                
+                <li class="song-item">
+                    <div class="song-number">5</div>
+                    <div class="mini-album">
+                        <img src="https://storage.googleapis.com/a1aa/image/9MQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album">
+                    </div>
+                    <div class="song-info-small">
+                        <div class="song-title-small">Good 4 U</div>
+                        <div class="song-artist-small">Olivia Rodrigo</div>
+                    </div>
+                    <div class="song-duration">2:58</div>
+                    <div class="song-menu"><i class="fas fa-ellipsis-h"></i></div>
+                </li>
+            </ul>
+            
+            <div class="section-title" style="margin-top: 30px;">
+                <h3>Popular Albums</h3>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            
+            <div class="playlist-grid">
+                <div class="playlist-card">
+                    <img src="https://storage.googleapis.com/a1aa/image/1NQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album" class="playlist-img">
+                    <div class="playlist-info">
+                        <div class="playlist-name">After Hours</div>
+                        <div class="playlist-songs">The Weeknd</div>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <img src="https://storage.googleapis.com/a1aa/image/2OQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album" class="playlist-img">
+                    <div class="playlist-info">
+                        <div class="playlist-name">Future Nostalgia</div>
+                        <div class="playlist-songs">Dua Lipa</div>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <img src="https://storage.googleapis.com/a1aa/image/3PQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album" class="playlist-img">
+                    <div class="playlist-info">
+                        <div class="playlist-name">SOUR</div>
+                        <div class="playlist-songs">Olivia Rodrigo</div>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <img src="https://storage.googleapis.com/a1aa/image/4RQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album" class="playlist-img">
+                    <div class="playlist-info">
+                        <div class="playlist-name">Justice</div>
+                        <div class="playlist-songs">Justin Bieber</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-title" style="margin-top: 30px;">
+                <h3>Your Playlists</h3>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            
+            <div class="playlist-grid">
+                <div class="playlist-card">
+                    <img src="https://storage.googleapis.com/a1aa/image/5SQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Playlist" class="playlist-img">
+                    <div class="playlist-info">
+                        <div class="playlist-name">Chill Vibes</div>
+                        <div class="playlist-songs">24 songs</div>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <img src="https://storage.googleapis.com/a1aa/image/6TQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Playlist" class="playlist-img">
+                    <div class="playlist-info">
+                        <div class="playlist-name">Workout Mix</div>
+                        <div class="playlist-songs">18 songs</div>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <img src="https://storage.googleapis.com/a1aa/image/7UQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Playlist" class="playlist-img">
+                    <div class="playlist-info">
+                        <div class="playlist-name">Road Trip</div>
+                        <div class="playlist-songs">32 songs</div>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <img src="https://storage.googleapis.com/a1aa/image/8VQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Playlist" class="playlist-img">
+                    <div class="playlist-info">
+                        <div class="playlist-name">Party Time</div>
+                        <div class="playlist-songs">28 songs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mini player bar -->
+        <div class="mini-player">
+            <div class="mini-album">
+                <img src="https://storage.googleapis.com/a1aa/image/sTQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" alt="Album">
+            </div>
+            <div class="mini-info">
+                <div class="mini-title">Blinding Lights</div>
+                <div class="mini-artist">The Weeknd</div>
+            </div>
+            <div class="mini-controls">
+                <button class="mini-btn">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="mini-btn play-mini">
+                    <i class="fas fa-pause"></i>
+                </button>
+                <button class="mini-btn">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom navigation -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Discover</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-music"></i>
+            <span>Music</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+    
+    <script>
+        // Music player functionality
+        const playBtn = document.querySelector('.play-btn');
+        const playMiniBtn = document.querySelector('.play-mini');
+        const albumArt = document.querySelector('.album-art');
+        const progress = document.querySelector('.progress');
+        const progressContainer = document.querySelector('.progress-container');
+        const currentTimeEl = document.querySelector('.current-time');
+        const totalTimeEl = document.querySelector('.total-time');
+        const songItems = document.querySelectorAll('.song-item');
+        const searchInput = document.querySelector('.search-input');
+        const searchResults = document.getElementById('searchResults');
+        const searchResultsList = document.getElementById('searchResultsList');
+        
+        let isPlaying = true;
+        
+        // Sample music library for search
+        const musicLibrary = [
+            { title: "Blinding Lights", artist: "The Weeknd", duration: "3:20", image: "https://storage.googleapis.com/a1aa/image/sTQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Save Your Tears", artist: "The Weeknd", duration: "3:35", image: "https://storage.googleapis.com/a1aa/image/6JQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Levitating", artist: "Dua Lipa", duration: "3:23", image: "https://storage.googleapis.com/a1aa/image/7KQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Stay", artist: "The Kid LAROI, Justin Bieber", duration: "2:21", image: "https://storage.googleapis.com/a1aa/image/8LQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Good 4 U", artist: "Olivia Rodrigo", duration: "2:58", image: "https://storage.googleapis.com/a1aa/image/9MQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Don't Start Now", artist: "Dua Lipa", duration: "3:03", image: "https://storage.googleapis.com/a1aa/image/10QY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Peaches", artist: "Justin Bieber", duration: "3:18", image: "https://storage.googleapis.com/a1aa/image/11QY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "drivers license", artist: "Olivia Rodrigo", duration: "4:02", image: "https://storage.googleapis.com/a1aa/image/12QY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Blinding Lights", artist: "The Weeknd", duration: "3:20", image: "https://storage.googleapis.com/a1aa/image/sTQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Save Your Tears", artist: "The Weeknd", duration: "3:35", image: "https://storage.googleapis.com/a1aa/image/6JQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Levitating", artist: "Dua Lipa", duration: "3:23", image: "https://storage.googleapis.com/a1aa/image/7KQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Stay", artist: "The Kid LAROI, Justin Bieber", duration: "2:21", image: "https://storage.googleapis.com/a1aa/image/8LQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Good 4 U", artist: "Olivia Rodrigo", duration: "2:58", image: "https://storage.googleapis.com/a1aa/image/9MQY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Don't Start Now", artist: "Dua Lipa", duration: "3:03", image: "https://storage.googleapis.com/a1aa/image/10QY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "Peaches", artist: "Justin Bieber", duration: "3:18", image: "https://storage.googleapis.com/a1aa/image/11QY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" },
+            { title: "drivers license", artist: "Olivia Rodrigo", duration: "4:02", image: "https://storage.googleapis.com/a1aa/image/12QY4hqQ9UeQvT5W2f8h1t3tL4t3q4r5t6y7u8i9o0p1l2k3j4h5g6f7d8s9.jpg" }
+        ];
+        
+        // Play/Pause functionality
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            
+            if (isPlaying) {
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                playMiniBtn.className = 'mini-btn play-mini';
+                playMiniBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                albumArt.parentElement.classList.add('playing');
+            } else {
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playMiniBtn.className = 'mini-btn';
+                playMiniBtn.innerHTML = '<i class="fas fa-play"></i>';
+                albumArt.parentElement.classList.remove('playing');
+            }
+        }
+        
+        playBtn.addEventListener('click', togglePlay);
+        playMiniBtn.addEventListener('click', togglePlay);
+        
+        // Progress bar functionality
+        function updateProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = 200; // Total duration in seconds
+            
+            const progressPercent = (clickX / width) * 100;
+            progress.style.width = `${progressPercent}%`;
+            
+            // Update time display
+            const currentTime = (progressPercent / 100) * duration;
+            const mins = Math.floor(currentTime / 60);
+            const secs = Math.floor(currentTime % 60);
+            currentTimeEl.textContent = `${mins}:${secs < 10 ? '0' + secs : secs}`;
+        }
+        
+        progressContainer.addEventListener('click', updateProgress);
+        
+        // Song selection
+        function selectSong(title, artist, imgSrc) {
+            // Remove active class from all songs
+            songItems.forEach(song => song.classList.remove('active'));
+            
+            // Update player with song info
+            document.querySelector('.song-title').textContent = title;
+            document.querySelector('.song-artist').textContent = artist;
+            document.querySelector('.album-art img').src = imgSrc;
+            document.querySelector('.mini-album img').src = imgSrc;
+            document.querySelector('.mini-title').textContent = title;
+            document.querySelector('.mini-artist').textContent = artist;
+            
+            // Reset progress
+            progress.style.width = '0%';
+            currentTimeEl.textContent = '0:00';
+            
+            // Ensure playing state
+            isPlaying = false;
+            togglePlay();
+        }
+        
+        songItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const title = this.querySelector('.song-title-small').textContent;
+                const artist = this.querySelector('.song-artist-small').textContent;
+                const imgSrc = this.querySelector('.mini-album img').src;
+                
+                selectSong(title, artist, imgSrc);
+                
+                // Add active class to clicked song
+                this.classList.add('active');
+            });
+        });
+        
+        // Search functionality
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            if (searchTerm.length > 0) {
+                searchResults.classList.add('active');
+                
+                // Filter music library based on search term
+                const filteredResults = musicLibrary.filter(song => 
+                    song.title.toLowerCase().includes(searchTerm) || 
+                    song.artist.toLowerCase().includes(searchTerm)
+                );
+                
+                // Display results
+                displaySearchResults(filteredResults);
+            } else {
+                searchResults.classList.remove('active');
+            }
+        });
+        
+        function displaySearchResults(results) {
+            // Clear previous results
+            searchResultsList.innerHTML = '';
+            
+            if (results.length > 0) {
+                results.forEach((song, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'song-item';
+                    li.innerHTML = `
+                        <div class="song-number">${index + 1}</div>
+                        <div class="mini-album">
+                            <img src="${song.image}" alt="Album">
+                        </div>
+                        <div class="song-info-small">
+                            <div class="song-title-small">${song.title}</div>
+                            <div class="song-artist-small">${song.artist}</div>
+                        </div>
+                        <div class="song-duration">${song.duration}</div>
+                        <div class="song-menu"><i class="fas fa-ellipsis-h"></i></div>
+                    `;
+                    
+                    li.addEventListener('click', function() {
+                        selectSong(song.title, song.artist, song.image);
+                        
+                        // Hide search results after selection
+                        searchResults.classList.remove('active');
+                        searchInput.value = '';
+                    });
+                    
+                    searchResultsList.appendChild(li);
+                });
+            } else {
+                searchResultsList.innerHTML = '<li class="no-results">No songs found</li>';
+            }
+        }
+        
+        // Set total time
+        totalTimeEl.textContent = '3:20';
+        
+        // Start with playing state
+        albumArt.parentElement.classList.add('playing');
+    </script>
+</body>
+</html>

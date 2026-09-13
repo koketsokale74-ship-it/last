@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Center</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: RED;
+            --primary-dark: RED;
+            --secondary: #ff1900;
+            --secondary-dark: #ff1900;
+            --success: #2ecc71;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--darker);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .header-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .header-action-btn:hover {
+            color: var(--primary);
+        }
+        
+        /* Main container */
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        /* Search bar */
+        .search-bar {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 10px 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            width: 100%;
+            outline: none;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--dark-gray);
+            margin: 20px 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            color: var(--gray);
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* Content sections */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        /* Call list */
+        .call-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .call-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid var(--card-border);
+            transition: transform 0.3s ease;
+        }
+        
+        .call-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .call-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            position: relative;
+        }
+        
+        .call-details {
+            flex: 1;
+        }
+        
+        .call-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .call-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray);
+            font-size: 13px;
+        }
+        
+        .call-type {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .call-time {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .call-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .call-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .call-btn.call {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .call-btn.call:hover {
+            background: var(--primary-dark);
+        }
+        
+        .call-btn.video {
+            background: var(--success);
+            color: white;
+        }
+        
+        .call-btn.video:hover {
+            background: #27ae60;
+        }
+        
+        .incoming {
+            color: var(--primary);
+        }
+        
+        .outgoing {
+            color: var(--success);
+        }
+        
+        .missed {
+            color: var(--secondary);
+        }
+        
+        /* Contacts list */
+        .contacts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .contact-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid var(--card-border);
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .contact-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .contact-details {
+            flex: 1;
+        }
+        
+        .contact-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .contact-number {
+            color: var(--gray);
+            font-size: 13px;
+        }
+        
+        .contact-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Dial pad */
+        .dial-pad {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+        
+        .number-display {
+            background: var(--darker);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 1px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .dial-btn {
+            background: var(--darker);
+            border: 1px solid var(--dark-gray);
+            border-radius: 50%;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .dial-btn:hover {
+            background: var(--dark-gray);
+        }
+        
+        .dial-btn .sub {
+            font-size: 10px;
+            text-transform: uppercase;
+            margin-top: 5px;
+            color: var(--gray);
+        }
+        
+        .dial-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 15px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .action-btn.call {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .action-btn.call:hover {
+            background: var(--primary-dark);
+        }
+        
+        .action-btn.video {
+            background: var(--success);
+            color: white;
+        }
+        
+        .action-btn.video:hover {
+            background: #ff0000;
+        }
+        
+        .backspace-btn {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        /* Video call interface */
+        .video-call {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .video-call.active {
+            display: flex;
+        }
+        
+        .video-main {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .remote-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .local-video {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 120px;
+            height: 160px;
+            border-radius: 8px;
+            border: 2px solid var(--light);
+            object-fit: cover;
+        }
+        
+        .call-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .caller-name {
+            font-weight: 600;
+        }
+        
+        .call-status {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .call-controls {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn.end {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .control-btn.end:hover {
+            background: var(--secondary-dark);
+        }
+        
+        .control-btn.mute {
+            background: var(--dark-gray);
+            color: white;
+        }
+        
+        .control-btn.mute:hover {
+            background: var(--gray);
+        }
+        
+        .control-btn.video {
+            background: var(--dark-gray);
+            color: white;
+        }
+        
+        .control-btn.video:hover {
+            background: var(--gray);
+        }
+        
+        .control-btn.speaker {
+            background: var(--dark-gray);
+            color: white;
+        }
+        
+        .control-btn.speaker:hover {
+            background: var(--gray);
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 5px;
+            min-width: 50px;
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 18px;
+            }
+            
+            .call-name, .contact-name {
+                font-size: 15px;
+            }
+            
+            .call-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+            
+            .dial-btn {
+                font-size: 20px;
+            }
+            
+            .action-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 15px;
+            }
+            
+            .main-container {
+                padding: 15px;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .call-item, .contact-item {
+                padding: 12px;
+            }
+            
+            .call-avatar, .contact-avatar {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .dial-pad {
+                padding: 15px;
+            }
+            
+            .number-display {
+                font-size: 20px;
+                min-height: 50px;
+            }
+            
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+            
+            .local-video {
+                width: 100px;
+                height: 133px;
+            }
+            
+            .nav-item i {
+                font-size: 18px;
+            }
+            
+            .nav-item {
+                font-size: 9px;
+                min-width: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">Call Center</div>
+        <div class="header-actions">
+            <button class="header-action-btn"><i class="fas fa-search"></i></button>
+            <button class="header-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Search bar -->
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search calls or contacts" id="search-input">
+        </div>
+        
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" data-tab="missed">Missed Calls</div>
+            <div class="tab" data-tab="contacts">Contacts</div>
+            <div class="tab" data-tab="dial">Dial Pad</div>
+        </div>
+        
+        <!-- Missed Calls Section -->
+        <div class="content-section active" id="missed-section">
+            <h2 style="margin-bottom: 15px;">Recent Calls</h2>
+            
+            <div class="call-list">
+                <!-- Missed call 1 -->
+                <div class="call-item">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="call-avatar">
+                    <div class="call-details">
+                        <div class="call-name">Emma Johnson</div>
+                        <div class="call-info">
+                            <span class="call-type missed"><i class="fas fa-phone-slash"></i> Missed</span>
+                            <span>Mobile</span>
+                        </div>
+                    </div>
+                    <div class="call-time">Today, 10:23 AM</div>
+                    <div class="call-actions">
+                        <button class="call-btn call" data-contact="Emma Johnson"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="Emma Johnson"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Missed call 2 -->
+                <div class="call-item">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="call-avatar">
+                    <div class="call-details">
+                        <div class="call-name">Michael Chen</div>
+                        <div class="call-info">
+                            <span class="call-type missed"><i class="fas fa-phone-slash"></i> Missed</span>
+                            <span>Work</span>
+                        </div>
+                    </div>
+                    <div class="call-time">Yesterday, 3:45 PM</div>
+                    <div class="call-actions">
+                        <button class="call-btn call" data-contact="Michael Chen"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="Michael Chen"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Incoming call -->
+                <div class="call-item">
+                    <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGVyc29ufGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="call-avatar">
+                    <div class="call-details">
+                        <div class="call-name">Sarah Williams</div>
+                        <div class="call-info">
+                            <span class="call-type incoming"><i class="fas fa-phone-alt"></i> Incoming</span>
+                            <span>Mobile</span>
+                        </div>
+                    </div>
+                    <div class="call-time">Yesterday, 11:15 AM</div>
+                    <div class="call-actions">
+                        <button class="call-btn call" data-contact="Sarah Williams"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="Sarah Williams"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Outgoing call -->
+                <div class="call-item">
+                    <img src="https://images.unsplash.com/photo-1567532939604-b6b5b0db1604?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="call-avatar">
+                    <div class="call-details">
+                        <div class="call-name">David Miller</div>
+                        <div class="call-info">
+                            <span class="call-type outgoing"><i class="fas fa-phone-alt"></i> Outgoing</span>
+                            <span>Home</span>
+                        </div>
+                    </div>
+                    <div class="call-time">Oct 12, 2:30 PM</div>
+                    <div class="call-actions">
+                        <button class="call-btn call" data-contact="David Miller"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="David Miller"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contacts Section -->
+        <div class="content-section" id="contacts-section">
+            <h2 style="margin-bottom: 15px;">My Contacts</h2>
+            
+            <div class="contacts-list">
+                <!-- Contact 1 -->
+                <div class="contact-item">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="contact-avatar">
+                    <div class="contact-details">
+                        <div class="contact-name">Emma Johnson</div>
+                        <div class="contact-number">+1 (555) 123-4567</div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="call-btn call" data-contact="Emma Johnson"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="Emma Johnson"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Contact 2 -->
+                <div class="contact-item">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="contact-avatar">
+                    <div class="contact-details">
+                        <div class="contact-name">Michael Chen</div>
+                        <div class="contact-number">+1 (555) 987-6543</div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="call-btn call" data-contact="Michael Chen"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="Michael Chen"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Contact 3 -->
+                <div class="contact-item">
+                    <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGVyc29ufGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="contact-avatar">
+                    <div class="contact-details">
+                        <div class="contact-name">Sarah Williams</div>
+                        <div class="contact-number">+1 (444) 567-8901</div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="call-btn call" data-contact="Sarah Williams"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="Sarah Williams"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Contact 4 -->
+                <div class="contact-item">
+                    <img src="https://images.unsplash.com/photo-1567532939604-b6b5b0db1604?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="contact-avatar">
+                    <div class="contact-details">
+                        <div class="contact-name">David Miller</div>
+                        <div class="contact-number">+1 (333) 456-7890</div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="call-btn call" data-contact="David Miller"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="David Miller"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Contact 5 -->
+                <div class="contact-item">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Avatar" class="contact-avatar">
+                    <div class="contact-details">
+                        <div class="contact-name">Jessica Brown</div>
+                        <div class="contact-number">+1 (222) 345-6789</div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="call-btn call" data-contact="Jessica Brown"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn video" data-contact="Jessica Brown"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dial Pad Section -->
+        <div class="content-section" id="dial-section">
+            <h2 style="margin-bottom: 15px;">Dial Pad</h2>
+            
+            <div class="dial-pad">
+                <div class="number-display">
+                    <span id="dial-number">Enter number</span>
+                    <button class="backspace-btn" id="backspace-btn"><i class="fas fa-backspace"></i></button>
+                </div>
+                
+                <div class="dial-grid">
+                    <div class="dial-btn" data-number="1">1</div>
+                    <div class="dial-btn" data-number="2">2<span class="sub">ABC</span></div>
+                    <div class="dial-btn" data-number="3">3<span class="sub">DEF</span></div>
+                    <div class="dial-btn" data-number="4">4<span class="sub">GHI</span></div>
+                    <div class="dial-btn" data-number="5">5<span class="sub">JKL</span></div>
+                    <div class="dial-btn" data-number="6">6<span class="sub">MNO</span></div>
+                    <div class="dial-btn" data-number="7">7<span class="sub">PQRS</span></div>
+                    <div class="dial-btn" data-number="8">8<span class="sub">TUV</span></div>
+                    <div class="dial-btn" data-number="9">9<span class="sub">WXYZ</span></div>
+                    <div class="dial-btn" data-number="*">*</div>
+                    <div class="dial-btn" data-number="0">0<span class="sub">+</span></div>
+                    <div class="dial-btn" data-number="#">#</div>
+                </div>
+                
+                <div class="dial-actions">
+                    <button class="action-btn call" id="dial-call-btn">
+                        <i class="fas fa-phone"></i> Call
+                    </button>
+                    <button class="action-btn video" id="dial-video-btn">
+                        <i class="fas fa-video"></i> Video Call
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Call Interface -->
+    <div class="video-call" id="video-call">
+        <div class="video-main">
+            <div class="remote-video" id="remote-video">
+                <!-- Video would appear here in a real app -->
+                <div style="display:flex; justify-content:center; align-items:center; height:100%; background:#000; color:white; font-size:24px;">
+                    Connecting...
+                </div>
+            </div>
+            <div class="local-video" id="local-video">
+                <!-- Local video would appear here -->
+                <div style="display:flex; justify-content:center; align-items:center; height:100%; background:#333; color:white;">
+                    You
+                </div>
+            </div>
+            <div class="call-info">
+                <div class="caller-name" id="caller-name">Contact Name</div>
+                <div class="call-status" id="call-status">Calling...</div>
+            </div>
+        </div>
+        <div class="call-controls">
+            <button class="control-btn mute" id="mute-btn">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button class="control-btn video" id="video-toggle-btn">
+                <i class="fas fa-video"></i>
+            </button>
+            <button class="control-btn speaker" id="speaker-btn">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <button class="control-btn end" id="end-call-btn">
+                <i class="fas fa-phone"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fas fa-phone"></i>
+            <span>Calls</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user-friends"></i>
+            <span>Contacts</span>
+        </a>
+        <a href="#" class="nav-item" id="dial-nav">
+            <i class="fas fa-dialpad"></i>
+            <span>Dial</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Hide all content sections
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the corresponding content section
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-section`).classList.add('active');
+            });
+        });
+        
+        // Dial pad functionality
+        const dialNumber = document.getElementById('dial-number');
+        const backspaceBtn = document.getElementById('backspace-btn');
+        const dialCallBtn = document.getElementById('dial-call-btn');
+        const dialVideoBtn = document.getElementById('dial-video-btn');
+        
+        // Add event listeners to dial buttons
+        document.querySelectorAll('.dial-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const number = button.getAttribute('data-number');
+                if (dialNumber.textContent === 'Enter number') {
+                    dialNumber.textContent = number;
+                } else {
+                    dialNumber.textContent += number;
+                }
+            });
+        });
+        
+        // Backspace functionality
+        backspaceBtn.addEventListener('click', () => {
+            if (dialNumber.textContent.length > 1) {
+                dialNumber.textContent = dialNumber.textContent.slice(0, -1);
+            } else {
+                dialNumber.textContent = 'Enter number';
+            }
+        });
+        
+        // Call buttons functionality
+        document.querySelectorAll('.call-btn.call, .call-btn.video').forEach(button => {
+            button.addEventListener('click', () => {
+                const isVideoCall = button.classList.contains('video');
+                const contact = button.getAttribute('data-contact');
+                initiateCall(contact, isVideoCall);
+            });
+        });
+        
+        // Dial pad call buttons
+        dialCallBtn.addEventListener('click', () => {
+            if (dialNumber.textContent !== 'Enter number') {
+                initiateCall(dialNumber.textContent, false);
+            }
+        });
+        
+        dialVideoBtn.addEventListener('click', () => {
+            if (dialNumber.textContent !== 'Enter number') {
+                initiateCall(dialNumber.textContent, true);
+            }
+        });
+        
+        // Video call functionality
+        const videoCall = document.getElementById('video-call');
+        const callerName = document.getElementById('caller-name');
+        const callStatus = document.getElementById('call-status');
+        const endCallBtn = document.getElementById('end-call-btn');
+        const muteBtn = document.getElementById('mute-btn');
+        const videoToggleBtn = document.getElementById('video-toggle-btn');
+        const speakerBtn = document.getElementById('speaker-btn');
+        
+        let callActive = false;
+        let muted = false;
+        let videoEnabled = true;
+        let speakerEnabled = false;
+        
+        function initiateCall(contact, isVideo) {
+            callerName.textContent = contact;
+            callStatus.textContent = isVideo ? 'Video Calling...' : 'Calling...';
+            videoCall.classList.add('active');
+            callActive = true;
+            
+            // Simulate call connection after 2 seconds
+            setTimeout(() => {
+                if (callActive) {
+                    callStatus.textContent = isVideo ? 'Video Call Connected' : 'Call Connected';
+                }
+            }, 2000);
+        }
+        
+        endCallBtn.addEventListener('click', () => {
+            videoCall.classList.remove('active');
+            callActive = false;
+            muted = false;
+            videoEnabled = true;
+            speakerEnabled = false;
+            
+            // Reset button states
+            muteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            videoToggleBtn.innerHTML = '<i class="fas fa-video"></i>';
+            speakerBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        });
+        
+        muteBtn.addEventListener('click', () => {
+            muted = !muted;
+            muteBtn.innerHTML = muted ? 
+                '<i class="fas fa-microphone-slash"></i>' : 
+                '<i class="fas fa-microphone"></i>';
+        });
+        
+        videoToggleBtn.addEventListener('click', () => {
+            videoEnabled = !videoEnabled;
+            videoToggleBtn.innerHTML = videoEnabled ? 
+                '<i class="fas fa-video"></i>' : 
+                '<i class="fas fa-video-slash"></i>';
+        });
+        
+        speakerBtn.addEventListener('click', () => {
+            speakerEnabled = !speakerEnabled;
+            speakerBtn.innerHTML = speakerEnabled ? 
+                '<i class="fas fa-volume-mute"></i>' : 
+                '<i class="fas fa-volume-up"></i>';
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            // Search in calls
+            document.querySelectorAll('.call-item').forEach(item => {
+                const name = item.querySelector('.call-name').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Search in contacts
+            document.querySelectorAll('.contact-item').forEach(item => {
+                const name = item.querySelector('.contact-name').textContent.toLowerCase();
+                const number = item.querySelector('.contact-number').textContent.toLowerCase();
+                if (name.includes(searchTerm) || number.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+        
+        // Bottom navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                if (item.id === 'dial-nav') {
+                    // Switch to dial tab
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelector('.tab[data-tab="dial"]').classList.add('active');
+                    
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById('dial-section').classList.add('active');
+                }
+                
+                // Update active state in nav
+                document.querySelectorAll('.nav-item').forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

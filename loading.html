@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #ff0000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* ===== LOADING CONTAINER ===== */
+        .loading-container {
+            text-align: center;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== LOGO ===== */
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -2px;
+            margin-bottom: 8px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .logo-sub {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* ===== ANIMATION CONTAINER ===== */
+        .animation-wrapper {
+            position: relative;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        /* ===== SPINNER STYLES ===== */
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 4px solid var(--dark-gray);
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== PULSE DOTS ===== */
+        .pulse-dots {
+            display: flex;
+            gap: 12px;
+        }
+
+        .pulse-dots .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        .pulse-dots .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .pulse-dots .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        .pulse-dots .dot:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+        .pulse-dots .dot:nth-child(5) {
+            animation-delay: 0.8s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.5); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* ===== RING SPINNER ===== */
+        .ring-spinner {
+            position: relative;
+            width: 70px;
+            height: 70px;
+        }
+
+        .ring-spinner .ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid transparent;
+        }
+
+        .ring-spinner .ring:nth-child(1) {
+            width: 70px;
+            height: 70px;
+            border-top-color: var(--primary);
+            animation: spin 1.2s linear infinite;
+        }
+
+        .ring-spinner .ring:nth-child(2) {
+            width: 54px;
+            height: 54px;
+            top: 8px;
+            left: 8px;
+            border-bottom-color: var(--success);
+            animation: spin 0.8s linear infinite reverse;
+        }
+
+        .ring-spinner .ring:nth-child(3) {
+            width: 38px;
+            height: 38px;
+            top: 16px;
+            left: 16px;
+            border-left-color: #ffaa00;
+            animation: spin 0.6s linear infinite;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-wrapper {
+            margin: 20px 0 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--dark-gray);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--gray);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== LOADING MESSAGE ===== */
+        .loading-message {
+            color: var(--gray);
+            font-size: 14px;
+            margin-top: 8px;
+            min-height: 24px;
+        }
+
+        .loading-message .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ===== TIPS ===== */
+        .tips {
+            margin-top: 30px;
+            padding: 16px 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            text-align: left;
+        }
+
+        .tips .tip-icon {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .tips .tip-text {
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .tips .tip-text strong {
+            color: var(--light);
+        }
+
+        /* ===== LOADING STYLES SELECTOR ===== */
+        .style-selector {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .style-selector button {
+            padding: 6px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            background: transparent;
+            color: var(--gray);
+            font-family: var(--font-family);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .style-selector button:hover {
+            border-color: var(--primary);
+            color: var(--light);
+        }
+
+        .style-selector button.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* ===== HIDDEN ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 36px;
+            }
+            .loading-container {
+                padding: 20px;
+            }
+            .tips {
+                padding: 12px 16px;
+            }
+            .tips .tip-text {
+                font-size: 12px;
+            }
+            .style-selector button {
+                font-size: 11px;
+                padding: 4px 12px;
+            }
+            .ring-spinner {
+                width: 56px;
+                height: 56px;
+            }
+            .ring-spinner .ring:nth-child(1) {
+                width: 56px;
+                height: 56px;
+            }
+            .ring-spinner .ring:nth-child(2) {
+                width: 42px;
+                height: 42px;
+                top: 7px;
+                left: 7px;
+            }
+            .ring-spinner .ring:nth-child(3) {
+                width: 28px;
+                height: 28px;
+                top: 14px;
+                left: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading-container">
+        <!-- Logo -->
+        <div class="logo">Gramite</div>
+        <div class="logo-sub">Loading...</div>
+
+        <!-- Animation -->
+        <div class="animation-wrapper" id="animationWrapper">
+            <!-- Default: Spinner -->
+            <div class="spinner" id="spinner"></div>
+            
+            <!-- Pulse Dots (hidden by default) -->
+            <div class="pulse-dots hidden" id="pulseDots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Ring Spinner (hidden by default) -->
+            <div class="ring-spinner hidden" id="ringSpinner">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-wrapper">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0%</div>
+        </div>
+
+        <!-- Loading Message -->
+        <div class="loading-message" id="loadingMessage">
+            <span class="highlight">✦</span> Preparing your experience...
+        </div>
+
+        <!-- Tips -->
+        <div class="tips" id="tipsContainer">
+            <div class="tip-text">
+                <span class="tip-icon"><i class="fas fa-lightbulb"></i></span>
+                <span id="tipText"><strong>Tip:</strong> Did you know you can customize your theme in settings?</span>
+            </div>
+        </div>
+
+        <!-- Style Selector -->
+        <div class="style-selector">
+            <button class="active" data-style="spinner" onclick="changeStyle('spinner')">Spinner</button>
+            <button data-style="dots" onclick="changeStyle('dots')">Pulse</button>
+            <button data-style="rings" onclick="changeStyle('rings')">Rings</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        const LOADING_TIME = 5000; // 5 seconds total
+        const TIPS = [
+            { tip: 'Did you know you can customize your theme in settings?', icon: 'fa-palette' },
+            { tip: 'Gramite supports real-time translation for 50+ languages.', icon: 'fa-language' },
+            { tip: 'You can pin important chats to the top of your list.', icon: 'fa-thumbtack' },
+            { tip: 'Privacy is our priority. Your data is always encrypted.', icon: 'fa-shield-alt' },
+            { tip: 'Share your location with friends during events.', icon: 'fa-map-pin' },
+            { tip: 'Discover trending content in the Explore section.', icon: 'fa-compass' },
+            { tip: 'You can create polls in groups to engage members.', icon: 'fa-poll' },
+            { tip: 'Gramite is available on iOS, Android, and Web.', icon: 'fa-mobile-alt' },
+            { tip: 'Enable dark mode for a more comfortable viewing experience.', icon: 'fa-moon' },
+            { tip: 'Follow your favorite creators to see their latest posts.', icon: 'fa-star' },
+            { tip: 'Use the search bar to find friends, groups, and content quickly.', icon: 'fa-search' },
+            { tip: 'You can schedule posts to go live at a specific time.', icon: 'fa-clock' },
+        ];
+
+        let currentStyle = 'spinner';
+        let progress = 0;
+        let isComplete = false;
+
+        // ===== DOM ELEMENTS =====
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const tipText = document.getElementById('tipText');
+        const tipsContainer = document.getElementById('tipsContainer');
+
+        const spinner = document.getElementById('spinner');
+        const pulseDots = document.getElementById('pulseDots');
+        const ringSpinner = document.getElementById('ringSpinner');
+
+        // ===== MESSAGES =====
+        const messages = [
+            'Connecting to servers...',
+            'Loading your profile...',
+            'Syncing your data...',
+            'Preparing your feed...',
+            'Almost ready...',
+            'Welcome to Gramite! ✨'
+        ];
+
+        let messageIndex = 0;
+
+        // ===== UPDATE PROGRESS =====
+        function updateProgress() {
+            const interval = 50; // Update every 50ms
+            const step = 100 / (LOADING_TIME / interval);
+
+            const timer = setInterval(() => {
+                if (progress >= 100) {
+                    clearInterval(timer);
+                    completeLoading();
+                    return;
+                }
+
+                // Random slowdown for realism
+                let increment = step;
+                if (progress > 70) increment = step * 0.6;
+                if (progress > 90) increment = step * 0.3;
+                if (Math.random() < 0.1) increment *= 0.5; // occasional slowdown
+
+                progress = Math.min(progress + increment, 100);
+                progressFill.style.width = progress + '%';
+                progressText.textContent = Math.floor(progress) + '%';
+
+                // Update message at milestones
+                const messageIndex = Math.floor((progress / 100) * (messages.length - 1));
+                if (loadingMessage) {
+                    const currentMessage = messages[Math.min(messageIndex, messages.length - 1)];
+                    loadingMessage.innerHTML = `<span class="highlight">✦</span> ${currentMessage}`;
+                }
+
+                // Update tip at 30% and 70%
+                if (progress >= 30 && progress < 35) {
+                    updateTip();
+                }
+                if (progress >= 70 && progress < 75) {
+                    updateTip();
+                }
+            }, interval);
+        }
+
+        // ===== UPDATE TIP =====
+        function updateTip() {
+            const randomTip = TIPS[Math.floor(Math.random() * TIPS.length)];
+            tipText.innerHTML = `<strong>Tip:</strong> ${randomTip.tip}`;
+            // Update icon
+            const tipIcon = tipsContainer.querySelector('.tip-icon i');
+            if (tipIcon) {
+                tipIcon.className = `fas ${randomTip.icon}`;
+            }
+        }
+
+        // ===== COMPLETE LOADING =====
+        function completeLoading() {
+            if (isComplete) return;
+            isComplete = true;
+            
+            loadingMessage.innerHTML = `<span class="highlight">🎉</span> Ready to go!`;
+            progressText.textContent = '100%';
+            
+            // Show completion animation
+            setTimeout(() => {
+                // Redirect to home page
+                window.location.href = 'Home.html';
+            }, 800);
+        }
+
+        // ===== CHANGE LOADING STYLE =====
+        function changeStyle(style) {
+            currentStyle = style;
+            
+            // Update buttons
+            document.querySelectorAll('.style-selector button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.style === style);
+            });
+
+            // Hide all
+            spinner.classList.add('hidden');
+            pulseDots.classList.add('hidden');
+            ringSpinner.classList.add('hidden');
+
+            // Show selected
+            if (style === 'spinner') {
+                spinner.classList.remove('hidden');
+            } else if (style === 'dots') {
+                pulseDots.classList.remove('hidden');
+            } else if (style === 'rings') {
+                ringSpinner.classList.remove('hidden');
+            }
+        }
+
+        // ===== START LOADING =====
+        function startLoading() {
+            // Initial tip
+            updateTip();
+            
+            // Start progress
+            updateProgress();
+
+            // Also update tip every 3 seconds
+            setInterval(updateTip, 3000);
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '1') changeStyle('spinner');
+            if (e.key === '2') changeStyle('dots');
+            if (e.key === '3') changeStyle('rings');
+            if (e.key === 'r' || e.key === 'R') {
+                // Reset loading
+                if (!isComplete) {
+                    progress = 0;
+                    progressFill.style.width = '0%';
+                    progressText.textContent = '0%';
+                    messageIndex = 0;
+                    startLoading();
+                }
+            }
+        });
+
+        // ===== START =====
+        startLoading();
+
+        // ===== CONSOLE MESSAGE =====
+        console.log('🚀 Gramite is loading...');
+        console.log('💡 Press 1, 2, or 3 to change loading animations!');
+        console.log('💡 Press R to restart loading!');
+    </script>
+
+</body>
+</html>

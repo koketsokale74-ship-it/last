@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Grami Search · advanced</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF1A1A;
+            --primary-soft: #ff3333;
+            --primary-glow: rgba(255, 26, 26, 0.3);
+            --dark-bg: #0b0b0e;
+            --card-bg: #17171c;
+            --card-hover: #22222a;
+            --surface: #1e1e26;
+            --text-main: #f0f0f5;
+            --text-muted: #9a9aa8;
+            --border-dim: #2b2b35;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 24px 16px 60px;
+            background-image: radial-gradient(circle at 20% 30%, #1c0f0f 0%, #0b0b0e 70%);
+        }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 640px;
+        }
+
+        /* header / search */
+        .search-header {
+            background: var(--card-bg);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 8px 20px 8px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+            transition: box-shadow 0.25s;
+        }
+        .search-header:focus-within {
+            box-shadow: 0 0 0 2px var(--primary-glow), 0 12px 30px rgba(0,0,0,0.8);
+        }
+
+        .search-header i {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+        .search-header:focus-within i {
+            color: var(--primary);
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-main);
+            width: 100%;
+            padding: 16px 0;
+            outline: none;
+            letter-spacing: -0.2px;
+        }
+        .search-input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        /* chips / quick filters */
+        .chip-row {
+            display: flex;
+            gap: 10px;
+            margin: 18px 0 8px;
+            flex-wrap: wrap;
+        }
+        .chip {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.2px;
+        }
+        .chip i {
+            font-size: 0.7rem;
+            color: var(--primary);
+        }
+        .chip:hover {
+            background: var(--card-hover);
+            color: var(--text-main);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* section titles */
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1.4rem;
+            letter-spacing: -0.3px;
+            margin: 32px 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-title span {
+            background: var(--primary);
+            width: 6px;
+            height: 28px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        /* trending grid - modern glass */
+        .trending-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .trending-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-md);
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+            backdrop-filter: blur(2px);
+            position: relative;
+            overflow: hidden;
+        }
+        .trending-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .trending-item:hover {
+            background: var(--card-hover);
+            transform: translateY(-4px);
+            border-color: var(--primary-soft);
+            box-shadow: 0 12px 24px -8px rgba(255, 26, 26, 0.15);
+        }
+        .trending-item:hover::after {
+            opacity: 1;
+        }
+
+        .trending-tag {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -0.2px;
+            color: white;
+        }
+        .trending-stats {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .trending-stats i {
+            font-size: 0.6rem;
+            color: var(--primary);
+        }
+
+        /* accounts feed */
+        .accounts-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .account-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            cursor: default;
+            backdrop-filter: blur(2px);
+        }
+        .account-card:hover {
+            background: var(--card-hover);
+            border-color: #3a3a48;
+            transform: scale(1.01);
+        }
+
+        .account-avatar {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            background: #1f1f2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .account-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .account-username {
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.2px;
+        }
+        .account-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+            margin-top: 2px;
+        }
+        .account-details i {
+            color: var(--primary);
+            font-size: 0.6rem;
+            margin-right: 4px;
+        }
+        .account-follow-btn {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+        .account-follow-btn:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px var(--primary-glow);
+            border-color: var(--primary);
+        }
+        .account-follow-btn.following {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* message box - premium */
+        .message-box-backdrop {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        .message-box {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.96);
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 38px 32px 32px;
+            max-width: 340px;
+            width: 90%;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            text-align: center;
+            box-shadow: 0 40px 70px rgba(0,0,0,0.8);
+            animation: popIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        }
+        .message-box.show {
+            display: flex;
+        }
+        .message-box .icon-wrap {
+            background: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 4px;
+        }
+        .message-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: white;
+            margin: 0;
+        }
+        .message-box p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0 0 6px;
+        }
+        .message-box button {
+            background: var(--primary);
+            border: none;
+            border-radius: 60px;
+            padding: 12px 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+        .message-box button:hover {
+            background: #e60000;
+            transform: scale(0.97);
+            box-shadow: 0 0 30px var(--primary-glow);
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; } 100% { opacity: 1; }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* responsive */
+        @media (max-width: 480px) {
+            .trending-grid {
+                grid-template-columns: 1fr;
+            }
+            .search-header {
+                padding: 4px 16px 4px 18px;
+            }
+            .section-title {
+                font-size: 1.2rem;
+            }
+            .account-card {
+                padding: 12px 14px;
+                flex-wrap: wrap;
+            }
+            .account-follow-btn {
+                padding: 6px 14px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+
+    <!-- search header -->
+    <div class="search-header">
+        <i class="fas fa-search"></i>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search creators, topics, hashtags...">
+    </div>
+
+    <!-- quick chips -->
+    <div class="chip-row">
+        <div class="chip" data-tag="#TechTok"><i class="fas fa-hashtag"></i> TechTok</div>
+        <div class="chip" data-tag="#CookingHacks"><i class="fas fa-fire"></i> Cooking</div>
+        <div class="chip" data-tag="#FitnessMotivation"><i class="fas fa-dumbbell"></i> Fitness</div>
+        <div class="chip" data-tag="#GamingCommunity"><i class="fas fa-gamepad"></i> Gaming</div>
+    </div>
+
+    <!-- trending -->
+    <div class="section-title"><span></span> Trending now</div>
+    <div class="trending-grid" id="trendingGrid"></div>
+
+    <!-- suggested accounts -->
+    <div class="section-title" style="margin-top: 40px;"><span></span> Suggested accounts</div>
+    <div class="accounts-feed" id="accountsFeed"></div>
+</div>
+
+<!-- message box -->
+<div class="message-box-backdrop" id="messageBackdrop"></div>
+<div class="message-box" id="messageBox">
+    <div class="icon-wrap"><i class="fas fa-bolt"></i></div>
+    <h3 id="messageTitle">✨</h3>
+    <p id="messageText"></p>
+    <button id="closeMessage">Got it</button>
+</div>
+
+<script>
+    (function() {
+        // DOM refs
+        const searchInput = document.getElementById('searchInput');
+        const trendingGrid = document.getElementById('trendingGrid');
+        const accountsFeed = document.getElementById('accountsFeed');
+        const messageBox = document.getElementById('messageBox');
+        const messageBackdrop = document.getElementById('messageBackdrop');
+        const messageTitle = document.getElementById('messageTitle');
+        const messageText = document.getElementById('messageText');
+        const closeMessageBtn = document.getElementById('closeMessage');
+
+        // ---------- data ----------
+        const trendingHashtags = [
+            { tag: '#TechTok', stats: '20.5M views', icon: 'fa-microchip' },
+            { tag: '#CookingHacks', stats: '15.2M views', icon: 'fa-utensils' },
+            { tag: '#FitnessMotivation', stats: '10.8M views', icon: 'fa-heartbeat' },
+            { tag: '#GamingCommunity', stats: '8.9M views', icon: 'fa-headset' },
+        ];
+
+        const suggestedAccounts = [
+            { username: '@tech_guru', name: 'Tech Guru', followers: '1.2M', avatarText: 'TG' },
+            { username: '@foodie_adventures', name: 'Foodie Adventures', followers: '850K', avatarText: 'FA' },
+            { username: '@art_studio', name: 'Art Studio', followers: '345K', avatarText: 'AS' },
+            { username: '@daily_vlogs', name: 'Daily Vlogs', followers: '2.1M', avatarText: 'DV' },
+        ];
+
+        // ---------- render functions ----------
+        function renderTrending() {
+            trendingGrid.innerHTML = '';
+            trendingHashtags.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'trending-item';
+                div.innerHTML = `
+                    <div class="trending-tag"><i class="fas ${item.icon}" style="color:var(--primary); margin-right:8px;"></i>${item.tag}</div>
+                    <div class="trending-stats"><i class="fas fa-eye"></i> ${item.stats}</div>
+                `;
+                // click -> show message
+                div.addEventListener('click', () => {
+                    showMessage('Trending', `Exploring ${item.tag} · ${item.stats}`);
+                });
+                trendingGrid.appendChild(div);
+            });
+        }
+
+        function renderAccounts() {
+            accountsFeed.innerHTML = '';
+            suggestedAccounts.forEach(account => {
+                const card = document.createElement('div');
+                card.className = 'account-card';
+
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = 'account-avatar';
+                avatarDiv.textContent = account.avatarText;
+
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'account-info';
+                infoDiv.innerHTML = `
+                    <div class="account-username">${account.username}</div>
+                    <div class="account-details"><i class="fas fa-user"></i> ${account.name} · <i class="fas fa-users"></i> ${account.followers} followers</div>
+                `;
+
+                const followBtn = document.createElement('button');
+                followBtn.className = 'account-follow-btn';
+                followBtn.textContent = 'Follow';
+
+                // follow toggle + message
+                let isFollowing = false;
+                followBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    isFollowing = !isFollowing;
+                    followBtn.textContent = isFollowing ? 'Following' : 'Follow';
+                    followBtn.classList.toggle('following', isFollowing);
+                    if (isFollowing) {
+                        showMessage('Followed', `You are now following ${account.username}`);
+                    } else {
+                        showMessage('Unfollowed', `You unfollowed ${account.username}`);
+                    }
+                });
+
+                // click on card -> show profile preview
+                card.addEventListener('click', () => {
+                    showMessage(`@${account.username}`, `${account.name} · ${account.followers} followers`);
+                });
+
+                card.append(avatarDiv, infoDiv, followBtn);
+                accountsFeed.appendChild(card);
+            });
+        }
+
+        // ---------- message system ----------
+        function showMessage(title, text) {
+            messageTitle.textContent = title;
+            messageText.textContent = text;
+            messageBox.classList.add('show');
+            messageBackdrop.style.display = 'block';
+        }
+
+        function hideMessage() {
+            messageBox.classList.remove('show');
+            messageBackdrop.style.display = 'none';
+        }
+
+        // close events
+        closeMessageBtn.addEventListener('click', hideMessage);
+        messageBackdrop.addEventListener('click', hideMessage);
+
+        // ---------- search ----------
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && searchInput.value.trim() !== '') {
+                const query = searchInput.value.trim();
+                showMessage('🔍 Search', `Showing results for "${query}"`);
+                // optional: clear input after search? keep as user expects.
+            }
+        });
+
+        // chip click
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                const tag = this.dataset.tag || '#explore';
+                showMessage('⚡ Trending', `Browsing ${tag}`);
+                searchInput.value = tag;
+            });
+        });
+
+        // ---------- init ----------
+        renderTrending();
+        renderAccounts();
+
+        // extra: click on search icon (just focus)
+        document.querySelector('.search-header i').addEventListener('click', () => {
+            searchInput.focus();
+        });
+
+    })();
+</script>
+</body>
+</html>

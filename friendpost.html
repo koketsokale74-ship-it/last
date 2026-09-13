@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friend Post - Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0050;
+            --primary-dark: #e60046;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* Friend post container */
+        .post-container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--darker);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--dark-gray);
+        }
+        
+        /* Post header */
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid var(--dark-gray);
+        }
+        
+        .poster-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .poster-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+        
+        .poster-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .poster-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .poster-handle {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .post-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .post-menu {
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        /* Post content */
+        .post-content {
+            padding: 15px;
+        }
+        
+        .post-text {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .post-hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .post-hashtag {
+            color: var(--primary);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        /* Post media */
+        .post-media {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .post-media img {
+            width: 100%;
+            display: block;
+        }
+        
+        /* Post stats */
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--dark-gray);
+            color: var(--gray);
+            font-size: 13px;
+        }
+        
+        .post-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Post actions */
+        .post-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 10px 0;
+        }
+        
+        .post-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 8px 0;
+        }
+        
+        .post-action:hover {
+            color: var(--primary);
+        }
+        
+        .post-action i {
+            font-size: 20px;
+        }
+        
+        .post-action span {
+            font-size: 12px;
+        }
+        
+        .post-action.liked {
+            color: var(--primary);
+        }
+        
+        /* Comments section */
+        .comments-section {
+            padding: 15px;
+            border-top: 1px solid var(--dark-gray);
+        }
+        
+        .comment-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .comment-input-field {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--dark-gray);
+            border-radius: 20px;
+            padding: 10px 15px;
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .comment-item {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .comment-content {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 10px 15px;
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .comment-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .comment-action {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        .comment-action:hover {
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .post-container {
+                border-radius: 10px;
+            }
+            
+            .poster-name {
+                font-size: 14px;
+            }
+            
+            .poster-handle, .post-time {
+                font-size: 12px;
+            }
+            
+            .post-action i {
+                font-size: 18px;
+            }
+            
+            .post-action span {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="post-container">
+        <!-- Post header -->
+        <div class="post-header">
+            <div class="poster-info">
+                <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="User Avatar" class="poster-avatar">
+                <div class="poster-details">
+                    <div class="poster-name">Sarah Johnson</div>
+                    <div class="poster-handle">@sarahj</div>
+                </div>
+            </div>
+            <div class="post-time">2 hrs ago</div>
+            <button class="post-menu">
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+        </div>
+        
+        <!-- Post content -->
+        <div class="post-content">
+            <p class="post-text">
+                Just had an amazing weekend hiking trip! The views were absolutely breathtaking 🌄 
+                Definitely recommend this trail if you're in the area! #NatureLover
+            </p>
+            
+            <div class="post-hashtags">
+                <a href="#" class="post-hashtag">#HikingAdventure</a>
+                <a href="#" class="post-hashtag">#WeekendGetaway</a>
+                <a href="#" class="post-hashtag">#NaturePhotography</a>
+            </div>
+            
+            <div class="post-media">
+                <img src="https://source.unsplash.com/random/500x500/?hiking" alt="Hiking photo">
+            </div>
+            
+            <div class="post-stats">
+                <div class="post-stat">
+                    <i class="fas fa-heart"></i>
+                    <span>245 likes</span>
+                </div>
+                <div class="post-stat">
+                    <i class="fas fa-comment"></i>
+                    <span>18 comments</span>
+                </div>
+                <div class="post-stat">
+                    <i class="fas fa-share"></i>
+                    <span>5 shares</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Post actions -->
+        <div class="post-actions">
+            <button class="post-action liked">
+                <i class="fas fa-heart"></i>
+                <span>Like</span>
+            </button>
+            <button class="post-action">
+                <i class="fas fa-comment"></i>
+                <span>Comment</span>
+            </button>
+            <button class="post-action">
+                <i class="fas fa-share"></i>
+                <span>Share</span>
+            </button>
+            <button class="post-action">
+                <i class="fas fa-bookmark"></i>
+                <span>Save</span>
+            </button>
+        </div>
+        
+        <!-- Comments section -->
+        <div class="comments-section">
+            <div class="comment-input">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Your Avatar" class="comment-avatar">
+                <input type="text" class="comment-input-field" placeholder="Add a comment...">
+            </div>
+            
+            <div class="comment-list">
+                <!-- Comment 1 -->
+                <div class="comment-item">
+                    <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Commenter Avatar" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-author">Michael Chen</div>
+                        <p class="comment-text">Wow, these photos are incredible! Where exactly is this trail? I'd love to check it out sometime.</p>
+                        <div class="comment-actions">
+                            <button class="comment-action">
+                                <i class="fas fa-heart"></i>
+                                <span>12</span>
+                            </button>
+                            <button class="comment-action">
+                                <span>Reply</span>
+                            </button>
+                            <span>1 hr ago</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comment 2 -->
+                <div class="comment-item">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Commenter Avatar" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-author">Emma Williams</div>
+                        <p class="comment-text">Looks amazing! 😍 I've been meaning to go hiking there for ages.</p>
+                        <div class="comment-actions">
+                            <button class="comment-action">
+                                <i class="fas fa-heart"></i>
+                                <span>5</span>
+                            </button>
+                            <button class="comment-action">
+                                <span>Reply</span>
+                            </button>
+                            <span>45 mins ago</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comment 3 -->
+                <div class="comment-item">
+                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Commenter Avatar" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-author">David Kim</div>
+                        <p class="comment-text">Great shots! What camera did you use for these?</p>
+                        <div class="comment-actions">
+                            <button class="comment-action">
+                                <i class="fas fa-heart"></i>
+                                <span>3</span>
+                            </button>
+                            <button class="comment-action">
+                                <span>Reply</span>
+                            </button>
+                            <span>30 mins ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Like functionality
+        const likeBtn = document.querySelector('.post-action.liked');
+        likeBtn.addEventListener('click', function() {
+            if (this.classList.contains('liked')) {
+                this.classList.remove('liked');
+                this.querySelector('span').textContent = 'Like';
+            } else {
+                this.classList.add('liked');
+                this.querySelector('span').textContent = 'Liked';
+            }
+        });
+        
+        // Comment like functionality
+        document.querySelectorAll('.comment-action').forEach(action => {
+            action.addEventListener('click', function() {
+                if (this.querySelector('i')) {
+                    const heart = this.querySelector('i');
+                    const count = this.querySelector('span');
+                    
+                    if (heart.classList.contains('fas')) {
+                        heart.classList.replace('fas', 'far');
+                        count.textContent = parseInt(count.textContent) - 1;
+                    } else {
+                        heart.classList.replace('far', 'fas');
+                        count.textContent = parseInt(count.textContent) + 1;
+                    }
+                }
+            });
+        });
+        
+        // Post menu functionality
+        document.querySelector('.post-menu').addEventListener('click', function() {
+            alert('Post options would appear here!');
+        });
+        
+        // Comment input functionality
+        const commentInput = document.querySelector('.comment-input-field');
+        commentInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.trim() !== '') {
+                alert(`Comment posted: ${this.value}`);
+                this.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

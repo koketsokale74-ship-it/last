@@ -1,0 +1,958 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: rgb(255, 0, 76);
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --danger: #ff0044;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-header .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* ===== POST FORM ===== */
+        .post-form-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .post-form {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            padding: 30px;
+        }
+
+        /* User info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .user-info .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .user-info .details .name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .user-info .details .username {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        /* Post input */
+        .post-textarea {
+            width: 100%;
+            min-height: 120px;
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 15px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.3s;
+            margin-bottom: 16px;
+        }
+
+        .post-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .post-textarea::placeholder {
+            color: var(--gray);
+            font-size: 15px;
+        }
+
+        /* Media upload area */
+        .media-upload {
+            border: 2px dashed var(--card-border);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .media-upload:hover {
+            border-color: var(--primary);
+            background: rgba(255, 0, 80, 0.03);
+        }
+
+        .media-upload i {
+            font-size: 32px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .media-upload p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .media-upload .upload-hint {
+            font-size: 12px;
+            color: var(--dark-gray);
+            margin-top: 4px;
+        }
+
+        /* Media preview */
+        .media-preview {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .media-preview.active {
+            display: grid;
+        }
+
+        .media-preview .preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+        }
+
+        .media-preview .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-preview .preview-item .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-preview .preview-item .remove-btn:hover {
+            background: var(--danger);
+        }
+
+        .media-preview .preview-item .file-type {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            font-size: 10px;
+            color: var(--gray);
+        }
+
+        /* Post options */
+        .post-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .post-options .option-group {
+            background: var(--darker);
+            border-radius: 10px;
+            padding: 12px 16px;
+            border: 1px solid var(--card-border);
+        }
+
+        .post-options .option-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-options .option-group select,
+        .post-options .option-group input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .post-options .option-group select option {
+            background: var(--darker);
+        }
+
+        /* Action buttons */
+        .post-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .post-actions .action-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--gray);
+            font-family: var(--font-family);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .post-actions .action-btn:hover {
+            border-color: var(--primary);
+            color: var(--light);
+        }
+
+        .post-actions .action-btn i {
+            font-size: 14px;
+        }
+
+        .post-actions .action-btn.active {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .post-actions .spacer {
+            flex: 1;
+        }
+
+        .post-actions .submit-btn {
+            padding: 10px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .post-actions .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 80, 0.3);
+        }
+
+        .post-actions .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Draft saved indicator */
+        .draft-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 8px;
+            color: var(--success);
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        .draft-indicator.show {
+            display: flex;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .main-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .page-header h1 {
+                font-size: 22px;
+            }
+            .post-form {
+                padding: 20px;
+            }
+            .post-options {
+                grid-template-columns: 1fr;
+            }
+            .post-actions {
+                flex-direction: column;
+            }
+            .post-actions .spacer {
+                display: none;
+            }
+            .post-actions .submit-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .post-form {
+                padding: 16px;
+            }
+            .media-upload {
+                padding: 20px;
+            }
+            .post-actions .action-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            .user-info .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 15px;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1001;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+
+        .toast.error i {
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chating.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='posting.html'">
+                <i class="fas fa-plus-square"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='profile.html'">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <h1>Create Post</h1>
+                <div class="subtitle">Share your thoughts with the world</div>
+            </div>
+        </div>
+
+        <div class="post-form-container">
+            <div class="post-form">
+                <!-- User Info -->
+                <div class="user-info">
+                    <div class="avatar">JD</div>
+                    <div class="details">
+                        <div class="name">John Doe</div>
+                        <div class="username">@johndoe · Posting to <span style="color:var(--primary);">Friends</span></div>
+                    </div>
+                </div>
+
+                <!-- Post Text -->
+                <textarea class="post-textarea" id="postContent" placeholder="What's on your mind, John?" maxlength="5000"></textarea>
+
+                <!-- Media Upload -->
+                <div class="media-upload" id="mediaUpload" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload photos or videos</p>
+                    <div class="upload-hint">PNG, JPG, MP4, GIF up to 50MB</div>
+                    <input type="file" id="fileInput" accept="image/*,video/*" multiple style="display:none;" onchange="handleFileUpload(event)">
+                </div>
+
+                <!-- Media Preview -->
+                <div class="media-preview" id="mediaPreview"></div>
+
+                <!-- Post Options -->
+                <div class="post-options">
+                    <div class="option-group">
+                        <label><i class="fas fa-globe"></i> Privacy</label>
+                        <select id="postPrivacy">
+                            <option value="public">🌍 Public</option>
+                            <option value="friends">👥 Friends</option>
+                            <option value="private">🔒 Private (Only Me)</option>
+                            <option value="custom">⚙️ Custom</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label><i class="fas fa-clock"></i> Schedule</label>
+                        <select id="postSchedule">
+                            <option value="now">Post Now</option>
+                            <option value="1h">In 1 Hour</option>
+                            <option value="3h">In 3 Hours</option>
+                            <option value="6h">In 6 Hours</option>
+                            <option value="12h">In 12 Hours</option>
+                            <option value="24h">Tomorrow</option>
+                            <option value="custom">Custom Date</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="post-actions">
+                    <button class="action-btn" onclick="toggleEmoji()">
+                        <i class="fas fa-smile"></i> Emoji
+                    </button>
+                    <button class="action-btn" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-image"></i> Media
+                    </button>
+                    <button class="action-btn" onclick="addLocation()">
+                        <i class="fas fa-map-pin"></i> Location
+                    </button>
+                    <button class="action-btn" onclick="addHashtag()">
+                        <i class="fas fa-hashtag"></i> Hashtag
+                    </button>
+                    <button class="action-btn" onclick="toggleDraft()" id="draftBtn">
+                        <i class="fas fa-save"></i> Draft
+                    </button>
+                    <div class="spacer"></div>
+                    <button class="submit-btn" id="submitBtn" onclick="submitPost()">
+                        <i class="fas fa-paper-plane"></i> Post
+                    </button>
+                </div>
+
+                <!-- Draft indicator -->
+                <div class="draft-indicator" id="draftIndicator">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Draft saved successfully</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Action completed successfully!</span>
+    </div>
+
+    <script>
+        // ===== STATE =====
+        let uploadedFiles = [];
+        let draftSaved = false;
+        let postContent = '';
+
+        // ===== HANDLE FILE UPLOAD =====
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            if (!files.length) return;
+
+            const preview = document.getElementById('mediaPreview');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                uploadedFiles.push(file);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const item = document.createElement('div');
+                    item.className = 'preview-item';
+                    
+                    const isVideo = file.type.startsWith('video/');
+                    if (isVideo) {
+                        item.innerHTML = `
+                            <video src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;"></video>
+                            <span class="file-type">🎬 Video</span>
+                            <button class="remove-btn" onclick="removeFile(${uploadedFiles.length - 1}, this.parentElement)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                    } else {
+                        item.innerHTML = `
+                            <img src="${e.target.result}" alt="Upload">
+                            <span class="file-type">📷 Photo</span>
+                            <button class="remove-btn" onclick="removeFile(${uploadedFiles.length - 1}, this.parentElement)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                    }
+                    
+                    preview.appendChild(item);
+                    preview.classList.add('active');
+                    document.getElementById('mediaUpload').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            showToast(`📎 ${files.length} file${files.length > 1 ? 's' : ''} uploaded`);
+            event.target.value = '';
+        }
+
+        // ===== REMOVE FILE =====
+        function removeFile(index, element) {
+            uploadedFiles.splice(index, 1);
+            element.remove();
+            
+            if (uploadedFiles.length === 0) {
+                document.getElementById('mediaPreview').classList.remove('active');
+                document.getElementById('mediaUpload').style.display = 'block';
+            }
+            showToast('🗑️ File removed');
+        }
+
+        // ===== ADD LOCATION =====
+        function addLocation() {
+            const content = document.getElementById('postContent');
+            const location = prompt('📍 Enter a location:');
+            if (location && location.trim()) {
+                const atIndex = content.selectionStart;
+                const before = content.value.substring(0, atIndex);
+                const after = content.value.substring(atIndex);
+                content.value = before + `📍 ${location.trim()}` + after;
+                content.focus();
+                showToast(`📍 Location added: ${location}`);
+            }
+        }
+
+        // ===== ADD HASHTAG =====
+        function addHashtag() {
+            const content = document.getElementById('postContent');
+            const hashtag = prompt('#️⃣ Enter a hashtag:');
+            if (hashtag && hashtag.trim()) {
+                const clean = hashtag.trim().replace(/^#/, '').replace(/\s+/g, '');
+                const atIndex = content.selectionStart;
+                const before = content.value.substring(0, atIndex);
+                const after = content.value.substring(atIndex);
+                content.value = before + `#${clean}` + after;
+                content.focus();
+                showToast(`#️⃣ Hashtag added: #${clean}`);
+            }
+        }
+
+        // ===== TOGGLE EMOJI =====
+        function toggleEmoji() {
+            const content = document.getElementById('postContent');
+            const emojis = ['😊', '😂', '❤️', '🔥', '✨', '👏', '💯', '🙌', '😍', '🤩', '🎉', '💪', '🤔', '🧠', '🚀', '🌈', '⭐', '🎯', '💡', '🌟'];
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            const atIndex = content.selectionStart;
+            const before = content.value.substring(0, atIndex);
+            const after = content.value.substring(atIndex);
+            content.value = before + randomEmoji + after;
+            content.focus();
+            showToast(`😊 Added ${randomEmoji}`);
+        }
+
+        // ===== TOGGLE DRAFT =====
+        function toggleDraft() {
+            const content = document.getElementById('postContent').value.trim();
+            if (!content && uploadedFiles.length === 0) {
+                showToast('⚠️ Nothing to save as draft');
+                return;
+            }
+            
+            draftSaved = !draftSaved;
+            const btn = document.getElementById('draftBtn');
+            const indicator = document.getElementById('draftIndicator');
+            
+            if (draftSaved) {
+                localStorage.setItem('gramite_draft', JSON.stringify({
+                    content: content,
+                    files: uploadedFiles.length,
+                    timestamp: Date.now()
+                }));
+                btn.style.borderColor = 'var(--success)';
+                btn.style.color = 'var(--success)';
+                btn.innerHTML = '<i class="fas fa-check"></i> Draft Saved';
+                indicator.classList.add('show');
+                showToast('💾 Draft saved successfully!');
+            } else {
+                localStorage.removeItem('gramite_draft');
+                btn.style.borderColor = '';
+                btn.style.color = '';
+                btn.innerHTML = '<i class="fas fa-save"></i> Draft';
+                indicator.classList.remove('show');
+                showToast('🗑️ Draft deleted');
+            }
+        }
+
+        // ===== SUBMIT POST =====
+        function submitPost() {
+            const content = document.getElementById('postContent').value.trim();
+            const privacy = document.getElementById('postPrivacy').value;
+            const schedule = document.getElementById('postSchedule').value;
+            
+            if (!content && uploadedFiles.length === 0) {
+                showToast('⚠️ Please write something or add media', true);
+                return;
+            }
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+            
+            // Simulate posting
+            setTimeout(() => {
+                const privacyLabels = {
+                    'public': '🌍 Public',
+                    'friends': '👥 Friends',
+                    'private': '🔒 Private',
+                    'custom': '⚙️ Custom'
+                };
+                
+                const scheduleLabels = {
+                    'now': 'Posted Now',
+                    '1h': 'Scheduled in 1 Hour',
+                    '3h': 'Scheduled in 3 Hours',
+                    '6h': 'Scheduled in 6 Hours',
+                    '12h': 'Scheduled in 12 Hours',
+                    '24h': 'Scheduled for Tomorrow',
+                    'custom': 'Scheduled'
+                };
+                
+                const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
+                const mediaCount = uploadedFiles.length;
+                
+                btn.innerHTML = '<i class="fas fa-check"></i> Posted!';
+                btn.style.background = 'var(--success)';
+                
+                showToast(`✅ Post published! ${wordCount} words, ${mediaCount} media items · ${privacyLabels[privacy]}`);
+                
+                // Reset after delay
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post';
+                    btn.style.background = '';
+                    
+                    // Clear form (optional)
+                    // document.getElementById('postContent').value = '';
+                    // uploadedFiles = [];
+                    // document.getElementById('mediaPreview').innerHTML = '';
+                    // document.getElementById('mediaPreview').classList.remove('active');
+                    // document.getElementById('mediaUpload').style.display = 'block';
+                }, 3000);
+                
+                // Remove draft if saved
+                if (draftSaved) {
+                    localStorage.removeItem('gramite_draft');
+                    document.getElementById('draftBtn').style.borderColor = '';
+                    document.getElementById('draftBtn').style.color = '';
+                    document.getElementById('draftBtn').innerHTML = '<i class="fas fa-save"></i> Draft';
+                    document.getElementById('draftIndicator').classList.remove('show');
+                    draftSaved = false;
+                }
+            }, 2000);
+        }
+
+        // ===== CHARACTER COUNTER =====
+        document.getElementById('postContent').addEventListener('input', function() {
+            const maxLength = 5000;
+            const current = this.value.length;
+            if (current > maxLength) {
+                this.value = this.value.substring(0, maxLength);
+            }
+        });
+
+        // ===== LOAD DRAFT =====
+        function loadDraft() {
+            const saved = localStorage.getItem('gramite_draft');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.content) {
+                    document.getElementById('postContent').value = data.content;
+                    showToast(`📝 Draft loaded from ${new Date(data.timestamp).toLocaleString()}`);
+                }
+            }
+        }
+
+        // ===== TOAST =====
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.className = 'toast';
+            if (isError) toast.classList.add('error');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+Enter to submit
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                if (!document.getElementById('submitBtn').disabled) {
+                    submitPost();
+                }
+            }
+            // Ctrl+D to toggle draft
+            if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                e.preventDefault();
+                toggleDraft();
+            }
+            // Escape to clear
+            if (e.key === 'Escape') {
+                if (confirm('Clear the post?')) {
+                    document.getElementById('postContent').value = '';
+                    uploadedFiles = [];
+                    document.getElementById('mediaPreview').innerHTML = '';
+                    document.getElementById('mediaPreview').classList.remove('active');
+                    document.getElementById('mediaUpload').style.display = 'block';
+                    showToast('🧹 Post cleared');
+                }
+            }
+        });
+
+        // ===== INIT =====
+        loadDraft();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings · Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #ff0000;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --success: #00ff88;
+            --danger: #ff0000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 72px;
+            background: var(--darker);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid var(--dark-gray);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sidebar .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .sidebar .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            font-size: 20px;
+        }
+
+        .sidebar .nav-item .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar .bottom-nav {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            margin-left: 72px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: calc(100% - 72px);
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-header .subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .save-btn {
+            padding: 10px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 80, 0.3);
+        }
+
+        /* ===== SETTINGS LAYOUT ===== */
+        .settings-layout {
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Sidebar navigation for settings */
+        .settings-nav {
+            width: 220px;
+            min-width: 220px;
+            position: sticky;
+            top: 0;
+            height: fit-content;
+        }
+
+        .settings-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .settings-nav .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .settings-nav .nav-item.active {
+            background: rgba(255, 0, 80, 0.1);
+            color: var(--primary);
+        }
+
+        .settings-nav .nav-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+
+        .settings-nav .nav-divider {
+            height: 1px;
+            background: var(--dark-gray);
+            margin: 12px 0;
+        }
+
+        /* Settings content */
+        .settings-content {
+            flex: 1;
+        }
+
+        .settings-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .settings-section h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .settings-section .section-desc {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Settings cards */
+        .settings-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .settings-card .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-card .card-title i {
+            color: var(--primary);
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-row .info {
+            flex: 1;
+        }
+
+        .setting-row .info .label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .setting-row .info .description {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        /* Toggle switch */
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--dark-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle.active::after {
+            left: 22px;
+        }
+
+        /* Inputs and selects */
+        .setting-input {
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            color: var(--light);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            width: 200px;
+            transition: border-color 0.3s;
+        }
+
+        .setting-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .setting-select {
+            background: var(--darker);
+            border: 1px solid var(--card-border);
+            color: var(--light);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            width: 200px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .setting-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .setting-select option {
+            background: var(--darker);
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active {
+            border-color: white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Danger zone */
+        .danger-zone {
+            border-color: var(--danger);
+        }
+
+        .danger-zone .card-title i {
+            color: var(--danger);
+        }
+
+        .danger-btn {
+            padding: 8px 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .danger-btn:hover {
+            background: #ff0000;
+            transform: scale(1.02);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .settings-layout {
+                flex-direction: column;
+            }
+            .settings-nav {
+                width: 100%;
+                min-width: unset;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                position: relative;
+            }
+            .settings-nav .nav-item {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+            .settings-nav .nav-divider {
+                display: none;
+            }
+            .main-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar .logo {
+                font-size: 18px;
+            }
+            .sidebar .nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-container {
+                margin-left: 60px;
+                max-width: calc(100% - 60px);
+                padding: 16px;
+            }
+            .page-header h1 {
+                font-size: 22px;
+            }
+            .setting-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .setting-input, .setting-select {
+                width: 100%;
+            }
+            .settings-nav .nav-item {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .save-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .settings-card {
+                padding: 16px;
+            }
+            .color-options {
+                gap: 6px;
+            }
+            .color-option {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            color: var(--success);
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">G</div>
+        <div class="nav-items">
+            <div class="nav-item" onclick="window.location.href='Home.html'">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="nav-item" onclick="window.location.href='chating.html'">
+                <i class="fas fa-comment-dots"></i>
+                <span class="badge">12</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='notification.html'">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='searching .html'">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="nav-item active" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='menu.html'">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <h1>Settings</h1>
+                <div class="subtitle">Manage your account preferences and privacy</div>
+            </div>
+            <button class="save-btn" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+
+        <div class="settings-layout">
+            <!-- Settings Navigation -->
+            <div class="settings-nav">
+                <div class="nav-item active" data-section="account">
+                    <i class="fas fa-user"></i> Account
+                </div>
+                <div class="nav-item" data-section="privacy">
+                    <i class="fas fa-lock"></i> Privacy
+                </div>
+                <div class="nav-item" data-section="notifications">
+                    <i class="fas fa-bell"></i> Notifications
+                </div>
+                <div class="nav-item" data-section="appearance">
+                    <i class="fas fa-palette"></i> Appearance
+                </div>
+                <div class="nav-item" data-section="security">
+                    <i class="fas fa-shield-alt"></i> Security
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="connected">
+                    <i class="fas fa-link"></i> Connected Apps
+                </div>
+                <div class="nav-item" data-section="data">
+                    <i class="fas fa-database"></i> Data & Storage
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" data-section="help">
+                    <i class="fas fa-question-circle"></i> Help & Support
+                </div>
+                <div class="nav-item" data-section="about">
+                    <i class="fas fa-info-circle"></i> About
+                </div>
+            </div>
+
+            <!-- Settings Content -->
+            <div class="settings-content">
+
+                <!-- ===== ACCOUNT ===== -->
+                <div class="settings-section active" id="section-account">
+                    <h2>Account Settings</h2>
+                    <p class="section-desc">Manage your personal information and account preferences</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-user-circle"></i> Profile Information</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Display Name</div>
+                                <div class="description">Your full name shown on your profile</div>
+                            </div>
+                            <input class="setting-input" value="John Doe" style="width:250px;">
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Username</div>
+                                <div class="description">Unique identifier for your account</div>
+                            </div>
+                            <input class="setting-input" value="@johndoe" style="width:250px;">
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Email Address</div>
+                                <div class="description">Used for login and notifications</div>
+                            </div>
+                            <input class="setting-input" value="john.doe@email.com" style="width:250px;">
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Bio</div>
+                                <div class="description">A short description about yourself</div>
+                            </div>
+                            <input class="setting-input" value="Digital creator | Tech enthusiast" style="width:250px;">
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-globe"></i> Language & Region</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Language</div>
+                                <div class="description">Choose your preferred language</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>English</option>
+                                <option>Spanish</option>
+                                <option>French</option>
+                                <option>German</option>
+                                <option>Chinese</option>
+                                <option>Japanese</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Time Zone</div>
+                                <div class="description">Display times in your local timezone</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>UTC -08:00 (PST)</option>
+                                <option selected>UTC -05:00 (EST)</option>
+                                <option>UTC +00:00 (GMT)</option>
+                                <option>UTC +05:30 (IST)</option>
+                                <option>UTC +08:00 (SGT)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== PRIVACY ===== -->
+                <div class="settings-section" id="section-privacy">
+                    <h2>Privacy & Security</h2>
+                    <p class="section-desc">Control who can see your information and how you interact</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-eye"></i> Visibility</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Profile Visibility</div>
+                                <div class="description">Who can view your profile</div>
+                            </div>
+                            <select class="setting-select">
+                                <option selected>Public</option>
+                                <option>Friends Only</option>
+                                <option>Private</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Last Seen</div>
+                                <div class="description">Show when you were last active</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Read Receipts</div>
+                                <div class="description">Show when you've read messages</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Profile Picture</div>
+                                <div class="description">Who can see your profile picture</div>
+                            </div>
+                            <select class="setting-select">
+                                <option selected>Everyone</option>
+                                <option>Friends Only</option>
+                                <option>No One</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-download"></i> Data Privacy</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Data Sharing</div>
+                                <div class="description">Allow Gramite to use your data for improvements</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Personalized Ads</div>
+                                <div class="description">Show ads based on your interests</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== NOTIFICATIONS ===== -->
+                <div class="settings-section" id="section-notifications">
+                    <h2>Notification Preferences</h2>
+                    <p class="section-desc">Customize how and when you receive notifications</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-bell"></i> Push Notifications</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">All Notifications</div>
+                                <div class="description">Master toggle for all notifications</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Messages</div>
+                                <div class="description">Notifications for new messages</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Likes & Reactions</div>
+                                <div class="description">When someone interacts with your posts</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Comments</div>
+                                <div class="description">New comments on your posts</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Friend Requests</div>
+                                <div class="description">When someone sends you a friend request</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-envelope"></i> Email Notifications</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Weekly Digest</div>
+                                <div class="description">Weekly summary of your activity</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Marketing Emails</div>
+                                <div class="description">News and promotional content</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Security Alerts</div>
+                                <div class="description">Important security notifications</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== APPEARANCE ===== -->
+                <div class="settings-section" id="section-appearance">
+                    <h2>Appearance</h2>
+                    <p class="section-desc">Customize the look and feel of your experience</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-moon"></i> Theme</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Dark Mode</div>
+                                <div class="description">Enable dark theme for the app</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">System Theme</div>
+                                <div class="description">Follow system theme preference</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-palette"></i> Accent Color</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Primary Color</div>
+                                <div class="description">Choose your preferred accent color</div>
+                            </div>
+                            <div class="color-options">
+                                <div class="color-option active" style="background:#ff0050;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#00ff88;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#00aaff;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#ffaa00;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#aa66ff;" onclick="selectColor(this)"></div>
+                                <div class="color-option" style="background:#ff44aa;" onclick="selectColor(this)"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-font"></i> Font & Display</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Font Size</div>
+                                <div class="description">Adjust text size throughout the app</div>
+                            </div>
+                            <select class="setting-select">
+                                <option>Small</option>
+                                <option selected>Medium</option>
+                                <option>Large</option>
+                                <option>Extra Large</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Font Family</div>
+                                <div class="description">Choose your preferred font</div>
+                            </div>
+                            <select class="setting-select">
+                                <option selected>Poppins</option>
+                                <option>Montserrat</option>
+                                <option>Inter</option>
+                                <option>Roboto</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SECURITY ===== -->
+                <div class="settings-section" id="section-security">
+                    <h2>Security</h2>
+                    <p class="section-desc">Protect your account with advanced security features</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-key"></i> Authentication</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Two-Factor Authentication</div>
+                                <div class="description">Add an extra layer of security to your account</div>
+                            </div>
+                            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Password</div>
+                                <div class="description">Last changed 2 months ago</div>
+                            </div>
+                            <button style="background:var(--primary);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('Password change dialog would open here')">
+                                Change Password
+                            </button>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Biometric Login</div>
+                                <div class="description">Use fingerprint or face recognition</div>
+                            </div>
+                            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-sign-in-alt"></i> Sessions</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Active Sessions</div>
+                                <div class="description">Devices currently logged into your account</div>
+                            </div>
+                            <button style="background:var(--danger);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('All sessions would be terminated')">
+                                Log Out All
+                            </button>
+                        </div>
+                        <div style="padding:8px 0;color:var(--gray);font-size:13px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                                <span>Chrome • Windows 10</span>
+                                <span style="color:var(--success);">Active now</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                                <span>Firefox • MacOS</span>
+                                <span style="color:var(--gray);">2 hours ago</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span>Gramite App • iPhone</span>
+                                <span style="color:var(--gray);">Yesterday</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== CONNECTED APPS ===== -->
+                <div class="settings-section" id="section-connected">
+                    <h2>Connected Apps</h2>
+                    <p class="section-desc">Manage third-party applications connected to your account</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-plug"></i> Active Connections</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Twitter</div>
+                                <div class="description">Connected • Sharing posts automatically</div>
+                            </div>
+                            <button style="background:var(--danger);border:none;color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('Disconnected from Twitter')">
+                                Disconnect
+                            </button>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Spotify</div>
+                                <div class="description">Connected • Music integration active</div>
+                            </div>
+                            <button style="background:var(--danger);border:none;color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('Disconnected from Spotify')">
+                                Disconnect
+                            </button>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Discord</div>
+                                <div class="description">Connected • Status syncing</div>
+                            </div>
+                            <button style="background:var(--danger);border:none;color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('Disconnected from Discord')">
+                                Disconnect
+                            </button>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Connect New App</div>
+                                <div class="description">Link your account to other platforms</div>
+                            </div>
+                            <button style="background:var(--primary);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('App connection dialog would open here')">
+                                <i class="fas fa-plus"></i> Connect
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== DATA & STORAGE ===== -->
+                <div class="settings-section" id="section-data">
+                    <h2>Data & Storage</h2>
+                    <p class="section-desc">Manage your data and storage usage</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-database"></i> Storage Usage</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Total Storage Used</div>
+                                <div class="description">2.4 GB of 5 GB</div>
+                            </div>
+                            <div style="width:200px;height:6px;background:var(--dark-gray);border-radius:3px;overflow:hidden;">
+                                <div style="width:48%;height:100%;background:var(--primary);border-radius:3px;"></div>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Photos & Videos</div>
+                                <div class="description">1.8 GB</div>
+                            </div>
+                            <button style="background:var(--dark-gray);border:none;color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('Media management dialog would open here')">
+                                Manage
+                            </button>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Messages</div>
+                                <div class="description">0.6 GB</div>
+                            </div>
+                            <button style="background:var(--dark-gray);border:none;color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('Message management dialog would open here')">
+                                Manage
+                            </button>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Clear Cache</div>
+                                <div class="description">Free up space by clearing cached data</div>
+                            </div>
+                            <button style="background:var(--dark-gray);border:none;color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="if(confirm('Clear all cached data?')){alert('Cache cleared!');}">
+                                Clear Cache
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-card danger-zone">
+                        <div class="card-title"><i class="fas fa-trash-alt"></i> Data Management</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Download Your Data</div>
+                                <div class="description">Get a copy of all your data in JSON format</div>
+                            </div>
+                            <button style="background:var(--primary);border:none;color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('Your data download has started')">
+                                Download
+                            </button>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Delete Account</div>
+                                <div class="description" style="color:var(--danger);">Permanently delete your account and all data</div>
+                            </div>
+                            <button class="danger-btn" onclick="if(confirm('Are you sure you want to delete your account? This action is irreversible!')){alert('Account deletion request submitted');}">
+                                Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== HELP & SUPPORT ===== -->
+                <div class="settings-section" id="section-help">
+                    <h2>Help & Support</h2>
+                    <p class="section-desc">Get help and connect with our support team</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-life-ring"></i> Support Center</div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Visit Help Center</div>
+                                <div class="description">Browse our comprehensive help articles</div>
+                            </div>
+                            <button style="background:var(--primary);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="window.location.href='help center.html'">
+                                Open Help Center
+                            </button>
+                        </div>
+                        <div class="setting-row">
+                            <div class="info">
+                                <div class="label">Contact Support</div>
+                                <div class="description">Reach out to our support team directly</div>
+                            </div>
+                            <button style="background:var(--primary);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="Window.location.href='contact us.html'">
+                                Contact Us
+                            </button>
+                        </div>
+                        <div class="setting-row" style="border-bottom:none;">
+                            <div class="info">
+                                <div class="label">Report a Problem</div>
+                                <div class="description">Report bugs or technical issues</div>
+                            </div>
+                            <button style="background:var(--danger);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="alert('Problem report form would open here')">
+                                Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== ABOUT ===== -->
+                <div class="settings-section" id="section-about">
+                    <h2>About Gramite</h2>
+                    <p class="section-desc">Learn more about the app and our mission</p>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-info-circle"></i> Information</div>
+                        <div style="color:var(--gray);line-height:1.8;">
+                            <p><strong style="color:var(--light);">Version:</strong> 2.4.1</p>
+                            <p><strong style="color:var(--light);">Build:</strong> 2026.07.13</p>
+                            <p><strong style="color:var(--light);">Platform:</strong> Web, iOS, Android</p>
+                            <p><strong style="color:var(--light);">Last Updated:</strong> July 13, 2026</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-users"></i> Our Team</div>
+                        <div style="color:var(--gray);line-height:1.8;">
+                            <p>Gramite is built by a passionate team of developers, designers, and creators.</p>
+                            <button style="margin-top:12px;background:var(--primary);border:none;color:white;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;" onclick="window.location.href='our team.html'">
+                                Meet the Team
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title"><i class="fas fa-file-alt"></i> Legal</div>
+                        <div style="color:var(--gray);line-height:2;">
+                            <a href="#" style="color:var(--gray);text-decoration:none;display:block;" onclick="alert('Terms of Service would open here')">Terms of Service</a>
+                            <a href="#" style="color:var(--gray);text-decoration:none;display:block;" onclick="alert('Privacy Policy would open here')">Privacy Policy</a>
+                            <a href="#" style="color:var(--gray);text-decoration:none;display:block;" onclick="alert('Cookie Policy would open here')">Cookie Policy</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Settings saved successfully!</span>
+    </div>
+
+    <script>
+        // ===== SECTION NAVIGATION =====
+        document.querySelectorAll('.settings-nav .nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.settings-nav .nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                const section = this.dataset.section;
+                document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(`section-${section}`).classList.add('active');
+            });
+        });
+
+        // ===== COLOR SELECTION =====
+        function selectColor(element) {
+            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            
+            const color = element.style.background;
+            document.documentElement.style.setProperty('--primary', color);
+        }
+
+        // ===== SAVE SETTINGS =====
+        function saveSettings() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== TOGGLE FUNCTIONALITY =====
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // ===== KEYBOARD SHORTCUT: Ctrl+S =====
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveSettings();
+            }
+        });
+
+        // ===== SET ACTIVE SECTION BASED ON URL HASH =====
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const navItem = document.querySelector(`.settings-nav .nav-item[data-section="${hash}"]`);
+                if (navItem) {
+                    navItem.click();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

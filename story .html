@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Story from [Friend Name]</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+    <style>
+      :root {
+        --primary: #e74c3c; /* A strong, vivid red */
+        --primary-dark: #c0392b;
+        --dark: #1a1a1a; /* Dark charcoal */
+        --darker: #0d0d0d;
+        --light: #f5f5f5;
+        --gray: #bdc3c7;
+        --dark-gray: #2c2c2c;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: var(--darker); /* Slightly darker for background of story */
+        color: var(--light);
+        overflow: hidden; /* Prevent scrolling */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Story Container */
+      .story-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: var(--dark);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Story Content (Image/Video) */
+      .story-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+
+      /* Overlay for better readability and controls */
+      .story-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,0.8) 100%);
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      /* Story Top Bar */
+      .story-top-bar {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        color: var(--light);
+        z-index: 3;
+      }
+
+      .story-top-bar .back-btn {
+        font-size: 24px;
+        margin-right: 15px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .story-top-bar .back-btn:hover {
+        color: var(--primary);
+      }
+
+      .story-top-bar .friend-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--primary);
+        margin-right: 10px;
+      }
+
+      .story-top-bar .friend-name {
+        font-size: 16px;
+        font-weight: 600;
+        flex-grow: 1;
+      }
+
+      .story-top-bar .story-time {
+        font-size: 12px;
+        color: var(--gray);
+        margin-right: 10px; /* Space before share button */
+      }
+
+      .story-top-bar .share-btn {
+        font-size: 20px;
+        color: var(--light);
+        cursor: pointer;
+        transition: color 0.3s ease, transform 0.3s ease;
+      }
+
+      .story-top-bar .share-btn:hover {
+        color: var(--primary);
+        transform: scale(1.1);
+      }
+
+      /* Story Progress Bar */
+      .story-progress-bar-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: rgba(255, 255, 255, 0.3);
+        z-index: 3;
+      }
+
+      .story-progress-bar {
+        width: 0%;
+        height: 100%;
+        background-color: var(--light);
+        transition: width 0.1s linear; /* Smooth fill */
+      }
+
+      /* Story Navigation Arrows */
+      .story-nav-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--light);
+        font-size: 30px;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 3;
+        transition: color 0.3s ease;
+      }
+
+      .story-nav-arrow:hover {
+        color: var(--primary);
+      }
+
+      .story-nav-arrow.left {
+        left: 10px;
+      }
+
+      .story-nav-arrow.right {
+        right: 10px;
+      }
+
+      /* Story Interactions (Reactions & View Comments) */
+      .story-interactions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        padding: 10px 15px;
+        z-index: 3;
+      }
+
+      .reaction-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        color: var(--light);
+      }
+
+      .reaction-btn:hover {
+        background-color: var(--primary);
+        transform: scale(1.1);
+      }
+
+      .reaction-btn.reacted {
+        background-color: var(--primary);
+      }
+      
+      .view-comments-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 25px;
+        padding: 8px 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--light);
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      .view-comments-btn:hover {
+        background-color: var(--primary);
+        transform: scale(1.05);
+      }
+
+      /* Story Reply Input */
+      .story-reply-input {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px 15px; /* Adjust padding to separate from interactions */
+        z-index: 3;
+      }
+
+      .story-reply-input textarea {
+        flex-grow: 1;
+        background-color: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 25px;
+        padding: 10px 15px;
+        color: var(--light);
+        font-size: 16px;
+        resize: none;
+        height: 45px;
+        max-height: 80px;
+        overflow-y: auto;
+      }
+
+      .story-reply-input textarea::placeholder {
+        color: var(--gray);
+      }
+
+      .story-reply-input .send-btn {
+        background-color: var(--primary);
+        color: var(--light);
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      .story-reply-input .send-btn:hover {
+        background-color: var(--primary-dark);
+        transform: scale(1.05);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 480px) {
+        .story-top-bar {
+          padding: 8px 10px;
+        }
+
+        .story-top-bar .friend-avatar {
+          width: 30px;
+          height: 30px;
+        }
+
+        .story-top-bar .friend-name {
+          font-size: 14px;
+        }
+
+        .story-top-bar .story-time {
+          font-size: 10px;
+        }
+
+        .story-nav-arrow {
+          font-size: 24px;
+          padding: 8px;
+        }
+
+        .story-interactions {
+            gap: 10px;
+            padding: 8px 10px;
+        }
+
+        .reaction-btn {
+            width: 35px;
+            height: 35px;
+            font-size: 18px;
+        }
+
+        .view-comments-btn {
+            padding: 6px 10px;
+            font-size: 12px;
+            gap: 5px;
+        }
+
+        .story-reply-input {
+          padding: 8px 10px 10px;
+        }
+
+        .story-reply-input textarea {
+          font-size: 14px;
+          height: 40px;
+        }
+
+        .story-reply-input .send-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 18px;
+          margin-left: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="story-container">
+      <!-- Story Content (Image/Video Placeholder) -->
+      <img src="https://placehold.co/600x1000/e74c3c/f5f5f5?text=Story+Content" alt="Story Content" class="story-content" id="storyContent">
+
+      <!-- Overlay for readability and controls -->
+      <div class="story-overlay">
+        <!-- Story Progress Bar Container -->
+        <div class="story-progress-bar-container">
+          <div class="story-progress-bar" id="storyProgressBar"></div>
+        </div>
+
+        <!-- Story Top Bar -->
+        <div class="story-top-bar">
+          <i class="fas fa-arrow-left back-btn" onclick="history.back()"></i>
+          <img src="https://placehold.co/400x400/2ecc71/f5f5f5?text=JD" alt="Friend Avatar" class="friend-avatar" id="friendAvatarTop">
+          <span class="friend-name" id="friendNameTop">John Doe</span>
+          <span class="story-time" id="storyTimeTop">5m ago</span>
+          <i class="fas fa-share-alt share-btn" id="shareStoryBtn"></i>
+        </div>
+
+        <!-- Story Navigation Arrows -->
+        <div class="story-nav-arrow left" id="prevStoryBtn">
+          <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="story-nav-arrow right" id="nextStoryBtn">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+
+        <!-- Story Interactions (Reactions & View Comments) -->
+        <div class="story-interactions">
+            <button class="reaction-btn" data-reaction="love"><i class="fas fa-heart"></i></button>
+            <button class="reaction-btn" data-reaction="haha"><i class="fas fa-laugh-squint"></i></button>
+            <button class="reaction-btn" data-reaction="wow"><i class="fas fa-surprise"></i></button>
+            <button class="reaction-btn" data-reaction="sad"><i class="fas fa-sad-tear"></i></button>
+            <button class="view-comments-btn" id="viewCommentsBtn">
+                <i class="fas fa-comment-dots"></i> View Comments
+            </button>
+        </div>
+
+        <!-- Story Reply Input -->
+        <div class="story-reply-input">
+          <textarea id="storyReplyInput" placeholder="Send a message..."></textarea>
+          <button class="send-btn" id="storySendBtn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const storyProgressBar = document.getElementById('storyProgressBar');
+      const storyReplyInput = document.getElementById('storyReplyInput');
+      const storySendBtn = document.getElementById('storySendBtn');
+      const storyContent = document.getElementById('storyContent');
+      const prevStoryBtn = document.getElementById('prevStoryBtn');
+      const nextStoryBtn = document.getElementById('nextStoryBtn');
+      const friendAvatarTop = document.getElementById('friendAvatarTop');
+      const friendNameTop = document.getElementById('friendNameTop');
+      const storyTimeTop = document.getElementById('storyTimeTop');
+      const shareStoryBtn = document.getElementById('shareStoryBtn');
+      const viewCommentsBtn = document.getElementById('viewCommentsBtn');
+      const reactionBtns = document.querySelectorAll('.reaction-btn');
+
+
+      let currentStoryIndex = 0;
+      const stories = [
+        {
+          id: 1,
+          friendName: "John Doe",
+          avatar: "https://placehold.co/400x400/2ecc71/f5f5f5?text=JD",
+          content: "https://placehold.co/600x1000/e74c3c/f5f5f5?text=John+Doe's+Story+1",
+          time: "5m ago"
+        },
+        {
+          id: 2,
+          friendName: "Jane Smith",
+          avatar: "https://placehold.co/400x400/e74c3c/f5f5f5?text=JS",
+          content: "https://placehold.co/600x1000/3498db/f5f5f5?text=Jane+Smith's+Story+2",
+          time: "15m ago"
+        },
+        {
+          id: 3,
+          friendName: "Mark K.",
+          avatar: "https://placehold.co/400x400/3498db/f5f5f5?text=MK",
+          content: "https://placehold.co/600x1000/2ecc71/f5f5f5?text=Mark+K.'s+Story+3",
+          time: "30m ago"
+        }
+      ];
+
+      let progressBarInterval;
+
+      function loadStory(index) {
+        if (index >= 0 && index < stories.length) {
+          currentStoryIndex = index;
+          const story = stories[currentStoryIndex];
+
+          document.title = `Story from ${story.friendName}`;
+          friendAvatarTop.src = story.avatar;
+          friendNameTop.textContent = story.friendName;
+          storyTimeTop.textContent = story.time;
+          storyContent.src = story.content;
+          
+          resetProgressBar();
+          startProgressBar();
+          resetReactions(); // Reset reactions for new story
+        }
+      }
+
+      function startProgressBar() {
+        let progress = 0;
+        const duration = 5000; // 5 seconds per story
+        progressBarInterval = setInterval(() => {
+          progress += 100 / (duration / 100); // Increment by 1% every 100ms
+          storyProgressBar.style.width = `${progress}%`;
+
+          if (progress >= 100) {
+            clearInterval(progressBarInterval);
+            nextStory();
+          }
+        }, 100);
+      }
+
+      function resetProgressBar() {
+        clearInterval(progressBarInterval);
+        storyProgressBar.style.width = '0%';
+      }
+
+      function nextStory() {
+        if (currentStoryIndex < stories.length - 1) {
+          loadStory(currentStoryIndex + 1);
+        } else {
+          alert('No more stories! Going back to chat list.');
+          history.back();
+        }
+      }
+
+      function prevStory() {
+        if (currentStoryIndex > 0) {
+          loadStory(currentStoryIndex - 1);
+        } else {
+          alert('This is the first story!');
+        }
+      }
+
+      function sendReply() {
+        const replyText = storyReplyInput.value.trim();
+        if (replyText === '') return;
+        alert(`Reply to ${stories[currentStoryIndex].friendName}: "${replyText}"`);
+        storyReplyInput.value = '';
+        storyReplyInput.style.height = '45px'; // Reset height
+      }
+
+      function shareStory() {
+          alert(`Sharing "${stories[currentStoryIndex].friendName}'s" story!`);
+          // In a real application, this would open a share dialog.
+      }
+
+      function handleReaction(event) {
+          const clickedButton = event.currentTarget;
+          const reaction = clickedButton.dataset.reaction;
+
+          // Toggle 'reacted' class for visual feedback
+          reactionBtns.forEach(btn => btn.classList.remove('reacted')); // Remove 'reacted' from all
+          clickedButton.classList.add('reacted'); // Add 'reacted' to the clicked one
+
+          alert(`Reacted with ${reaction} to ${stories[currentStoryIndex].friendName}'s story!`);
+          // In a real app, this would send the reaction to a backend.
+      }
+
+      function resetReactions() {
+          reactionBtns.forEach(btn => btn.classList.remove('reacted'));
+      }
+
+      function viewComments() {
+          alert(`Viewing comments for ${stories[currentStoryIndex].friendName}'s story! (Comment section would slide up here)`);
+          // In a real app, this would likely open a comments modal or a sliding panel.
+      }
+
+      // Event Listeners
+      storySendBtn.addEventListener('click', sendReply);
+      storyReplyInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendReply();
+        }
+      });
+      prevStoryBtn.addEventListener('click', prevStory);
+      nextStoryBtn.addEventListener('click', nextStory);
+      shareStoryBtn.addEventListener('click', shareStory);
+      viewCommentsBtn.addEventListener('click', viewComments);
+      reactionBtns.forEach(button => {
+          button.addEventListener('click', handleReaction);
+      });
+
+      storyReplyInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+      });
+
+      // Initial load
+      loadStory(0);
+    </script>
+  </body>
+</html>
+

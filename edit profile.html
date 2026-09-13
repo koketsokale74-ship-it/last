@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Gramite · Edit Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff0000;
+            --primary-soft: #ff0000;
+            --primary-glow: rgba(255, 26, 26, 0.5);
+            --dark: #0c0c10;
+            --darker: #07070a;
+            --card-bg: #16161e;
+            --card-hover: #1f1f2a;
+            --surface: #1c1c26;
+            --border-dim: #2a2a36;
+            --text-main: #f0f0f8;
+            --text-muted: #9494a3;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 0 0 80px 0;
+            background-image: radial-gradient(circle at 30% 10%, #1a0e0e 0%, #0c0c10 80%);
+        }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 640px;
+            position: relative;
+        }
+
+        /* ===== EDIT PROFILE HEADER ===== */
+        .edit-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px 12px;
+            border-bottom: 1px solid var(--border-dim);
+            margin-bottom: 20px;
+        }
+        .edit-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .edit-header .back-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 4px 8px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+        .edit-header .back-btn:hover {
+            background: var(--card-hover);
+            color: white;
+        }
+        .edit-header .save-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+        .edit-header .save-btn:hover {
+            background: #e60000;
+            transform: scale(0.97);
+        }
+
+        /* ===== PROFILE PICTURE EDIT ===== */
+        .profile-pic-edit {
+            text-align: center;
+            padding: 10px 0 24px;
+            position: relative;
+        }
+
+        /* ENHANCED RED GLOW BEHIND PROFILE PICTURE */
+        .profile-bg-glow {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, #ff1a1a 0%, #ff1a1a 30%, transparent 70%);
+            opacity: 0.55;
+            filter: blur(50px);
+            z-index: 0;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .profile-pic-wrapper {
+            position: relative;
+            width: 128px;
+            height: 128px;
+            margin: 0 auto;
+            z-index: 2;
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            object-fit: cover;
+            box-shadow: 0 0 60px var(--primary-glow), 0 0 120px rgba(255, 26, 26, 0.25);
+            transition: transform 0.4s ease;
+        }
+        .profile-pic:hover {
+            transform: scale(1.02);
+        }
+
+        .change-photo-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 0 20px var(--primary-glow);
+            z-index: 3;
+            color: white;
+            font-size: 16px;
+        }
+        .change-photo-btn:hover {
+            transform: scale(1.12);
+            background: #ff3333;
+        }
+
+        .photo-hint {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 12px;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* ===== FORM ===== */
+        .edit-form {
+            padding: 0 20px 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-dim);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            transition: 0.25s;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+        .form-group .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== LINKS SECTION ===== */
+        .links-section {
+            padding: 0 20px 20px;
+        }
+        .links-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--card-bg);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-dim);
+            margin-bottom: 10px;
+            transition: 0.2s;
+        }
+        .link-item:hover {
+            border-color: var(--primary-soft);
+        }
+        .link-item i {
+            color: var(--primary);
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        .link-item input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+        .link-item input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+        .link-item .remove-link {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+            padding: 4px;
+        }
+        .link-item .remove-link:hover {
+            color: var(--primary);
+        }
+
+        .add-link-btn {
+            background: transparent;
+            border: 1.5px dashed var(--border-dim);
+            color: var(--text-muted);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .add-link-btn:hover {
+            border-color: var(--primary);
+            color: var(--text-main);
+            background: var(--card-hover);
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            border-top: 1px solid var(--border-dim);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 14px;
+            backdrop-filter: blur(12px);
+            max-width: 640px;
+            margin: 0 auto;
+            z-index: 200;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 4px;
+            transition: 0.2s;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-item i {
+            font-size: 22px;
+            transition: 0.2s;
+        }
+        .nav-item.active {
+            color: var(--primary);
+        }
+        .nav-item.active i {
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+        .nav-item:hover {
+            color: white;
+        }
+
+        /* ===== MESSAGE BOX ===== */
+        .msg-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            display: none;
+            animation: fadeIn 0.2s;
+        }
+        .msg-box {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px 28px;
+            max-width: 360px;
+            width: 90%;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-heavy);
+            animation: popIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        }
+        .msg-box .icon-big {
+            background: var(--primary);
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 4px;
+        }
+        .msg-box h3 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .msg-box p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 4px 0 8px;
+        }
+        .msg-box .btn-close-msg {
+            background: var(--primary);
+            border: none;
+            border-radius: 60px;
+            padding: 12px 44px;
+            font-weight: 600;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .msg-box .btn-close-msg:hover {
+            background: #e60000;
+            transform: scale(0.96);
+        }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes popIn { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+        @media (max-width: 480px) {
+            .profile-pic-wrapper { width: 100px; height: 100px; }
+            .profile-bg-glow { width: 220px; height: 220px; opacity: 0.5; }
+            .edit-header h1 { font-size: 18px; }
+            .edit-header .save-btn { padding: 6px 18px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+
+    <!-- ===== EDIT HEADER ===== -->
+    <div class="edit-header">
+        <a href="profile.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <h1>Edit Profile</h1>
+        <button class="save-btn" id="saveProfileBtn">Save</button>
+    </div>
+
+    <!-- ===== PROFILE PICTURE ===== -->
+    <div class="profile-pic-edit">
+        <!-- ENHANCED RED GLOW -->
+        <div class="profile-bg-glow"></div>
+
+        <div class="profile-pic-wrapper">
+            <img src="https://storage.googleapis.com/a1aa/image/JApZbFwotxIlMx2gvX24bqvWTX4boKhIdRCvzIPdWRdZs39E.jpg" alt="Profile" class="profile-pic" id="profilePic" />
+            <label class="change-photo-btn" for="photoUpload" title="Change photo">
+                <i class="fas fa-camera"></i>
+            </label>
+            <input type="file" id="photoUpload" accept="image/*" style="display:none;" />
+        </div>
+        <div class="photo-hint">Tap the camera icon to change your profile picture</div>
+    </div>
+
+    <!-- ===== EDIT FORM ===== -->
+    <div class="edit-form">
+        <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" id="displayName" value="John Doe" maxlength="30" />
+        </div>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="username" value="@johndoe" maxlength="20" />
+        </div>
+        <div class="form-group">
+            <label>Bio</label>
+            <textarea id="userBio" maxlength="150">Digital creator | Tech enthusiast | Sharing my journey ✨ #CreateEveryday</textarea>
+            <div class="char-count"><span id="bioCount">150</span> / 150</div>
+        </div>
+        <div class="form-group">
+            <label>Pronouns (optional)</label>
+            <input type="text" id="pronouns" value="he/him" placeholder="e.g. they/them" maxlength="20" />
+        </div>
+    </div>
+
+    <!-- ===== LINKS ===== -->
+    <div class="links-section">
+        <h3><i class="fas fa-link" style="color:var(--primary);margin-right:8px;"></i> Links</h3>
+        <div id="linksContainer">
+            <div class="link-item">
+                <i class="fab fa-instagram"></i>
+                <input type="text" placeholder="Instagram URL" value="https://instagram.com/johndoe" />
+                <button class="remove-link" onclick="removeLink(this)"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="link-item">
+                <i class="fab fa-youtube"></i>
+                <input type="text" placeholder="YouTube URL" value="https://youtube.com/@johndoe" />
+                <button class="remove-link" onclick="removeLink(this)"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="link-item">
+                <i class="fab fa-twitter"></i>
+                <input type="text" placeholder="Twitter / X URL" value="https://twitter.com/johndoe" />
+                <button class="remove-link" onclick="removeLink(this)"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <button class="add-link-btn" id="addLinkBtn"><i class="fas fa-plus"></i> Add link</button>
+    </div>
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <div class="bottom-nav">
+        <a href="Home.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="chating.html" class="nav-item"><i class="fas fa-message"></i><span>Message</span></a>
+        <a href="profile.html" class="nav-item active"><i class="fas fa-user"></i><span>Profile</span></a>
+    </div>
+
+    <!-- ===== MESSAGE BOX ===== -->
+    <div class="msg-overlay" id="msgOverlay"></div>
+    <div class="msg-box" id="msgBox">
+        <div class="icon-big"><i class="fas fa-check-circle"></i></div>
+        <h3 id="msgTitle">✨</h3>
+        <p id="msgText">Profile updated successfully!</p>
+        <button class="btn-close-msg" id="msgCloseBtn">OK</button>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        // ----- DOM refs -----
+        const displayName = document.getElementById('displayName');
+        const username = document.getElementById('username');
+        const userBio = document.getElementById('userBio');
+        const bioCount = document.getElementById('bioCount');
+        const pronouns = document.getElementById('pronouns');
+        const profilePic = document.getElementById('profilePic');
+        const photoUpload = document.getElementById('photoUpload');
+        const saveBtn = document.getElementById('saveProfileBtn');
+        const addLinkBtn = document.getElementById('addLinkBtn');
+        const linksContainer = document.getElementById('linksContainer');
+
+        // Message system
+        const msgOverlay = document.getElementById('msgOverlay');
+        const msgBox = document.getElementById('msgBox');
+        const msgTitle = document.getElementById('msgTitle');
+        const msgText = document.getElementById('msgText');
+        const msgCloseBtn = document.getElementById('msgCloseBtn');
+
+        function showMsg(title, text) {
+            msgTitle.textContent = title;
+            msgText.textContent = text;
+            msgBox.style.display = 'flex';
+            msgOverlay.style.display = 'block';
+        }
+        function hideMsg() {
+            msgBox.style.display = 'none';
+            msgOverlay.style.display = 'none';
+        }
+        msgCloseBtn.addEventListener('click', hideMsg);
+        msgOverlay.addEventListener('click', hideMsg);
+
+        // ----- Bio character counter -----
+        userBio.addEventListener('input', function() {
+            const count = this.value.length;
+            bioCount.textContent = count;
+            if (count > 150) {
+                this.value = this.value.substring(0, 150);
+                bioCount.textContent = 150;
+            }
+        });
+
+        // ----- Photo upload -----
+        photoUpload.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    profilePic.src = event.target.result;
+                    showMsg('📸 Photo updated', 'Your profile picture has been changed successfully.');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ----- Save profile -----
+        saveBtn.addEventListener('click', function() {
+            const name = displayName.value.trim() || 'John Doe';
+            const handle = username.value.trim() || '@johndoe';
+            const bio = userBio.value.trim() || 'Digital creator';
+            const pro = pronouns.value.trim() || '';
+
+            // In a real app, you'd send this data to a server
+            console.log('Saving profile:', { name, handle, bio, pro });
+
+            // Collect links
+            const links = [];
+            document.querySelectorAll('.link-item input').forEach(input => {
+                if (input.value.trim()) links.push(input.value.trim());
+            });
+
+            showMsg('✅ Profile Saved', `Your profile has been updated successfully!`);
+        });
+
+        // ----- Add link -----
+        addLinkBtn.addEventListener('click', function() {
+            const icons = ['fab fa-globe', 'fab fa-github', 'fab fa-tiktok', 'fab fa-facebook', 'fab fa-linkedin', 'fas fa-link'];
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+
+            const div = document.createElement('div');
+            div.className = 'link-item';
+            div.innerHTML = `
+                <i class="${randomIcon}"></i>
+                <input type="text" placeholder="Enter URL" />
+                <button class="remove-link" onclick="removeLink(this)"><i class="fas fa-times"></i></button>
+            `;
+            linksContainer.appendChild(div);
+
+            // Focus the new input
+            const input = div.querySelector('input');
+            input.focus();
+
+            showMsg('🔗 Link Added', 'You can now enter your new link URL.');
+        });
+
+        // ----- Remove link (global function) -----
+        window.removeLink = function(btn) {
+            const item = btn.closest('.link-item');
+            if (document.querySelectorAll('.link-item').length > 1) {
+                item.remove();
+                showMsg('🗑️ Link Removed', 'The link has been removed from your profile.');
+            } else {
+                showMsg('⚠️', 'You need at least one link.');
+            }
+        };
+
+        // ----- Back button confirmation (optional) -----
+        document.querySelector('.back-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            showMsg('↩️ Go Back', 'Your changes will be lost if you leave without saving.');
+            // In a real app, you might want to navigate after confirmation
+            // For demo, we'll just show the message and let user click OK then navigate
+            const originalHref = this.href;
+            msgCloseBtn.onclick = function() {
+                hideMsg();
+                window.location.href = originalHref;
+            };
+            // Reset onclick after
+            setTimeout(() => {
+                msgCloseBtn.onclick = hideMsg;
+            }, 100);
+        });
+
+        // ----- Navigation items (intercept for demo) -----
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href) {
+                    e.preventDefault();
+                    showMsg('🚀 Navigating', `Going to ${this.querySelector('span')?.textContent || 'page'}...`);
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 500);
+                }
+            });
+        });
+
+        console.log('📝 Edit Profile page loaded.');
+        console.log('🔗 Navigation: Home → index.html | Message → message.html | Profile → profile.html');
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0050;
+            --primary-dark: #e60046;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --unread-bg: rgba(255, 0, 80, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--darker);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .header-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .header-action-btn:hover {
+            color: var(--primary);
+        }
+        
+        /* Notification container */
+        .notification-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 15px 80px;
+        }
+        
+        /* Notification tabs */
+        .notification-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--dark-gray);
+            margin-bottom: 20px;
+        }
+        
+        .notification-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+        
+        .notification-tab.active {
+            color: var(--primary);
+        }
+        
+        .notification-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* Notification cards */
+        .notification-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .notification-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--card-border);
+        }
+        
+        .notification-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .notification-card.unread {
+            background: var(--unread-bg);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .notification-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid var(--primary);
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-text {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        .notification-user {
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .notification-action {
+            color: var(--gray);
+        }
+        
+        .notification-highlight {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .notification-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .notification-preview {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--gray);
+            padding: 8px;
+            background: var(--darker);
+            border-radius: 8px;
+            border-left: 2px solid var(--primary);
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .notification-btn {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-follow {
+            background: var(--primary);
+            color: var(--light);
+        }
+        
+        .btn-follow:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-view {
+            background: transparent;
+            color: var(--light);
+            border: 1px solid var(--gray);
+        }
+        
+        .btn-view:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Notification types */
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        
+        .icon-like {
+            background: rgba(237, 73, 86, 0.2);
+            color: #ed4956;
+        }
+        
+        .icon-comment {
+            background: rgba(0, 191, 255, 0.2);
+            color: #00bfff;
+        }
+        
+        .icon-follow {
+            background: rgba(255, 0, 80, 0.2);
+            color: var(--primary);
+        }
+        
+        .icon-mention {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-explore {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: var(--light);
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .btn-explore:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 5px;
+        }
+        
+        .nav-item i {
+            font-size: 22px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 18px;
+            }
+            
+            .notification-card {
+                padding: 12px;
+            }
+            
+            .notification-avatar {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .notification-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">Notifications</div>
+        <div class="header-actions">
+            <button class="header-action-btn">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="header-action-btn">
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Notification container -->
+    <div class="notification-container">
+        <!-- Notification tabs -->
+        <div class="notification-tabs">
+            <div class="notification-tab active" data-tab="all">All</div>
+            <div class="notification-tab" data-tab="mentions">Mentions</div>
+            <div class="notification-tab" data-tab="verified">Verified</div>
+        </div>
+        
+        <!-- All notifications -->
+        <div class="notification-list" id="all-notifications">
+            <!-- Follow notification -->
+            <div class="notification-card unread">
+                <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="User" class="notification-avatar">
+                <div class="notification-content">
+                    <div class="notification-text">
+                        <span class="notification-user">sarahj</span>
+                        <span class="notification-action">started following you</span>
+                    </div>
+                    <div class="notification-time">10m ago</div>
+                    <div class="notification-actions">
+                        <button class="notification-btn btn-follow">Follow back</button>
+                        <button class="notification-btn btn-view">View profile</button>
+                    </div>
+                </div>
+                <div class="notification-icon icon-follow">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+            </div>
+            
+            <!-- Like notification -->
+            <div class="notification-card unread">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="notification-avatar">
+                <div class="notification-content">
+                    <div class="notification-text">
+                        <span class="notification-user">michaelc</span>
+                        <span class="notification-action">liked your</span>
+                        <span class="notification-highlight">video</span>
+                    </div>
+                    <div class="notification-time">45m ago</div>
+                    <div class="notification-preview">
+                        "Check out my new tech review! #Tech #Gadgets"
+                    </div>
+                </div>
+                <div class="notification-icon icon-like">
+                    <i class="fas fa-heart"></i>
+                </div>
+            </div>
+            
+            <!-- Comment notification -->
+            <div class="notification-card">
+                <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="User" class="notification-avatar">
+                <div class="notification-content">
+                    <div class="notification-text">
+                        <span class="notification-user">emmaw</span>
+                        <span class="notification-action">commented on your</span>
+                        <span class="notification-highlight">post</span>
+                    </div>
+                    <div class="notification-time">1h ago</div>
+                    <div class="notification-preview">
+                        "Amazing content as always! What camera do you use for your travel videos?"
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-btn btn-view">Reply</button>
+                    </div>
+                </div>
+                <div class="notification-icon icon-comment">
+                    <i class="fas fa-comment"></i>
+                </div>
+            </div>
+            
+            <!-- Mention notification -->
+            <div class="notification-card">
+                <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="User" class="notification-avatar">
+                <div class="notification-content">
+                    <div class="notification-text">
+                        <span class="notification-user">davidk</span>
+                        <span class="notification-action">mentioned you in a</span>
+                        <span class="notification-highlight">comment</span>
+                    </div>
+                    <div class="notification-time">2h ago</div>
+                    <div class="notification-preview">
+                        "You should check out @johndoe's fitness routine, it's amazing!"
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-btn btn-view">View post</button>
+                    </div>
+                </div>
+                <div class="notification-icon icon-mention">
+                    <i class="fas fa-at"></i>
+                </div>
+            </div>
+            
+            <!-- Live notification -->
+            <div class="notification-card">
+                <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="User" class="notification-avatar">
+                <div class="notification-content">
+                    <div class="notification-text">
+                        <span class="notification-user">jessical</span>
+                        <span class="notification-action">went live</span>
+                        <span class="notification-highlight">"Studio Session"</span>
+                    </div>
+                    <div class="notification-time">3h ago</div>
+                    <div class="notification-actions">
+                        <button class="notification-btn btn-view">Watch replay</button>
+                    </div>
+                </div>
+                <div class="notification-icon icon-follow">
+                    <i class="fas fa-video"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mentions notifications -->
+        <div class="notification-list" id="mentions-notifications" style="display: none;">
+            <!-- Only mention notifications would appear here -->
+            <div class="notification-card">
+                <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="User" class="notification-avatar">
+                <div class="notification-content">
+                    <div class="notification-text">
+                        <span class="notification-user">davidk</span>
+                        <span class="notification-action">mentioned you in a</span>
+                        <span class="notification-highlight">comment</span>
+                    </div>
+                    <div class="notification-time">2h ago</div>
+                    <div class="notification-preview">
+                        "You should check out @johndoe's fitness routine, it's amazing!"
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-btn btn-view">View post</button>
+                    </div>
+                </div>
+                <div class="notification-icon icon-mention">
+                    <i class="fas fa-at"></i>
+                </div>
+            </div>
+            
+            <div class="notification-card">
+                <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="User" class="notification-avatar">
+                <div class="notification-content">
+                    <div class="notification-text">
+                        <span class="notification-user">sophiam</span>
+                        <span class="notification-action">mentioned you in her</span>
+                        <span class="notification-highlight">story</span>
+                    </div>
+                    <div class="notification-time">5h ago</div>
+                    <div class="notification-actions">
+                        <button class="notification-btn btn-view">View story</button>
+                    </div>
+                </div>
+                <div class="notification-icon icon-mention">
+                    <i class="fas fa-at"></i>
+                </div>
+            </div>
+            
+            <div class="empty-state">
+                <i class="fas fa-at"></i>
+                <p>No new mentions</p>
+                <button class="btn-explore">Explore Content</button>
+            </div>
+        </div>
+        
+        <!-- Verified notifications -->
+        <div class="notification-list" id="verified-notifications" style="display: none;">
+            <div class="empty-state">
+                <i class="fas fa-certificate"></i>
+                <p>No notifications from verified accounts</p>
+                <p class="notification-time">Notifications from verified accounts will appear here</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom navigation -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Discover</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-plus-square"></i>
+            <span>Create</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.notification-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.notification-tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Hide all notification lists
+                document.querySelectorAll('.notification-list').forEach(list => {
+                    list.style.display = 'none';
+                });
+                
+                // Show the corresponding notification list
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}-notifications`).style.display = 'flex';
+            });
+        });
+        
+        // Follow buttons functionality
+        document.querySelectorAll('.btn-follow').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (this.textContent.includes('Follow')) {
+                    this.textContent = 'Following';
+                    this.style.background = 'transparent';
+                    this.style.border = '1px solid var(--gray)';
+                    this.style.color = 'var(--light)';
+                } else {
+                    this.textContent = 'Follow back';
+                    this.style.background = 'var(--primary)';
+                    this.style.border = 'none';
+                    this.style.color = 'var(--light)';
+                }
+            });
+        });
+        
+        // Mark as read functionality
+        document.querySelectorAll('.notification-card').forEach(card => {
+            card.addEventListener('click', function() {
+                if (this.classList.contains('unread')) {
+                    this.classList.remove('unread');
+                }
+            });
+        });
+        
+        // Header search functionality
+        document.querySelector('.header-action-btn:first-child').addEventListener('click', function() {
+            alert('Search functionality would go here!');
+        });
+        
+        // Header menu functionality
+        document.querySelector('.header-action-btn:last-child').addEventListener('click', function() {
+            alert('Notification settings would appear here!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Grami · Contact</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff0000;
+            --primary-soft: #ff3333;
+            --primary-glow: rgba(255, 26, 26, 0.3);
+            --dark-bg: #0b0b0e;
+            --card-bg: #17171c;
+            --card-hover: #22222a;
+            --surface: #1e1e26;
+            --text-main: #f0f0f5;
+            --text-muted: #9a9aa8;
+            --border-dim: #2b2b35;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 24px 16px 40px;
+            background-image: radial-gradient(circle at 20% 30%, #1c0f0f 0%, #0b0b0e 70%);
+        }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 640px;
+        }
+
+        /* navigation */
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: 60px;
+            padding: 8px 12px 8px 20px;
+            backdrop-filter: blur(6px);
+        }
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-logo i {
+            color: var(--primary);
+        }
+        .nav-links {
+            display: flex;
+            gap: 6px;
+        }
+        .nav-link {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-link:hover {
+            background: var(--card-hover);
+            color: white;
+        }
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        /* search header (compact) */
+        .search-header {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 6px 20px 6px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            transition: box-shadow 0.25s;
+            margin-bottom: 16px;
+        }
+        .search-header:focus-within {
+            box-shadow: 0 0 0 2px var(--primary-glow), 0 12px 30px rgba(0,0,0,0.8);
+        }
+        .search-header i {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .search-header:focus-within i {
+            color: var(--primary);
+        }
+        .search-input {
+            background: transparent;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+            width: 100%;
+            padding: 14px 0;
+            outline: none;
+        }
+        .search-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        /* ===== CONTACT PAGE ===== */
+        .contact-hero {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            margin: 24px 0 20px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            background: var(--primary);
+            opacity: 0.04;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .contact-hero .icon-ring {
+            background: var(--primary);
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 0 40px var(--primary-glow);
+        }
+        .contact-hero h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        .contact-hero p {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .contact-phone-card {
+            background: var(--surface);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0 8px;
+            transition: 0.2s;
+            cursor: default;
+        }
+        .contact-phone-card:hover {
+            border-color: var(--primary-soft);
+            background: var(--card-hover);
+        }
+        .phone-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .phone-left i {
+            font-size: 1.6rem;
+            color: var(--primary);
+            background: rgba(255, 26, 26, 0.12);
+            padding: 12px;
+            border-radius: 50%;
+        }
+        .phone-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
+        }
+        .phone-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .phone-action {
+            display: flex;
+            gap: 10px;
+        }
+        .phone-action button {
+            background: transparent;
+            border: 1px solid var(--border-dim);
+            color: var(--text-muted);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .phone-action button:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+        .contact-meta {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .contact-meta .meta-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .contact-meta .meta-item i {
+            color: var(--primary);
+        }
+
+        /* extra sections */
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin: 28px 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title span {
+            background: var(--primary);
+            width: 5px;
+            height: 24px;
+            border-radius: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-md);
+            padding: 18px 16px;
+            transition: 0.2s;
+        }
+        .info-card:hover {
+            background: var(--card-hover);
+            border-color: var(--primary-soft);
+        }
+        .info-card i {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        .info-card h4 {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .info-card p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        /* message box */
+        .message-box-backdrop {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        .message-box {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.96);
+            background: var(--card-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            padding: 34px 28px 28px;
+            max-width: 340px;
+            width: 90%;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            text-align: center;
+            box-shadow: 0 40px 70px rgba(0,0,0,0.8);
+            animation: popIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        }
+        .message-box .icon-wrap {
+            background: var(--primary);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: white;
+        }
+        .message-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+        .message-box p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .message-box button {
+            background: var(--primary);
+            border: none;
+            border-radius: 60px;
+            padding: 12px 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 4px;
+        }
+        .message-box button:hover {
+            background: #e60000;
+            transform: scale(0.97);
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; } 100% { opacity: 1; }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            .contact-phone-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+            .phone-action {
+                justify-content: center;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .phone-number {
+                font-size: 1.3rem;
+            }
+            .nav-link {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+
+    <!-- navigation -->
+    <div class="nav-bar">
+        <div class="nav-logo"><i class="fas fa-compass"></i> Gramite</div>
+        <div class="nav-links">
+            <button class="nav-link" id="navHome">Home</button>
+            <button class="nav-link active" id="navContact">Contact</button>
+        </div>
+    </div>
+
+    <!-- search (light) -->
+    <div class="search-header">
+        <i class="fas fa-search"></i>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search anything...">
+    </div>
+
+    <!-- ===== CONTACT PAGE ===== -->
+    <div id="contactPage">
+        <div class="contact-hero">
+            <div class="icon-ring"><i class="fas fa-headset"></i></div>
+            <h2>Get in touch</h2>
+            <p>We're here to help. Reach out anytime — we respond within minutes.</p>
+        </div>
+
+        <!-- phone card -->
+        <div class="contact-phone-card">
+            <div class="phone-left">
+                <i class="fas fa-phone-alt"></i>
+                <div>
+                    <div class="phone-number">078 867 2222</div>
+                    <div class="phone-label">📞 Call or WhatsApp</div>
+                </div>
+            </div>
+            <div class="phone-action">
+                <button id="callBtn" title="Call"><i class="fas fa-phone"></i></button>
+                <button id="copyBtn" title="Copy number"><i class="fas fa-copy"></i></button>
+                <button id="smsBtn" title="Message"><i class="fas fa-comment-dots"></i></button>
+            </div>
+        </div>
+
+        <!-- quick meta -->
+        <div class="contact-meta">
+            <div class="meta-item"><i class="fas fa-clock"></i> 24/7 support</div>
+            <div class="meta-item"><i class="fas fa-globe"></i> Global</div>
+            <div class="meta-item"><i class="fas fa-shield-alt"></i> Encrypted</div>
+        </div>
+
+        <!-- extra info -->
+        <div class="section-title"><span></span> More ways to connect</div>
+        <div class="info-grid">
+            <div class="info-card">
+                <i class="fas fa-envelope"></i>
+                <h4>Email</h4>
+                <p>support@gramite.com<br><span style="color:var(--text-muted);font-size:0.7rem;">we reply in 2h</span></p>
+            </div>
+            <div class="info-card">
+                <i class="fab fa-whatsapp"></i>
+                <h4>WhatsApp</h4>
+                <p>+27 78 867 2222<br><span style="color:var(--text-muted);font-size:0.7rem;">business account</span></p>
+            </div>
+            <div class="info-card">
+                <i class="fab fa-twitter"></i>
+                <h4>Twitter / X</h4>
+                <p>@gramite_support<br><span style="color:var(--text-muted);font-size:0.7rem;">DMs open</span></p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-map-pin"></i>
+                <h4>Location</h4>
+                <p>Cape Town, ZA<br><span style="color:var(--text-muted);font-size:0.7rem;">virtual office</span></p>
+            </div>
+        </div>
+
+        <!-- subtle note -->
+        <div style="margin-top: 24px; text-align: center; font-size: 0.7rem; color: var(--text-muted); opacity: 0.6; border-top: 1px solid var(--border-dim); padding-top: 18px;">
+            <i class="fas fa-lock" style="margin-right: 6px;"></i> Secure &bull; 078 867 2222
+        </div>
+    </div>
+</div>
+
+<!-- message box -->
+<div class="message-box-backdrop" id="messageBackdrop"></div>
+<div class="message-box" id="messageBox">
+    <div class="icon-wrap"><i class="fas fa-bolt"></i></div>
+    <h3 id="messageTitle">✨</h3>
+    <p id="messageText"></p>
+    <button id="closeMessage">OK</button>
+</div>
+
+<script>
+    (function() {
+        const searchInput = document.getElementById('searchInput');
+        const messageBox = document.getElementById('messageBox');
+        const messageBackdrop = document.getElementById('messageBackdrop');
+        const messageTitle = document.getElementById('messageTitle');
+        const messageText = document.getElementById('messageText');
+        const closeMessageBtn = document.getElementById('closeMessage');
+        const navHome = document.getElementById('navHome');
+        const navContact = document.getElementById('navContact');
+
+        // Phone number
+        const PHONE = '0788672222';
+        const PHONE_DISPLAY = '078 867 2222';
+
+        // ---- message system ----
+        function showMessage(title, text) {
+            messageTitle.textContent = title;
+            messageText.textContent = text;
+            messageBox.style.display = 'flex';
+            messageBackdrop.style.display = 'block';
+        }
+
+        function hideMessage() {
+            messageBox.style.display = 'none';
+            messageBackdrop.style.display = 'none';
+        }
+
+        closeMessageBtn.addEventListener('click', hideMessage);
+        messageBackdrop.addEventListener('click', hideMessage);
+
+        // ---- contact actions ----
+        document.getElementById('callBtn').addEventListener('click', () => {
+            showMessage('📞 Call', `Calling ${PHONE_DISPLAY} ...`);
+            // in real world: window.location.href = `tel:${PHONE}`;
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(PHONE);
+                showMessage('✅ Copied!', `Phone number ${PHONE_DISPLAY} copied to clipboard.`);
+            } catch {
+                // fallback
+                const el = document.createElement('textarea');
+                el.value = PHONE;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                showMessage('✅ Copied!', `Phone number ${PHONE_DISPLAY} copied.`);
+            }
+        });
+
+        document.getElementById('smsBtn').addEventListener('click', () => {
+            showMessage('💬 Message', `Open SMS to ${PHONE_DISPLAY}?`);
+            // window.location.href = `sms:${PHONE}`;
+        });
+
+        // ---- navigation ----
+        navHome.addEventListener('click', () => {
+            showMessage('🏠 Home', 'Redirecting to Grami Search...');
+            // simulate navigation
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?home'; 
+                // in real app you'd change view; for demo we just show message
+            }, 300);
+        });
+
+        navContact.addEventListener('click', () => {
+            // already on contact
+            showMessage('📬 Contact', 'You are on the contact page.');
+        });
+
+        // ---- search ----
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && searchInput.value.trim() !== '') {
+                showMessage('🔍 Search', `Searching for "${searchInput.value.trim()}"`);
+            }
+        });
+
+        // ---- extra: click on phone number card shows info ----
+        document.querySelector('.contact-phone-card').addEventListener('click', (e) => {
+            // ignore if clicked on button
+            if (e.target.closest('button')) return;
+            showMessage('📱 Contact', `Reach us at ${PHONE_DISPLAY} (24/7)`);
+        });
+
+        // ---- info cards click ----
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.querySelector('h4')?.textContent || 'Info';
+                const desc = this.querySelector('p')?.textContent?.trim() || 'More details';
+                showMessage(`💡 ${title}`, desc);
+            });
+        });
+
+        // ---- meta items click ----
+        document.querySelectorAll('.meta-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const txt = this.textContent.trim();
+                showMessage('ℹ️', txt);
+            });
+        });
+
+        // ---- init: show a small welcome (optional) ----
+        // showMessage('👋', 'Contact page — tap any card for details.');
+
+        console.log('Grami Contact · 078 867 2222');
+    })();
+</script>
+</body>
+</html>

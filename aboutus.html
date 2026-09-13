@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Gramite</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0050;
+            --primary-dark: #e60046;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f8f8;
+            --gray: #808080;
+            --dark-gray: #2e2e2e;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--darker);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .header-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .header-action-btn:hover {
+            color: var(--primary);
+        }
+        
+        /* About container */
+        .about-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px 80px;
+        }
+        
+        /* Hero section */
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--darker));
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1611605698335-8b1569810432?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') center/cover;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-logo {
+            font-size: 60px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--light), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-tagline {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .hero-description {
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Section styling */
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--primary);
+        }
+        
+        .section-content {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        
+        /* Story section */
+        .story-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .story-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 3px solid var(--dark);
+        }
+        
+        .timeline-year {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .timeline-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-description {
+            font-size: 15px;
+            color: var(--gray);
+        }
+        
+        /* Values section */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .value-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .value-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+        }
+        
+        .value-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .value-description {
+            font-size: 15px;
+            color: var(--gray);
+        }
+        
+        /* Team section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+        
+        .team-member {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .member-photo {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .member-info {
+            padding: 20px;
+        }
+        
+        .member-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .member-role {
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .member-bio {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-link {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--primary);
+        }
+        
+        /* Stats section */
+        .stats-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            margin-bottom: 50px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            color: var(--gray);
+        }
+        
+        /* CTA section */
+        .cta-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--darker));
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .cta-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        .btn-primary:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--light);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--darker);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid var(--dark-gray);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 10px;
+            gap: 5px;
+        }
+        
+        .nav-item i {
+            font-size: 22px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-logo {
+                font-size: 40px;
+            }
+            
+            .hero-tagline {
+                font-size: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .values-grid, .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 18px;
+            }
+            
+            .header {
+                padding: 12px 15px;
+            }
+            
+            .about-container {
+                padding: 20px 15px 80px;
+            }
+            
+            .hero-section {
+                padding: 30px 15px;
+            }
+            
+            .stat-number {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">About Gramite</div>
+        <div class="header-actions">
+            <button class="header-action-btn">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="header-action-btn">
+                <i class="fas fa-share-alt"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="about-container">
+        <!-- Hero section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <div class="hero-logo">Gramite</div>
+                <div class="hero-tagline">Where Creativity Meets Community</div>
+                <p class="hero-description">
+                    Gramite is a next-generation social platform that empowers creators, connects communities, 
+                    and celebrates authentic expression through short-form video and beyond.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Our Story section -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-book-open"></i>
+                Our Story
+            </h2>
+            <p class="section-content">
+                Gramite was born from a simple idea: to create a space where everyone can share their passion, 
+                talent, and creativity with the world. Founded in 2020, we've grown from a small team of dreamers 
+                to a global platform with millions of users.
+            </p>
+            
+            <div class="story-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2020</div>
+                    <h3 class="timeline-title">The Beginning</h3>
+                    <p class="timeline-description">
+                        Gramite was founded by a group of friends who wanted to create a more authentic 
+                        social media experience focused on creativity rather than popularity.
+                    </p>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2021</div>
+                    <h3 class="timeline-title">First Million Users</h3>
+                    <p class="timeline-description">
+                        Within a year, Gramite reached 1 million active users, proving that people were 
+                        hungry for a platform that valued genuine content and community.
+                    </p>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2022</div>
+                    <h3 class="timeline-title">Creator Fund Launch</h3>
+                    <p class="timeline-description">
+                        We launched the Gramite Creator Fund, allowing talented creators to earn money 
+                        directly from their content and build sustainable careers.
+                    </p>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2023</div>
+                    <h3 class="timeline-title">Global Expansion</h3>
+                    <p class="timeline-description">
+                        Gramite expanded to 50+ countries and introduced new features including 
+                        Marketplace, Live Shopping, and enhanced creator tools.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Our Mission section -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-bullseye"></i>
+                Our Mission
+            </h2>
+            <p class="section-content">
+                Our mission is to inspire creativity and bring joy through authentic connections. 
+                We believe that everyone has a story to tell and talent to share, and we're building 
+                the tools to make that possible.
+            </p>
+        </div>
+        
+        <!-- Our Values section -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-heart"></i>
+                Our Values
+            </h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="value-title">Community First</h3>
+                    <p class="value-description">
+                        We prioritize the needs and safety of our community above all else, 
+                        fostering an inclusive environment where everyone belongs.
+                    </p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="value-title">Creativity</h3>
+                    <p class="value-description">
+                        We celebrate original thinking and provide tools that empower users 
+                        to express themselves in unique and meaningful ways.
+                    </p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="value-title">Safety & Privacy</h3>
+                    <p class="value-description">
+                        We're committed to protecting our users' data and maintaining a 
+                        safe platform through advanced technology and human moderation.
+                    </p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="value-title">Diversity</h3>
+                    <p class="value-description">
+                        We embrace and celebrate diverse perspectives, cultures, and 
+                        backgrounds from around the world.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Our Team section -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-users"></i>
+                Meet Our Team
+            </h2>
+            <p class="section-content">
+                Gramite is powered by a diverse team of innovators, creators, and visionaries 
+                who are passionate about building the future of social media.
+            </p>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Team Member" class="member-photo">
+                    <div class="member-info">
+                        <h3 class="member-name">Alex Chen</h3>
+                        <p class="member-role">CEO & Founder</p>
+                        <p class="member-bio">Former product lead at major tech company with 10+ years experience.</p>
+                        <div class="member-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Team Member" class="member-photo">
+                    <div class="member-info">
+                        <h3 class="member-name">Sarah Johnson</h3>
+                        <p class="member-role">Chief Product Officer</p>
+                        <p class="member-bio">Product design expert passionate about user-centered experiences.</p>
+                        <div class="member-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Team Member" class="member-photo">
+                    <div class="member-info">
+                        <h3 class="member-name">Marcus Rodriguez</h3>
+                        <p class="member-role">CTO</p>
+                        <p class="member-bio">Engineering leader with expertise in scalable platform architecture.</p>
+                        <div class="member-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Team Member" class="member-photo">
+                    <div class="member-info">
+                        <h3 class="member-name">Emily Watson</h3>
+                        <p class="member-role">Head of Community</p>
+                        <p class="member-bio">Dedicated to fostering positive and inclusive online spaces.</p>
+                        <div class="member-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats section -->
+        <div class="stats-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Gramite by the Numbers
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">50M+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">150+</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5B+</div>
+                    <div class="stat-label">Videos Created</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">250+</div>
+                    <div class="stat-label">Team Members</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA section -->
+        <div class="cta-section">
+            <h2 class="cta-title">Join the Gramite Community</h2>
+            <p class="section-content" style="color: rgba(255,255,255,0.9); margin-bottom: 30px;">
+                Ready to share your creativity with the world? Download Gramite today and start your journey.
+            </p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary">
+                    <i class="fas fa-download"></i> Download App
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-briefcase"></i> Careers
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom navigation -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Discover</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-plus-square"></i>
+            <span>Create</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+    
+    <script>
+        // Header search functionality
+        document.querySelector('.header-action-btn:first-child').addEventListener('click', function() {
+            alert('Search functionality would go here!');
+        });
+        
+        // Header share functionality
+        document.querySelector('.header-action-btn:last-child').addEventListener('click', function() {
+            alert('Share this page with friends!');
+        });
+        
+        // Download app button functionality
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            alert('Redirecting to app store...');
+        });
+        
+        // Careers button functionality
+        document.querySelector('.btn-outline').addEventListener('click', function() {
+            alert('Opening careers page...');
+        });
+        
+        // Team member social links
+        document.querySelectorAll('.social-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const platform = this.querySelector('i').classList[1];
+                alert(`Opening ${platform} profile...`);
+            });
+        });
+    </script>
+</body>
+</html>
